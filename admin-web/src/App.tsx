@@ -1,0 +1,152 @@
+import { createBrowserRouter, RouterProvider } from "react-router";
+import DefaultLayout from "./components/ui/layouts/defaultLayout/DefaultLayout.tsx";
+import CategoriesPage from "./pages/categories/page.tsx";
+import HomePage from "./pages/page.tsx";
+import AddCategoryPage from "./pages/categories/add/page.tsx";
+import EditCategoryPage from "./pages/categories/edit/[id]/page.tsx";
+import ProductsPage from "./pages/products/page.tsx";
+import EditProductPage from "./pages/products/edit/[id]/page.tsx";
+import AddProductPage from "./pages/products/add/page.tsx";
+import BrandsPage from "./pages/brands/page.tsx";
+import EditBrandPage from "./pages/brands/edit/[id]/page.tsx";
+import AddBrandPage from "./pages/brands/add/page.tsx";
+import CustomersPage from "./pages/customers/page.tsx";
+import EditCustomersPage from "./pages/customers/edit/[id]/page.tsx";
+import AddCustomersPage from "./pages/customers/add/page.tsx";
+import CompanyPage from "./pages/companies/page.tsx";
+import EditCompanyPage from "./pages/companies/edit/[id]/page.tsx";
+import AddCompanyPage from "./pages/companies/add/page.tsx";
+import OrdersPage from "./pages/orders/page.tsx";
+import ProductFiltersPage from "./pages/productFilters/page.tsx";
+import AddProductFilterPage from "./pages/productFilters/add/page.tsx";
+import EditProductFilterPage from "./pages/productFilters/edit/[id]/page.tsx";
+import { UserContextProvider } from "./components/contexts/userContext/UserContextProvider.tsx";
+import LoginPage from "./pages/login/page.tsx";
+import UsersPage from "./pages/users/page.tsx";
+import AddUserPage from "./pages/users/add/page.tsx";
+import EditUserPage from "./pages/users/edit/[id]/page.tsx";
+import NotFoundPage from "./pages/not-found/page.tsx";
+import OrderPage from "./pages/orders/[id]/page.tsx";
+
+function App() {
+  const router = createBrowserRouter([
+    {
+      path: "/admin/login",
+      element: <LoginPage />,
+    },
+    {
+      path: "/admin",
+      element: (
+        <UserContextProvider>
+          <DefaultLayout />
+        </UserContextProvider>
+      ),
+      children: [
+        {
+          index: true,
+          element: <HomePage />,
+        },
+        {
+          path: "categories",
+          element: <CategoriesPage />,
+        },
+        {
+          path: "categories/add",
+          element: <AddCategoryPage />,
+        },
+        {
+          path: "categories/edit/:id",
+          element: <EditCategoryPage />,
+        },
+        {
+          path: "customers",
+          element: <CustomersPage />,
+        },
+        {
+          path: "customers/add",
+          element: <AddCustomersPage />,
+        },
+        {
+          path: "customers/edit/:id",
+          element: <EditCustomersPage />,
+        },
+        {
+          path: "companies",
+          element: <CompanyPage />,
+        },
+        {
+          path: "companies/add",
+          element: <AddCompanyPage />,
+        },
+        {
+          path: "companies/edit/:id",
+          element: <EditCompanyPage />,
+        },
+        {
+          path: "products",
+          element: <ProductsPage />,
+        },
+        {
+          path: "products/add",
+          element: <AddProductPage />,
+        },
+        {
+          path: "products/edit/:id",
+          element: <EditProductPage />,
+        },
+        {
+          path: "product-filters",
+          element: <ProductFiltersPage />,
+        },
+        {
+          path: "product-filter/add",
+          element: <AddProductFilterPage />,
+        },
+        {
+          path: "product-filter/edit/:id",
+          element: <EditProductFilterPage />,
+        },
+        {
+          path: "brands",
+          element: <BrandsPage />,
+        },
+        {
+          path: "brands/add",
+          element: <AddBrandPage />,
+        },
+        {
+          path: "brands/edit/:id",
+          element: <EditBrandPage />,
+        },
+        {
+          path: "Orders",
+          element: <OrdersPage />,
+        },
+        {
+          path: "orders/:id",
+          element: <OrderPage />,
+        },
+        {
+          path: "users",
+          element: <UsersPage />,
+        },
+        {
+          path: "users/add",
+          element: <AddUserPage />,
+        },
+        {
+          path: "users/edit/:id",
+          element: <EditUserPage />,
+        },
+      ],
+    },
+    {
+      path: "*",
+      element: <NotFoundPage />,
+    },
+  ]);
+
+  return <RouterProvider router={router} />;
+}
+
+export default App;

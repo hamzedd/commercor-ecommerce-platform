@@ -1,0 +1,41 @@
+import { ValidationPipe } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
+import { PORT } from '@/src/utils/environmentConstants';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { updateGlobalConfig } from 'nestjs-paginate';
+
+async function bootstrap() {
+  updateGlobalConfig({
+    defaultOrigin: undefined,
+    defaultLimit: 20,
+    defaultMaxLimit: 100,
+  });
+
+  const app = await NestFactory.create(AppModule);
+  app.setGlobalPrefix('api');
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
+  const config = new DocumentBuilder()
+    .setTitle('Commercor Customer API')
+    .setDescription('Commercor API documentation for Customer Project')
+    .setVersion('0.1')
+    .addBearerAuth({
+      type: 'http',
+      scheme: 'bearer',
+      bearerFormat: 'JWT',
+      in: 'header',
+      description: 'Enter your bearer token',
+    })
+    .build();
+  const documentFactory = () => SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api/swagger', app, documentFactory);
+  app.enableCors();
+  await app.listen(PORT);
+}
+bootstrap();

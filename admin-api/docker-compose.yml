@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_PASSWORD: commercorPostgres123
+      POSTGRES_USER: commercorUser
+      POSTGRES_DB: commercorDB
+  minio:
+    image: minio/minio:latest
+    restart: always
+    ports:
+      - "${MINIO_PORT}:9000"              # API -> http://localhost:9000
+      - "${MINIO_CONSOLE_PORT}:9001"      # Console -> http://localhost:8000
+    environment:
+      MINIO_ROOT_USER: ${MINIO_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD}
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio-data:/data
+
+volumes:
+  minio-data:
