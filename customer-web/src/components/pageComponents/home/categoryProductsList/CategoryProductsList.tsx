@@ -15,32 +15,50 @@ async function CategoryProductsList({ category, lang }: Props) {
 
   const categoryTranslation =
     category.translations.find(
-      (t) => t.lang.toString().toLowerCase() === lang.toLowerCase(),
+      (item) => item.lang.toLowerCase() === lang.toLowerCase(),
     ) || category.translations[0];
+
   const products = await fetchProducts({
     filter: {
       categoryId: [category.id],
     },
   });
 
+  if (!products?.data?.length) {
+    return null;
+  }
+
   return (
-    <div className={"my-container flex flex-col gap-4 md:gap-5"}>
-      <div className="flex items-center justify-between">
-        <h1 className={"text-lg font-bold md:text-2xl"}>
-          {categoryTranslation?.name} {t("productsList")}
-        </h1>
+    <section className="my-container flex flex-col gap-6">
+      <div className="flex items-end justify-between gap-4">
+        <div>
+          <p className="text-sm font-semibold uppercase tracking-wider text-gray-500">
+            Featured collection
+          </p>
+
+          <h2 className="mt-1 text-2xl font-bold md:text-3xl">
+            {categoryTranslation?.name}
+          </h2>
+        </div>
+
         <Link
-          className={"text-sm font-bold hover:underline md:text-lg"}
+          className="group flex items-center gap-2 text-sm font-semibold transition hover:text-gray-600 md:text-base"
           href={{
-            pathname: `/categories/[slug]`,
-            params: { slug: categoryTranslation?.slug },
+            pathname: "/categories/[slug]",
+            params: {
+              slug: categoryTranslation?.slug,
+            },
           }}
         >
           {t("viewAll")}
+          <span className="transition-transform group-hover:translate-x-1">
+            →
+          </span>
         </Link>
       </div>
-      <CategoryProductsSlider products={products?.data} lang={lang} />
-    </div>
+
+      <CategoryProductsSlider products={products.data} lang={lang} />
+    </section>
   );
 }
 

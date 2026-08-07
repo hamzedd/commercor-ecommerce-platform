@@ -7,6 +7,7 @@ import { useCurrentUserQuery } from "@/src/service/react-query/user/query/useCur
 import { ShoppingCartOutlined, ThunderboltOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { notifyCartUpdated } from "@/src/utils/cart/cartStorage";
 
 interface Props {
   product: ProductType;
@@ -41,6 +42,7 @@ function ProductPurchaseBox({ product }: Props) {
       });
     }
     localStorage.setItem("cart", JSON.stringify(cart));
+    notifyCartUpdated();
   };
 
   const handlePurchase = () => {

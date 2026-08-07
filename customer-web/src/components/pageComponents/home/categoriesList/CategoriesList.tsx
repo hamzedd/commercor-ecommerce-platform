@@ -2,6 +2,7 @@ import { CategoryType } from "@/src/utils/types/category.type";
 import { LocaleType } from "@/src/i18n/config";
 import { Link } from "@/src/i18n/navigation";
 import { useTranslations } from "next-intl";
+import getImageSrcByBucketAndFileNames from "@/src/utils/functions/getImageSrcByBucketAndFileNames";
 
 interface Props {
   categories: CategoryType[];
@@ -12,38 +13,73 @@ function CategoriesList({ categories, lang }: Props) {
   const t = useTranslations();
 
   return (
-    <div className="my-container flex flex-col gap-4 md:gap-5">
-      <p className={"text-lg font-bold md:text-xl"}>{t("categories")}</p>
-      <div
-        className={
-          "grid w-full grid-cols-3 gap-2 sm:grid-cols-5 md:grid-cols-7 md:gap-4 lg:grid-cols-10"
-        }
-      >
+    <div className="my-container flex flex-col gap-6">
+      <div>
+        <p className="text-2xl font-bold md:text-3xl">
+          {t("categories")}
+        </p>
+
+        <p className="mt-1 text-sm text-gray-500 md:text-base">
+          Browse products by category
+        </p>
+      </div>
+
+      <div className="grid w-full grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
         {categories.map((category) => {
-          let translation = category?.translations?.find(
-            (t) => t.lang.toLowerCase() === lang.toLowerCase(),
-          );
-          if (!translation) {
-            translation = category?.translations?.[0];
-          }
+          const translation =
+            category.translations?.find(
+              (item) =>
+                item.lang.toLowerCase() === lang.toLowerCase(),
+            ) || category.translations?.[0];
+
+          const imageSrc = category.image
+            ? getImageSrcByBucketAndFileNames({
+                bucketName: "categories",
+                fileName: category.image,
+              })
+            : null;
 
           return (
             <Link
               href={{
-                pathname: `/categories/[slug]`,
-                params: { slug: translation?.slug },
+                pathname: "/categories/[slug]",
+                params: {
+                  slug: translation?.slug,
+                },
               }}
-              type={"button"}
               key={category.id}
-              className={
-                "flex aspect-[1/1] flex-col items-center justify-center rounded-lg bg-gray-300 p-2 transition-colors hover:bg-gray-400 md:p-4"
-              }
+              className="group relative aspect-[4/3] overflow-hidden rounded-2xl bg-gray-200 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg"
             >
-              <span
-                className={"w-full truncate text-center text-xs sm:text-sm"}
-              >
-                {translation?.name}
-              </span>
+              {imageSrc ? (
+                <img
+                  src={imageSrc}
+                  alt={translation?.name || "Category"}
+                  className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-110"
+                />
+              ) : (
+                <div className="absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-400" />
+              )}
+
+              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
+
+              <div className="absolute inset-x-0 bottom-0 p-4">
+                <p className="text-lg font-bold text-white md:text-xl">
+                  {translation?.name}
+                </p>
+
+                {translation?.description && (
+                  <p className="mt-1 line-clamp-2 text-xs text-gray-200">
+                    {translation.description}
+                  </p>
+                )}
+
+                <span className="mt-3 inline-flex items-center text-sm font-semibold text-white">
+                  Shop now
+                  <span className="ml-1 transition-transform group-hover:translate-x-1">
+                    →
+                  </span>
+                </span>
+              </div>
             </Link>
           );
         })}

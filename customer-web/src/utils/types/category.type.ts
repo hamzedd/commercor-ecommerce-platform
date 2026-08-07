@@ -13,5 +13,6 @@ export type CategoryType = {
   id: string;
   created_at: string;
   parentId?: CategoryType["id"];
-  translations: Array<CategoryTranslationType>;
+  image?: string;
+  translations: CategoryTranslationType[];
 };

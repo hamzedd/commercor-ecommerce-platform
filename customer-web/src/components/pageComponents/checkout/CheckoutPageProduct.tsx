@@ -8,6 +8,7 @@ import { CreateOrderItemType } from "@/src/utils/types/order.type";
 import { DeleteOutlined, MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import { Dispatch, SetStateAction, useEffect } from "react";
 import { useTranslations } from "next-intl";
+import { notifyCartUpdated } from "@/src/utils/cart/cartStorage";
 
 interface Props {
   productId: ProductType["id"];
@@ -31,6 +32,7 @@ function CheckoutPageProduct({
 
   const updateCart = (updatedCart: CreateOrderItemType[]) => {
     localStorage.setItem("cart", JSON.stringify(updatedCart));
+    notifyCartUpdated();
     if (onCartUpdate) {
       onCartUpdate();
     }

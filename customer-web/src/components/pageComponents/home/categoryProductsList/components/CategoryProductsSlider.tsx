@@ -9,6 +9,7 @@ interface Props {
   products: ProductType[];
   lang: LocaleType;
 }
+
 function CategoryProductsSlider({ products, lang }: Props) {
   const [emblaRef] = useEmblaCarousel({
     align: "start",
@@ -17,22 +18,20 @@ function CategoryProductsSlider({ products, lang }: Props) {
   });
 
   return (
-    <div className="overflow-hidden">
-      <div className="-mx-2 px-2" ref={emblaRef}>
-        <div className="flex gap-3 md:gap-4">
-          {products.map((product) => (
-            <div
-              key={product.id}
-              className="min-w-0 flex-[0_0_75%] sm:flex-[0_0_50%] md:flex-[0_0_33.333%] lg:flex-[0_0_25%]"
-            >
-              <ProductCard
-                className={"h-full w-full"}
-                product={product}
-                lang={lang}
-              />
-            </div>
-          ))}
-        </div>
+    <div ref={emblaRef} className="overflow-hidden">
+      <div className="-ml-4 flex">
+        {products.map((product) => (
+          <div
+            key={product.id}
+            className="min-w-0 flex-[0_0_82%] pl-4 sm:flex-[0_0_48%] md:flex-[0_0_32%] lg:flex-[0_0_24%] xl:flex-[0_0_20%]"
+          >
+            <ProductCard
+              className="h-full w-full"
+              product={product}
+              lang={lang}
+            />
+          </div>
+        ))}
       </div>
     </div>
   );
