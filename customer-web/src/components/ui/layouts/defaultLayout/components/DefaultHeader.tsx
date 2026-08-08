@@ -58,7 +58,7 @@ function DefaultHeader({ logo }: Props) {
   };
 
   const cartBadge = cartCount > 0 && (
-    <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-black px-1 text-[10px] font-bold text-white">
+    <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-black px-1 text-[10px] font-bold text-white">
       {cartCount > 99 ? "99+" : cartCount}
     </span>
   );
@@ -66,11 +66,11 @@ function DefaultHeader({ logo }: Props) {
   return (
     <>
       <header className="sticky top-0 z-40 w-full border-b border-gray-100 bg-white shadow-sm">
-        <div className="my-container flex flex-col gap-4 py-3 md:flex-row md:items-center md:justify-between">
+        <div className="my-container flex flex-row flex-wrap items-center justify-between gap-2 py-2 md:flex-nowrap md:gap-4 md:py-3">
           {/* Brand */}
           <Link
             href="/"
-            className="flex shrink-0 items-center gap-3 transition-opacity hover:opacity-80"
+            className="flex min-w-0 shrink items-center gap-2 transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:outline-none md:shrink-0 md:gap-3"
           >
             {logo?.image ? (
               <Image
@@ -79,14 +79,14 @@ function DefaultHeader({ logo }: Props) {
                   fileName: logo.image,
                 })}
                 alt={logo.value || "Store logo"}
-                className="h-11 w-auto object-contain"
+                className="h-9 max-w-32 object-contain md:h-11 md:max-w-none"
                 width={140}
                 height={44}
                 priority
               />
             ) : (
               <div className="flex items-center gap-2">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-black text-lg font-bold text-white">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-black text-base font-bold text-white md:h-10 md:w-10 md:text-lg">
                   C
                 </div>
 
@@ -95,7 +95,7 @@ function DefaultHeader({ logo }: Props) {
                     {logo?.value || "Commercor"}
                   </p>
 
-                  <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-gray-400">
+                  <p className="text-[10px] font-medium tracking-[0.2em] text-gray-400 uppercase">
                     Online Store
                   </p>
                 </div>
@@ -104,17 +104,17 @@ function DefaultHeader({ logo }: Props) {
           </Link>
 
           {/* Search */}
-          <div className="w-full md:max-w-[600px] md:flex-1 lg:max-w-[800px]">
+          <div className="order-3 w-full md:order-none md:max-w-[600px] md:flex-1 lg:max-w-[800px]">
             <DefaultHeaderSearch />
           </div>
 
           {/* Actions */}
-          <div className="flex items-center justify-end gap-3 md:gap-4">
+          <div className="flex shrink-0 items-center justify-end gap-2 md:gap-4">
             {/* Cart */}
             {userData?.id ? (
               <Link
                 href="/checkout"
-                className="group relative flex h-10 w-10 items-center justify-center rounded-full border-2 border-gray-200 bg-white transition-all hover:border-black hover:bg-black md:h-11 md:w-11"
+                className="group relative flex h-11 w-11 items-center justify-center rounded-full border-2 border-gray-200 bg-white transition-all hover:border-black hover:bg-black focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:outline-none"
                 aria-label={t("cart")}
               >
                 <ShoppingCartOutlined className="text-base text-gray-700 transition-colors group-hover:text-white md:text-lg" />
@@ -124,7 +124,7 @@ function DefaultHeader({ logo }: Props) {
               <button
                 type="button"
                 onClick={() => toggleLogin()}
-                className="group relative flex h-10 w-10 items-center justify-center rounded-full border-2 border-gray-200 bg-white transition-all hover:border-black hover:bg-black md:h-11 md:w-11"
+                className="group relative flex h-11 w-11 items-center justify-center rounded-full border-2 border-gray-200 bg-white transition-all hover:border-black hover:bg-black focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:outline-none"
                 aria-label={t("cart")}
               >
                 <ShoppingCartOutlined className="text-base text-gray-700 transition-colors group-hover:text-white md:text-lg" />
@@ -136,11 +136,11 @@ function DefaultHeader({ logo }: Props) {
             {userData?.id ? (
               <Link
                 href="/profile"
-                className="group flex items-center gap-2 rounded-full border-2 border-gray-200 bg-white px-3 py-2 transition-all hover:border-black hover:bg-black md:px-4"
+                className="group flex h-11 w-11 items-center justify-center gap-2 rounded-full border-2 border-gray-200 bg-white transition-all hover:border-black hover:bg-black focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:outline-none md:w-auto md:px-4"
               >
                 <UserOutlined className="text-base text-gray-700 transition-colors group-hover:text-white md:text-lg" />
 
-                <span className="text-sm font-medium text-gray-700 transition-colors group-hover:text-white">
+                <span className="hidden text-sm font-medium text-gray-700 transition-colors group-hover:text-white md:inline">
                   {userData.firstName}
                 </span>
               </Link>
@@ -148,11 +148,12 @@ function DefaultHeader({ logo }: Props) {
               <button
                 type="button"
                 onClick={() => toggleLogin()}
-                className="group flex items-center gap-2 rounded-full border-2 border-gray-200 bg-white px-3 py-2 transition-all hover:border-black hover:bg-black md:px-4"
+                className="group flex h-11 w-11 items-center justify-center gap-2 rounded-full border-2 border-gray-200 bg-white transition-all hover:border-black hover:bg-black focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:outline-none md:w-auto md:px-4"
+                aria-label={t("login")}
               >
                 <UserOutlined className="text-base text-gray-700 transition-colors group-hover:text-white md:text-lg" />
 
-                <span className="text-sm font-medium text-gray-700 transition-colors group-hover:text-white">
+                <span className="hidden text-sm font-medium text-gray-700 transition-colors group-hover:text-white md:inline">
                   {t("login")}
                 </span>
               </button>

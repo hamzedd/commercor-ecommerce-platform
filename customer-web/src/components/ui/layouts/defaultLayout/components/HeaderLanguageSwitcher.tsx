@@ -66,7 +66,9 @@ export default function HeaderLanguageSwitcher() {
       {/* Mobile Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-2.5 py-1.5 text-sm font-medium text-gray-700 transition-all hover:border-gray-400 hover:bg-gray-50 md:hidden"
+        aria-expanded={isOpen}
+        aria-label={currentLanguage?.name}
+        className="flex h-11 min-w-11 items-center justify-center gap-1.5 rounded-lg border border-gray-300 bg-white px-2.5 text-sm font-medium text-gray-700 transition-all hover:border-gray-400 hover:bg-gray-50 focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:outline-none md:hidden"
       >
         <GlobalOutlined className="text-sm" />
         <span>{currentLanguage?.flag}</span>

@@ -3,8 +3,13 @@ import { currentUserService } from "@/src/service/apiServices/auth.service";
 import { CustomerProfileType } from "@/src/utils/types/customer.type";
 
 export const useCurrentUserQuery = () => {
+  const hasAccessToken =
+    typeof window !== "undefined" &&
+    Boolean(window.localStorage.getItem("accessToken"));
+
   return useQuery<CustomerProfileType, Error>({
     queryKey: ["user", "current"],
+    enabled: hasAccessToken,
     queryFn: async () => {
       const res = await currentUserService();
       if (res?.id) {
