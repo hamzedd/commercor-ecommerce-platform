@@ -1,17 +1,19 @@
 "use client";
 
-import { CreateOrderItemType } from "@/src/utils/types/order.type";
-import { createOrderService } from "@/src/service/apiServices/order.service";
-import CheckoutAddressList from "@/src/components/pageComponents/checkout/CheckoutAddressList";
-import { useState } from "react";
-import { AddressType } from "@/src/utils/types/address.type";
-import { useRouter } from "@/src/i18n/navigation";
+import { LockOutlined, SafetyCertificateOutlined } from "@ant-design/icons";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
+
+import CheckoutAddressList from "@/src/components/pageComponents/checkout/CheckoutAddressList";
+import { useRouter } from "@/src/i18n/navigation";
+import { createOrderService } from "@/src/service/apiServices/order.service";
+import { AddressType } from "@/src/utils/types/address.type";
+import { CreateOrderItemType } from "@/src/utils/types/order.type";
 
 interface Props {
   cart: CreateOrderItemType[];
   lang: string;
-  productPrices: { [p: string]: string | undefined };
+  productPrices: Record<string, string | undefined>;
 }
 
 function CheckoutOrderSummary({ cart, productPrices }: Props) {
@@ -24,82 +26,68 @@ function CheckoutOrderSummary({ cart, productPrices }: Props) {
       items: cart,
       addressId: selectedAddress,
     });
+    // The payment provider returns a runtime URL outside the localized route map.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     router.push(paymentUrl as any);
   };
 
-  const calculateTotalPrice = () => {
-    let total = 0;
-
-    cart.forEach((item) => {
-      const price = productPrices?.[item.productId];
-      if (price) {
-        total += +price * item.quantity;
-      }
-    });
-
-    return total;
-  };
-
-  const totalPrice = calculateTotalPrice();
+  const totalPrice = cart.reduce((total, item) => {
+    const price = productPrices[item.productId];
+    return price ? total + +price * item.quantity : total;
+  }, 0);
 
   return (
-    <div className="sticky top-5 flex h-fit flex-col gap-4 rounded-lg border bg-white p-6 shadow-sm">
-      <h2 className="mb-4 text-xl font-bold">{t("orderSummary")}</h2>
+    <aside className="rounded-2xl border border-stone-200 bg-white p-5 shadow-sm sm:p-6 lg:sticky lg:top-28">
+      <p className="text-xs font-bold tracking-[0.16em] text-amber-700 uppercase">
+        {t("secureCheckout")}
+      </p>
+      <h2 className="mt-2 text-2xl font-bold tracking-tight text-stone-950">
+        {t("orderSummary")}
+      </h2>
 
-      {/* Total */}
-      <div className="flex justify-between text-lg font-bold">
-        <span>{t("total")}</span>
-        {Number.isInteger(totalPrice) && <span>${calculateTotalPrice()}</span>}
+      <dl className="mt-6 border-y border-stone-200 py-4">
+        <div className="flex items-center justify-between gap-4">
+          <dt className="text-sm text-stone-600">{t("subtotal")}</dt>
+          <dd className="text-base font-semibold text-stone-950">
+            ${totalPrice.toFixed(2)}
+          </dd>
+        </div>
+        <div className="mt-3 flex items-center justify-between gap-4 border-t border-stone-100 pt-3">
+          <dt className="font-bold text-stone-950">{t("total")}</dt>
+          <dd className="text-2xl font-bold tracking-tight text-stone-950">
+            ${totalPrice.toFixed(2)}
+          </dd>
+        </div>
+      </dl>
+
+      <div className="mt-6">
+        <CheckoutAddressList
+          onAddressSelect={setSelectedAddress}
+          selectedAddressId={selectedAddress}
+        />
       </div>
-      <CheckoutAddressList
-        onAddressSelect={setSelectedAddress}
-        selectedAddressId={selectedAddress}
-      />
-      {/* Checkout Button */}
+
       <button
+        type="button"
         onClick={handleCheckout}
         disabled={cart.length === 0 && !selectedAddress}
-        className="w-full rounded-lg bg-black px-4 py-3 font-semibold text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:bg-gray-300"
+        className="mt-6 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-stone-950 px-5 text-sm font-bold text-white transition-colors duration-200 hover:bg-amber-600 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-stone-300 disabled:text-stone-500"
       >
+        <LockOutlined aria-hidden />
         {t("proceedToCheckout")}
       </button>
 
-      {/* Additional Info */}
-      <div className="mt-4 space-y-2 text-xs text-gray-500">
+      <div className="mt-4 grid gap-2 text-xs font-medium text-stone-500 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
         <p className="flex items-center gap-2">
-          <svg
-            className="h-4 w-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-            />
-          </svg>
+          <SafetyCertificateOutlined className="text-amber-700" aria-hidden />
           {t("secureCheckout")}
         </p>
         <p className="flex items-center gap-2">
-          <svg
-            className="h-4 w-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"
-            />
-          </svg>
+          <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-amber-600" />
           {t("freeReturns")}
         </p>
       </div>
-    </div>
+    </aside>
   );
 }
 

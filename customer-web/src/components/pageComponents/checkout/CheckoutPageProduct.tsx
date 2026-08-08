@@ -1,14 +1,16 @@
 "use client";
 
-import { ProductType } from "@/src/utils/types/product.type";
-import { useProductQuery } from "@/src/service/react-query/product/query/useProductQuery";
+import { DeleteOutlined, MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
+import { Dispatch, SetStateAction, useEffect } from "react";
+
+import { Link } from "@/src/i18n/navigation";
+import { useProductQuery } from "@/src/service/react-query/product/query/useProductQuery";
+import { notifyCartUpdated } from "@/src/utils/cart/cartStorage";
 import getImageSrcByBucketAndFileNames from "@/src/utils/functions/getImageSrcByBucketAndFileNames";
 import { CreateOrderItemType } from "@/src/utils/types/order.type";
-import { DeleteOutlined, MinusOutlined, PlusOutlined } from "@ant-design/icons";
-import { Dispatch, SetStateAction, useEffect } from "react";
-import { useTranslations } from "next-intl";
-import { notifyCartUpdated } from "@/src/utils/cart/cartStorage";
+import { ProductType } from "@/src/utils/types/product.type";
 
 interface Props {
   productId: ProductType["id"];
@@ -16,7 +18,7 @@ interface Props {
   lang: string;
   onCartUpdate?: () => void;
   setProductPrices: Dispatch<
-    SetStateAction<{ [p: string]: string | undefined }>
+    SetStateAction<Record<string, string | undefined>>
   >;
 }
 
@@ -33,35 +35,23 @@ function CheckoutPageProduct({
   const updateCart = (updatedCart: CreateOrderItemType[]) => {
     localStorage.setItem("cart", JSON.stringify(updatedCart));
     notifyCartUpdated();
-    if (onCartUpdate) {
-      onCartUpdate();
-    }
+    if (onCartUpdate) onCartUpdate();
   };
 
   useEffect(() => {
     if (data?.price) {
-      setProductPrices((prev) => ({
-        ...prev,
-        [data.id]: data.price,
-      }));
+      setProductPrices((previous) => ({ ...previous, [data.id]: data.price }));
     }
-  }, [data?.id]);
+  }, [data?.id, data?.price, setProductPrices]);
 
   const handleQuantityChange = (newQuantity: number) => {
     const cart: CreateOrderItemType[] = JSON.parse(
       localStorage.getItem("cart") || "[]",
     );
-
     const itemIndex = cart.findIndex((item) => item.productId === productId);
-
     if (itemIndex >= 0) {
-      if (newQuantity <= 0) {
-        // Remove item if quantity is 0 or less
-        cart.splice(itemIndex, 1);
-      } else {
-        // Update quantity
-        cart[itemIndex].quantity = newQuantity;
-      }
+      if (newQuantity <= 0) cart.splice(itemIndex, 1);
+      else cart[itemIndex].quantity = newQuantity;
       updateCart(cart);
     }
   };
@@ -70,26 +60,20 @@ function CheckoutPageProduct({
     const cart: CreateOrderItemType[] = JSON.parse(
       localStorage.getItem("cart") || "[]",
     );
-
-    const updatedCart = cart.filter((item) => item.productId !== productId);
-    updateCart(updatedCart);
-  };
-
-  const handleIncrement = () => {
-    handleQuantityChange(quantity + 1);
-  };
-
-  const handleDecrement = () => {
-    handleQuantityChange(quantity - 1);
+    updateCart(cart.filter((item) => item.productId !== productId));
   };
 
   if (isLoading) {
     return (
-      <div className="flex animate-pulse items-center gap-4 rounded-lg border p-4">
-        <div className="h-20 w-20 rounded bg-gray-200"></div>
-        <div className="flex-1 space-y-2">
-          <div className="h-4 w-3/4 rounded bg-gray-200"></div>
-          <div className="h-3 w-1/2 rounded bg-gray-200"></div>
+      <div
+        aria-busy="true"
+        className="flex animate-pulse gap-4 rounded-2xl border border-stone-200 bg-white p-4 motion-reduce:animate-none"
+      >
+        <div className="h-24 w-24 shrink-0 rounded-xl bg-stone-200 sm:h-32 sm:w-32" />
+        <div className="flex-1 space-y-3 py-1">
+          <div className="h-5 w-3/4 rounded bg-stone-200" />
+          <div className="h-4 w-1/2 rounded bg-stone-100" />
+          <div className="h-10 w-36 rounded bg-stone-200" />
         </div>
       </div>
     );
@@ -97,28 +81,34 @@ function CheckoutPageProduct({
 
   if (error || !data) {
     return (
-      <div className="rounded-lg border border-red-200 bg-red-50 p-4">
-        <p className="text-red-600">{t("failedToLoadProduct")}</p>
+      <div
+        role="alert"
+        className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm font-medium text-red-700"
+      >
+        {t("failedToLoadProduct")}
       </div>
     );
   }
 
-  // Get the translation for the current language or fallback to first available
   const translation =
     data.translations.find(
-      (t) => t.lang.toLowerCase() === lang.toLowerCase(),
+      (item) => item.lang.toLowerCase() === lang.toLowerCase(),
     ) || data.translations[0];
-
   const primaryImage = data.images?.[0];
-  const price = parseFloat(data.price || "0");
+  const price = Number.parseFloat(data.price || "0");
   const totalPrice = price * quantity;
 
   return (
-    <div className="flex flex-col gap-4 rounded-lg border bg-white p-4 sm:flex-row sm:items-center">
-      <div className="flex gap-4">
-        {/* Product Image */}
-        {primaryImage ? (
-          <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded bg-gray-100">
+    <article className="rounded-2xl border border-stone-200 bg-white p-3 shadow-sm sm:p-4">
+      <div className="flex min-w-0 gap-3 sm:gap-4">
+        <Link
+          href={{
+            pathname: "/products/[slug]",
+            params: { slug: translation.slug },
+          }}
+          className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-stone-100 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:outline-none sm:h-32 sm:w-32"
+        >
+          {primaryImage ? (
             <Image
               src={getImageSrcByBucketAndFileNames({
                 bucketName: "products",
@@ -126,103 +116,83 @@ function CheckoutPageProduct({
               })}
               alt={translation?.name || t("product")}
               fill
-              className="object-cover"
+              sizes="(max-width: 640px) 96px, 128px"
+              className="object-contain p-2"
             />
-          </div>
-        ) : (
-          <div className="flex h-20 w-20 flex-shrink-0 items-center justify-center rounded bg-gray-200">
-            <span className="text-xs text-gray-400">{t("noImage")}</span>
-          </div>
-        )}
+          ) : (
+            <span className="flex h-full items-center justify-center px-2 text-center text-xs text-stone-500">
+              {t("noImage")}
+            </span>
+          )}
+        </Link>
 
-        {/* Product Info - Mobile */}
-        <div className="flex min-w-0 flex-1 flex-col justify-between sm:hidden">
-          <div>
-            <h3 className="truncate font-medium text-gray-900">
-              {translation?.name}
-            </h3>
-            {translation?.description && (
-              <p className="mt-1 line-clamp-1 text-sm text-gray-500">
-                {translation.description}
+        <div className="flex min-w-0 flex-1 flex-col">
+          <div className="flex items-start justify-between gap-2">
+            <div className="min-w-0">
+              <Link
+                href={{
+                  pathname: "/products/[slug]",
+                  params: { slug: translation.slug },
+                }}
+                className="line-clamp-2 text-sm leading-5 font-bold text-stone-950 transition-colors hover:text-amber-700 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none sm:text-base"
+              >
+                {translation?.name}
+              </Link>
+              <p className="mt-1 text-xs text-stone-500 sm:text-sm">
+                ${price.toFixed(2)} {t("each")}
               </p>
-            )}
-          </div>
-          <div className="flex items-center justify-between">
-            <p className="font-semibold text-gray-900">
-              ${totalPrice?.toFixed(2)}
+              {data.stock !== undefined && (
+                <p className="mt-1 text-xs text-stone-500">
+                  {data.stock} {t("inStock")}
+                </p>
+              )}
+            </div>
+            <p className="shrink-0 text-base font-bold text-stone-950 sm:text-lg">
+              ${totalPrice.toFixed(2)}
             </p>
-            {quantity > 1 && (
-              <p className="text-sm text-gray-500">
-                ${price?.toFixed(2)} {t("each")}
-              </p>
-            )}
+          </div>
+
+          <div className="mt-auto flex flex-wrap items-end justify-between gap-2 pt-3">
+            <div>
+              <span className="mb-1 block text-xs font-medium text-stone-500">
+                {t("quantity")}
+              </span>
+              <div className="flex w-fit items-center overflow-hidden rounded-xl border border-stone-300">
+                <button
+                  type="button"
+                  aria-label={t("decreaseQuantity")}
+                  disabled={quantity <= 1}
+                  onClick={() => handleQuantityChange(quantity - 1)}
+                  className="flex h-11 w-11 items-center justify-center transition-colors hover:bg-stone-100 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none focus-visible:ring-inset disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  <MinusOutlined aria-hidden />
+                </button>
+                <output className="flex h-11 min-w-10 items-center justify-center border-x border-stone-300 px-2 text-sm font-bold">
+                  {quantity}
+                </output>
+                <button
+                  type="button"
+                  aria-label={t("increaseQuantity")}
+                  disabled={data.stock !== undefined && quantity >= data.stock}
+                  onClick={() => handleQuantityChange(quantity + 1)}
+                  className="flex h-11 w-11 items-center justify-center transition-colors hover:bg-stone-100 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none focus-visible:ring-inset disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  <PlusOutlined aria-hidden />
+                </button>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={handleRemove}
+              className="flex min-h-11 items-center gap-2 rounded-xl px-3 text-sm font-semibold text-red-700 transition-colors hover:bg-red-50 focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:outline-none"
+            >
+              <DeleteOutlined aria-hidden />
+              {t("remove")}
+            </button>
           </div>
         </div>
       </div>
-
-      {/* Product Details - Desktop */}
-      <div className="hidden min-w-0 flex-1 sm:block">
-        <h3 className="truncate font-medium text-gray-900">
-          {translation?.name}
-        </h3>
-        {translation?.description && (
-          <p className="mt-1 line-clamp-1 text-sm text-gray-500">
-            {translation.description}
-          </p>
-        )}
-      </div>
-
-      {/* Quantity Controls */}
-      <div className="flex flex-wrap items-center gap-3">
-        <div className="flex items-center gap-2 rounded-lg border border-gray-300">
-          <button
-            onClick={handleDecrement}
-            className="flex h-8 w-8 items-center justify-center rounded-l-lg hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
-            disabled={quantity <= 1}
-            type="button"
-          >
-            <MinusOutlined className="h-4 w-4" />
-          </button>
-          <span className="min-w-[2rem] text-center text-sm font-medium">
-            {quantity}
-          </span>
-          <button
-            onClick={handleIncrement}
-            className="flex h-8 w-8 items-center justify-center rounded-r-lg hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
-            disabled={data.stock !== undefined && quantity >= data.stock}
-            type="button"
-          >
-            <PlusOutlined className="h-4 w-4" />
-          </button>
-        </div>
-
-        {data.stock !== undefined && (
-          <span className="text-xs text-gray-400">
-            ({data.stock} {t("inStock")})
-          </span>
-        )}
-
-        {/* Remove Button */}
-        <button
-          onClick={handleRemove}
-          className="flex items-center gap-1 rounded px-2 py-1 text-sm text-red-600 hover:bg-red-50 sm:ml-auto"
-          type="button"
-        >
-          <DeleteOutlined className="h-4 w-4" />
-          <span>{t("remove")}</span>
-        </button>
-      </div>
-
-      {/* Price - Desktop */}
-      <div className="hidden flex-shrink-0 text-right sm:block">
-        <p className="font-semibold text-gray-900">${totalPrice?.toFixed(2)}</p>
-        {quantity > 1 && (
-          <p className="text-sm text-gray-500">
-            ${price?.toFixed(2)} {t("each")}
-          </p>
-        )}
-      </div>
-    </div>
+    </article>
   );
 }
 
