@@ -1,55 +1,52 @@
 "use client";
-import { CategoryType } from "@/src/utils/types/category.type";
+
+import { useTranslations } from "next-intl";
+import ProductCard from "@/src/components/ui/cards/productCard/ProductCard";
+import { LocaleType } from "@/src/i18n/config";
 import { PaginatedResponseType } from "@/src/utils/types/api.type";
 import { ProductType } from "@/src/utils/types/product.type";
-import ProductCard from "@/src/components/ui/cards/productCard/ProductCard";
-import { useTranslations } from "next-intl";
-import { LocaleType } from "@/src/i18n/config";
 
 interface Props {
-  category: CategoryType;
   products: PaginatedResponseType<ProductType>;
   isLoading: boolean;
   locale: LocaleType;
 }
 
-function CategoryPageProductsList({
-  category,
-  products,
-  isLoading,
-  locale,
-}: Props) {
+function CategoryPageProductsList({ products, isLoading, locale }: Props) {
   const t = useTranslations();
 
   if (isLoading) {
     return (
       <div
-        className={
-          "grid grow grid-cols-2 gap-3 sm:grid-cols-2 md:grid-cols-3 md:gap-4 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
-        }
+        aria-label={t("loadingProducts")}
+        aria-busy="true"
+        className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4"
       >
-        {Array.from({ length: 10 }).map((_, index) => (
+        {Array.from({ length: 8 }).map((_, index) => (
           <div
             key={index}
-            className="animate-pulse rounded-xl bg-white p-4 shadow-sm"
+            className="overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm"
           >
-            <div className="mb-3 aspect-square w-full rounded-lg bg-gray-200"></div>
-            <div className="mb-2 h-4 w-3/4 rounded bg-gray-200"></div>
-            <div className="mb-2 h-4 w-1/2 rounded bg-gray-200"></div>
-            <div className="h-6 w-1/3 rounded bg-gray-200"></div>
+            <div className="aspect-square animate-pulse bg-stone-200 motion-reduce:animate-none" />
+            <div className="space-y-3 p-4">
+              <div className="h-4 w-4/5 animate-pulse rounded bg-stone-200 motion-reduce:animate-none" />
+              <div className="h-3 w-full animate-pulse rounded bg-stone-100 motion-reduce:animate-none" />
+              <div className="h-6 w-2/5 animate-pulse rounded bg-stone-200 motion-reduce:animate-none" />
+            </div>
           </div>
         ))}
       </div>
     );
   }
 
-  if (!products?.data || products.data.length === 0) {
+  if (!products?.data?.length) {
     return (
-      <div className="flex min-h-[400px] items-center justify-center rounded-xl bg-white p-8">
-        <div className="text-center">
-          <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-gray-100">
+      <div className="flex min-h-96 items-center justify-center rounded-2xl border border-stone-200 bg-white p-8 shadow-sm">
+        <div className="max-w-sm text-center">
+          <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-amber-100 text-amber-800">
             <svg
-              className="h-10 w-10 text-gray-400"
+              aria-hidden
+              className="h-8 w-8"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -62,23 +59,27 @@ function CategoryPageProductsList({
               />
             </svg>
           </div>
-          <h3 className="mb-2 text-lg font-semibold text-gray-900">
+          <h2 className="text-xl font-bold text-stone-950">
             {t("noProductsFound")}
-          </h3>
-          <p className="text-sm text-gray-600">{t("tryAdjustingFilters")}</p>
+          </h2>
+          <p className="mt-2 text-sm leading-6 text-stone-600">
+            {t("tryAdjustingFilters")}
+          </p>
         </div>
       </div>
     );
   }
 
   return (
-    <div
-      className={
-        "grid grow grid-cols-2 gap-3 sm:grid-cols-2 md:grid-cols-3 md:gap-4 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
-      }
-    >
+    <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4">
       {products.data.map((product) => (
-        <ProductCard product={product} lang={locale} key={product.id} />
+        <ProductCard
+          className="h-full focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-4 focus-visible:outline-none"
+          product={product}
+          lang={locale}
+          titleClassName="min-h-10 leading-5 md:min-h-0 md:leading-normal"
+          key={product.id}
+        />
       ))}
     </div>
   );

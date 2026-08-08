@@ -1,126 +1,237 @@
 "use client";
+
+import { CloseOutlined, FilterOutlined } from "@ant-design/icons";
+import { useLocale, useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
+
 import CategoryPageFiltersList from "@/src/components/pageComponents/category/CategoryPageFiltersList";
 import CategoryPageProductsList from "@/src/components/pageComponents/category/CategoryPageProductsList";
-import { ProductType } from "@/src/utils/types/product.type";
+import { useProductsQuery } from "@/src/service/react-query/product/query/useProductsQuery";
 import { PaginatedResponseType } from "@/src/utils/types/api.type";
 import { CategoryType } from "@/src/utils/types/category.type";
+import { ProductType } from "@/src/utils/types/product.type";
 import { ProductFilterWithOptionsType } from "@/src/utils/types/productFilter.type";
-import { useProductsQuery } from "@/src/service/react-query/product/query/useProductsQuery";
-import { useState } from "react";
-import { FilterOutlined, CloseOutlined } from "@ant-design/icons";
-import { useLocale, useTranslations } from "next-intl";
 
 interface Props {
   products: PaginatedResponseType<ProductType>;
   category: CategoryType;
   productFilters: ProductFilterWithOptionsType[];
 }
+
 function CategoryPage({ products, category, productFilters }: Props) {
   const locale = useLocale();
   const t = useTranslations();
   const [productFilterValues, setProductFilterValues] = useState<string[]>([]);
   const [showFilters, setShowFilters] = useState(false);
-  const { data, isFetched, isFetching } = useProductsQuery({
-    page: 1,
+  const [sortBy, setSortBy] = useState("id:DESC");
+  const [page, setPage] = useState(1);
+
+  const { data, isFetching } = useProductsQuery({
+    page,
     categoryId: category.id,
     initialData: products,
     productFilterValues,
+    sortBy,
   });
+
+  useEffect(() => {
+    if (!showFilters) return;
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setShowFilters(false);
+    };
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    document.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [showFilters]);
 
   const categoryTranslated =
     category.translations.find(
       (translation) => translation?.lang.toLowerCase() === locale.toLowerCase(),
     ) || category.translations[0];
-
+  const currentProducts = data || products;
   const activeFiltersCount = productFilterValues.length;
 
+  const updateFilters = (values: string[]) => {
+    setProductFilterValues(values);
+    setPage(1);
+  };
+
   return (
-    <div className="flex w-full flex-col items-center bg-gray-50 py-4 md:py-6">
-      <div className="my-container flex flex-col gap-4 md:gap-6">
-        {/* Page Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900 md:text-3xl">
-              {categoryTranslated?.name}
-            </h1>
-            <p className="mt-1 text-sm text-gray-600 md:text-base">
-              {data ? data?.meta.totalItems : products?.meta.totalItems}{" "}
+    <main className="min-h-screen bg-stone-50 pb-16 text-stone-950">
+      <section className="border-b border-white/10 bg-stone-950 text-white">
+        <div className="my-container py-8 sm:py-10 lg:py-12">
+          <p className="text-xs font-bold tracking-[0.18em] text-amber-300 uppercase">
+            {t("categoryCollection")}
+          </p>
+          <h1 className="mt-3 text-3xl leading-tight font-bold tracking-tight sm:text-4xl lg:text-5xl">
+            {categoryTranslated?.name}
+          </h1>
+          {categoryTranslated?.description && (
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-stone-300 sm:text-base">
+              {categoryTranslated.description}
+            </p>
+          )}
+        </div>
+      </section>
+
+      <div className="my-container py-6 sm:py-8 lg:py-10">
+        <div className="mb-6 flex flex-col gap-3 rounded-2xl border border-stone-200 bg-white p-3 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:p-4">
+          <div className="flex items-center justify-between gap-3">
+            <p aria-live="polite" className="text-sm text-stone-600">
+              <span className="font-bold text-stone-950">
+                {currentProducts.meta.totalItems}
+              </span>{" "}
               {t("productsFound")}
             </p>
-          </div>
-
-          {/* Mobile Filter Toggle Button */}
-          <button
-            onClick={() => setShowFilters(!showFilters)}
-            className="relative flex items-center gap-2 rounded-lg bg-white px-4 py-2.5 text-sm font-medium shadow-sm transition-all hover:shadow-md md:hidden"
-          >
-            <FilterOutlined className="text-base" />
-            <span>{t("filters")}</span>
             {activeFiltersCount > 0 && (
-              <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-black text-xs text-white">
-                {activeFiltersCount}
+              <span className="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-bold text-amber-900 sm:hidden">
+                {t("activeFilters", { count: activeFiltersCount })}
               </span>
             )}
-          </button>
-        </div>
-
-        <div className="flex gap-6">
-          {/* Mobile Filter Drawer Overlay */}
-          {showFilters && (
-            <div
-              className="fixed inset-0 z-40 bg-black/50 md:hidden"
-              onClick={() => setShowFilters(false)}
-            />
-          )}
-
-          {/* Filters Sidebar */}
-          <div
-            className={`${
-              showFilters ? "translate-x-0" : "-translate-x-full"
-            } fixed inset-y-0 left-0 z-50 w-[280px] overflow-y-auto bg-white shadow-xl transition-transform duration-300 md:relative md:inset-auto md:z-auto md:w-[260px] md:translate-x-0 md:rounded-xl md:shadow-sm`}
-          >
-            {/* Mobile Filter Header */}
-            <div className="flex items-center justify-between border-b p-4 md:hidden">
-              <h2 className="text-lg font-semibold">{t("filters")}</h2>
-              <button
-                onClick={() => setShowFilters(false)}
-                className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-gray-100"
-              >
-                <CloseOutlined />
-              </button>
-            </div>
-
-            <CategoryPageFiltersList
-              category={category}
-              productFilters={productFilters}
-              productFilterValues={productFilterValues}
-              setProductFilterValues={setProductFilterValues}
-            />
-
-            {/* Mobile Apply Button */}
-            <div className="border-t p-4 md:hidden">
-              <button
-                onClick={() => setShowFilters(false)}
-                className="w-full rounded-lg bg-black py-3 text-sm font-medium text-white transition-colors hover:bg-gray-800"
-              >
-                {t("show")} {data?.meta.totalItems || products?.meta.totalItems}{" "}
-                {t("products")}
-              </button>
-            </div>
           </div>
 
-          {/* Products List */}
-          <div className="flex-1">
+          <div className="grid grid-cols-2 gap-2 sm:flex sm:items-center">
+            <button
+              type="button"
+              onClick={() => setShowFilters(true)}
+              aria-haspopup="dialog"
+              className="relative flex min-h-11 items-center justify-center gap-2 rounded-xl border border-stone-300 bg-white px-4 text-sm font-semibold text-stone-800 transition-colors hover:border-stone-950 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:outline-none md:hidden"
+            >
+              <FilterOutlined aria-hidden />
+              {t("filters")}
+              {activeFiltersCount > 0 && (
+                <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-stone-950 px-1 text-xs text-white">
+                  {activeFiltersCount}
+                </span>
+              )}
+            </button>
+
+            <label className="flex min-h-11 items-center gap-2 rounded-xl border border-stone-300 bg-white px-3 text-sm text-stone-600 focus-within:ring-2 focus-within:ring-amber-500 focus-within:ring-offset-2">
+              <span className="hidden sm:inline">{t("sortBy")}</span>
+              <select
+                value={sortBy}
+                aria-label={t("sortBy")}
+                onChange={(event) => {
+                  setSortBy(event.target.value);
+                  setPage(1);
+                }}
+                className="min-w-0 flex-1 cursor-pointer bg-transparent font-semibold text-stone-900 outline-none"
+              >
+                <option value="id:DESC">{t("sortNewest")}</option>
+                <option value="price:ASC">{t("sortPriceLow")}</option>
+                <option value="price:DESC">{t("sortPriceHigh")}</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <div className="flex items-start gap-6 lg:gap-8">
+          <aside className="sticky top-28 hidden w-64 shrink-0 overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm md:block lg:w-72">
+            <CategoryPageFiltersList
+              productFilters={productFilters}
+              productFilterValues={productFilterValues}
+              setProductFilterValues={updateFilters}
+            />
+          </aside>
+
+          <div className="min-w-0 flex-1">
             <CategoryPageProductsList
-              category={category}
-              products={(isFetched ? data || [] : products) as never}
+              products={currentProducts}
               isLoading={isFetching}
               locale={locale}
             />
+
+            {currentProducts.meta.totalPages > 1 && (
+              <nav
+                aria-label={t("pagination")}
+                className="mt-8 flex items-center justify-center gap-3"
+              >
+                <button
+                  type="button"
+                  disabled={page <= 1 || isFetching}
+                  onClick={() => setPage((current) => Math.max(1, current - 1))}
+                  className="min-h-11 rounded-xl border border-stone-300 bg-white px-4 text-sm font-semibold transition-colors hover:border-stone-950 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  {t("previous")}
+                </button>
+                <span className="text-sm font-medium text-stone-600">
+                  {t("pageOf", {
+                    page: currentProducts.meta.currentPage,
+                    total: currentProducts.meta.totalPages,
+                  })}
+                </span>
+                <button
+                  type="button"
+                  disabled={
+                    page >= currentProducts.meta.totalPages || isFetching
+                  }
+                  onClick={() => setPage((current) => current + 1)}
+                  className="min-h-11 rounded-xl border border-stone-300 bg-white px-4 text-sm font-semibold transition-colors hover:border-stone-950 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  {t("next")}
+                </button>
+              </nav>
+            )}
           </div>
         </div>
       </div>
-    </div>
+
+      {showFilters && (
+        <div
+          className="fixed inset-0 z-50 md:hidden"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="mobile-filter-title"
+        >
+          <button
+            type="button"
+            aria-label={t("closeFilters")}
+            onClick={() => setShowFilters(false)}
+            className="absolute inset-0 h-full w-full bg-stone-950/60 backdrop-blur-[2px]"
+          />
+          <div className="absolute inset-x-0 bottom-0 max-h-[85vh] overflow-hidden rounded-t-3xl bg-white shadow-2xl">
+            <div className="flex items-center justify-between border-b border-stone-200 px-4 py-3">
+              <div>
+                <h2 id="mobile-filter-title" className="text-lg font-bold">
+                  {t("filters")}
+                </h2>
+                <p className="text-xs text-stone-500">{t("refineResults")}</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowFilters(false)}
+                aria-label={t("closeFilters")}
+                className="flex h-11 w-11 items-center justify-center rounded-full transition-colors hover:bg-stone-100 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none"
+              >
+                <CloseOutlined aria-hidden />
+              </button>
+            </div>
+            <div className="max-h-[calc(85vh-132px)] overflow-y-auto">
+              <CategoryPageFiltersList
+                productFilters={productFilters}
+                productFilterValues={productFilterValues}
+                setProductFilterValues={updateFilters}
+              />
+            </div>
+            <div className="border-t border-stone-200 bg-white p-4">
+              <button
+                type="button"
+                onClick={() => setShowFilters(false)}
+                className="min-h-12 w-full rounded-xl bg-stone-950 px-4 text-sm font-bold text-white transition-colors hover:bg-amber-600 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:outline-none"
+              >
+                {t("showProducts", { count: currentProducts.meta.totalItems })}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </main>
   );
 }
 

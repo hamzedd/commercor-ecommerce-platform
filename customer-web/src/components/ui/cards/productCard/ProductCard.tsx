@@ -13,9 +13,10 @@ interface Props {
   product: ProductType;
   lang: LocaleType;
   className?: string;
+  titleClassName?: string;
 }
 
-function ProductCard({ product, lang, className }: Props) {
+function ProductCard({ product, lang, className, titleClassName }: Props) {
   const t = useTranslations();
 
   const productTranslation: ProductTranslationType =
@@ -60,9 +61,7 @@ function ProductCard({ product, lang, className }: Props) {
       {/* Product Info */}
       <div className="flex flex-1 flex-col p-3 md:p-4">
         <h2
-          className={
-            "mb-1 line-clamp-2 text-sm font-semibold text-gray-900 md:text-base"
-          }
+          className={`mb-1 line-clamp-2 text-sm font-semibold text-gray-900 md:text-base ${titleClassName || ""}`}
         >
           {productTranslation?.name}
         </h2>
