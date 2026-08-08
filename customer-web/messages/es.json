@@ -1,4 +1,13 @@
 {
+  "productOverview": "Resumen del producto",
+  "breadcrumbs": "Ruta de navegación",
+  "productGallery": "Galería de imágenes del producto",
+  "selectProductImage": "Seleccionar imagen {index} del producto",
+  "productImagePreview": "Vista previa de la imagen {index} del producto",
+  "decreaseQuantity": "Reducir cantidad",
+  "increaseQuantity": "Aumentar cantidad",
+  "productInformation": "Información del producto",
+  "youMayAlsoLike": "También te puede gustar",
   "categoryCollection": "Colección seleccionada",
   "activeFilters": "{count} activos",
   "sortBy": "Ordenar por",

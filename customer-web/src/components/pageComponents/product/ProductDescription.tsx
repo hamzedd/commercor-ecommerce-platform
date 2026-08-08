@@ -1,6 +1,5 @@
-import React from "react";
-import { ProductTranslationType } from "@/src/utils/types/product.type";
 import { getTranslations } from "next-intl/server";
+import { ProductTranslationType } from "@/src/utils/types/product.type";
 
 interface Props {
   productTranslation: ProductTranslationType;
@@ -10,15 +9,18 @@ async function ProductDescription({ productTranslation }: Props) {
   const t = await getTranslations();
 
   return (
-    <div className="flex-1 rounded-xl bg-white p-4 shadow-sm md:p-6">
-      <h2 className="mb-4 text-xl font-bold text-gray-900 md:text-2xl">
+    <section className="rounded-2xl border border-stone-200 bg-white p-5 shadow-sm sm:p-7 lg:p-8">
+      <p className="text-xs font-bold tracking-[0.16em] text-amber-700 uppercase">
+        {t("productInformation")}
+      </p>
+      <h2 className="mt-2 text-2xl font-bold tracking-tight text-stone-950 sm:text-3xl">
         {t("productDescription")}
       </h2>
       <div
-        className="prose prose-sm md:prose-base max-w-none text-gray-700"
+        className="mt-5 max-w-none text-sm leading-7 text-stone-700 sm:text-base"
         dangerouslySetInnerHTML={{ __html: productTranslation?.description }}
       />
-    </div>
+    </section>
   );
 }
 

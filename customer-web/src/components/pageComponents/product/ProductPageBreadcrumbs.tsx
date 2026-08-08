@@ -1,43 +1,39 @@
 import React from "react";
+import { getTranslations } from "next-intl/server";
+import { Link } from "@/src/i18n/navigation";
+import { fetchCategories } from "@/src/service/apiServices/category.service";
+import { productBreadcrumbsCategoriesHierarchy } from "@/src/utils/functions/product/productCategoriesHierarchy";
 import {
   ProductTranslationType,
   ProductType,
 } from "@/src/utils/types/product.type";
-import { Link } from "@/src/i18n/navigation";
-import { fetchCategories } from "@/src/service/apiServices/category.service";
-import { productBreadcrumbsCategoriesHierarchy } from "@/src/utils/functions/product/productCategoriesHierarchy";
-import { getTranslations } from "next-intl/server";
 
 interface Props {
   productTranslation: ProductTranslationType;
   product: ProductType;
 }
 
-async function ProductPageBreadcrumbs({
-  productTranslation,
-  product,
-}: Props) {
+async function ProductPageBreadcrumbs({ productTranslation, product }: Props) {
   const t = await getTranslations();
   const categories = await fetchCategories();
-
   const categoriesHierarchy = productBreadcrumbsCategoriesHierarchy({
     product,
     categories,
   });
+  const linkClassName =
+    "rounded-sm text-stone-300 transition-colors hover:text-amber-300 focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:outline-none";
 
   return (
-    <div className="flex flex-wrap items-center gap-2 text-sm md:text-base">
-      <Link
-        href="/"
-        className="text-gray-600 transition-colors hover:text-black"
-      >
+    <nav
+      aria-label={t("breadcrumbs")}
+      className="flex min-w-0 items-center gap-2 overflow-hidden text-sm"
+    >
+      <Link href="/" className={linkClassName}>
         {t("home")}
       </Link>
-
-      <span className="text-xs text-gray-400" aria-hidden="true">
-        ›
+      <span className="text-stone-600" aria-hidden>
+        /
       </span>
-
       {categoriesHierarchy.map((category) => {
         const categoryTranslation =
           category.translations.find(
@@ -45,32 +41,27 @@ async function ProductPageBreadcrumbs({
               translation.lang.toLowerCase() ===
               productTranslation.lang.toLowerCase(),
           ) || category.translations[0];
-
         return (
           <React.Fragment key={category.id}>
             <Link
               href={{
                 pathname: "/categories/[slug]",
-                params: {
-                  slug: categoryTranslation?.slug,
-                },
+                params: { slug: categoryTranslation?.slug },
               }}
-              className="text-gray-600 transition-colors hover:text-black"
+              className={`${linkClassName} shrink-0`}
             >
               {categoryTranslation?.name}
             </Link>
-
-            <span className="text-xs text-gray-400" aria-hidden="true">
-              ›
+            <span className="text-stone-600" aria-hidden>
+              /
             </span>
           </React.Fragment>
         );
       })}
-
-      <span className="font-semibold text-gray-900">
+      <span className="truncate font-semibold text-white">
         {productTranslation.name}
       </span>
-    </div>
+    </nav>
   );
 }
 

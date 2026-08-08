@@ -1,4 +1,13 @@
 {
+  "productOverview": "Product overview",
+  "breadcrumbs": "Breadcrumbs",
+  "productGallery": "Product image gallery",
+  "selectProductImage": "Select product image {index}",
+  "productImagePreview": "Product image {index} preview",
+  "decreaseQuantity": "Decrease quantity",
+  "increaseQuantity": "Increase quantity",
+  "productInformation": "Product information",
+  "youMayAlsoLike": "You may also like",
   "categoryCollection": "Curated collection",
   "activeFilters": "{count} active",
   "sortBy": "Sort by",

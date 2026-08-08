@@ -1,4 +1,13 @@
 {
+  "productOverview": "პროდუქტის მიმოხილვა",
+  "breadcrumbs": "სანავიგაციო ბილიკი",
+  "productGallery": "პროდუქტის სურათების გალერეა",
+  "selectProductImage": "პროდუქტის სურათის არჩევა {index}",
+  "productImagePreview": "პროდუქტის სურათის გადახედვა {index}",
+  "decreaseQuantity": "რაოდენობის შემცირება",
+  "increaseQuantity": "რაოდენობის გაზრდა",
+  "productInformation": "პროდუქტის ინფორმაცია",
+  "youMayAlsoLike": "შესაძლოა ასევე მოგეწონოთ",
   "categoryCollection": "შერჩეული კოლექცია",
   "activeFilters": "აქტიურია: {count}",
   "sortBy": "დალაგება",

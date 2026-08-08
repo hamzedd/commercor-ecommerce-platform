@@ -1,4 +1,13 @@
 {
+  "productOverview": "Обзор товара",
+  "breadcrumbs": "Навигационная цепочка",
+  "productGallery": "Галерея изображений товара",
+  "selectProductImage": "Выбрать изображение товара {index}",
+  "productImagePreview": "Предпросмотр изображения товара {index}",
+  "decreaseQuantity": "Уменьшить количество",
+  "increaseQuantity": "Увеличить количество",
+  "productInformation": "Информация о товаре",
+  "youMayAlsoLike": "Вам также может понравиться",
   "categoryCollection": "Избранная коллекция",
   "activeFilters": "Активных: {count}",
   "sortBy": "Сортировать",

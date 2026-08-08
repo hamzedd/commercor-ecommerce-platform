@@ -1,9 +1,8 @@
-import React from "react";
-import { ProductType } from "@/src/utils/types/product.type";
-import { fetchProducts } from "@/src/service/apiServices/product.service";
+import { getTranslations } from "next-intl/server";
 import ProductCard from "@/src/components/ui/cards/productCard/ProductCard";
 import { LocaleType } from "@/src/i18n/config";
-import { getTranslations } from "next-intl/server";
+import { fetchProducts } from "@/src/service/apiServices/product.service";
+import { ProductType } from "@/src/utils/types/product.type";
 
 interface Props {
   product: ProductType;
@@ -13,39 +12,37 @@ interface Props {
 async function ProductPageSimilarProducts({ product, lang }: Props) {
   const t = await getTranslations();
   const products = (
-    await fetchProducts({
-      filter: {
-        categoryId: [product.categoryId],
-      },
-    })
-  )?.data.filter((p) => p.id !== product.id);
-
-  if (products.length === 0) {
-    return null;
-  }
+    await fetchProducts({ filter: { categoryId: [product.categoryId] } })
+  )?.data.filter((candidate) => candidate.id !== product.id);
+  if (!products.length) return null;
 
   return (
-    <div className={"my-container flex w-full flex-col gap-4 md:gap-6"}>
-      <div className="flex items-center justify-between">
-        <h2 className={"text-xl font-bold text-gray-900 md:text-2xl"}>
-          {t("similarProducts")}
-        </h2>
-        <p className="text-sm text-gray-600">
+    <section className="my-container mt-4 flex w-full flex-col gap-6 border-t border-stone-200 pt-10 sm:mt-6 sm:pt-12">
+      <div className="flex items-end justify-between gap-4">
+        <div>
+          <p className="text-xs font-bold tracking-[0.16em] text-amber-700 uppercase">
+            {t("youMayAlsoLike")}
+          </p>
+          <h2 className="mt-2 text-2xl font-bold tracking-tight text-stone-950 sm:text-3xl">
+            {t("similarProducts")}
+          </h2>
+        </div>
+        <p className="shrink-0 text-sm text-stone-600">
           {products.length}{" "}
           {products.length === 1 ? t("product") : t("products")}
         </p>
       </div>
-      <div className="scrollbar-hide flex gap-3 overflow-x-auto pb-4 md:gap-4">
-        {products.map((product) => (
+      <div className="flex snap-x gap-3 overflow-x-auto pb-5 sm:gap-4">
+        {products.map((relatedProduct) => (
           <ProductCard
-            className={"max-w-[300px]"}
-            key={product.id}
-            product={product}
+            className="h-auto w-[72vw] shrink-0 snap-start focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-4 focus-visible:outline-none sm:w-64 lg:w-72"
+            key={relatedProduct.id}
+            product={relatedProduct}
             lang={lang}
           />
         ))}
       </div>
-    </div>
+    </section>
   );
 }
 

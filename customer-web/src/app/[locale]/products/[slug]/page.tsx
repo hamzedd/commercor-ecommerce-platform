@@ -1,25 +1,20 @@
-import React from "react";
-import { fetchProduct } from "@/src/service/apiServices/product.service";
-import ProductImagesPreview from "@/src/components/pageComponents/product/productImagesPreview/ProductImagesPreview";
-import ProductPageHeader from "@/src/components/pageComponents/product/ProductPageHeader";
-import ProductPurchaseBox from "@/src/components/pageComponents/product/productPurchaseBox/ProductPurchaseBox";
-import ProductDescription from "@/src/components/pageComponents/product/ProductDescription";
-import ProductPageSimilarProducts from "@/src/components/pageComponents/product/ProductPageSimilarProducts";
 import { getTranslations } from "next-intl/server";
 
+import ProductDescription from "@/src/components/pageComponents/product/ProductDescription";
+import ProductPageHeader from "@/src/components/pageComponents/product/ProductPageHeader";
+import ProductPageSimilarProducts from "@/src/components/pageComponents/product/ProductPageSimilarProducts";
+import ProductImagesPreview from "@/src/components/pageComponents/product/productImagesPreview/ProductImagesPreview";
+import ProductPurchaseBox from "@/src/components/pageComponents/product/productPurchaseBox/ProductPurchaseBox";
+import { fetchProduct } from "@/src/service/apiServices/product.service";
+
 interface Props {
-  params: Promise<{
-    locale: string;
-    slug: string;
-  }>;
+  params: Promise<{ locale: string; slug: string }>;
 }
 
 export async function generateMetadata(props: Props) {
   const t = await getTranslations();
   const { locale, slug } = await props.params;
-
   const product = await fetchProduct(slug);
-
   const productTranslation =
     product.translations.find(
       (translation) => translation.lang.toLowerCase() === locale.toLowerCase(),
@@ -34,36 +29,32 @@ export async function generateMetadata(props: Props) {
 
 async function Page(props: Props) {
   const { locale, slug } = await props.params;
-
   const product = await fetchProduct(slug);
-
   const productTranslation =
     product.translations.find(
       (translation) => translation.lang.toLowerCase() === locale.toLowerCase(),
     ) || product.translations[0];
 
   return (
-    <div
-      className={
-        "flex flex-col items-center gap-6 bg-gray-50 py-4 md:gap-8 md:py-8"
-      }
-    >
+    <main className="min-h-screen bg-stone-50 pb-16 text-stone-950">
       <ProductPageHeader
         productTranslation={productTranslation}
         product={product}
       />
-      <div className="my-container flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-        <div className="flex flex-1 flex-col gap-6 lg:flex-row">
-          <ProductImagesPreview
-            images={product.images}
-            productTranslation={productTranslation}
-          />
+
+      <div className="my-container grid items-start gap-6 py-6 sm:py-8 lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-8 lg:py-10">
+        <ProductImagesPreview
+          images={product.images}
+          productTranslation={productTranslation}
+        />
+        <ProductPurchaseBox product={product} />
+        <div className="lg:col-span-2">
           <ProductDescription productTranslation={productTranslation} />
         </div>
-        <ProductPurchaseBox product={product} />
       </div>
+
       <ProductPageSimilarProducts product={product} lang={locale} />
-    </div>
+    </main>
   );
 }
 
