@@ -1,4 +1,12 @@
 {
+  "yourSelection": "თქვენი არჩევანი",
+  "shoppingCart": "საყიდლების კალათა",
+  "cartDescription": "გადახდამდე გადახედეთ პროდუქტებსა და რაოდენობებს.",
+  "cartItemCount": "{count} პროდუქტი",
+  "cartItems": "კალათის პროდუქტები",
+  "emptyCartDescription": "დაათვალიერეთ კოლექცია და დაამატეთ სასურველი პროდუქტი.",
+  "continueShopping": "შოპინგის გაგრძელება",
+  "cartSummary": "კალათის შეჯამება",
   "productOverview": "პროდუქტის მიმოხილვა",
   "breadcrumbs": "სანავიგაციო ბილიკი",
   "productGallery": "პროდუქტის სურათების გალერეა",

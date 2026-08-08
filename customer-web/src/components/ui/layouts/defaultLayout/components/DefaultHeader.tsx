@@ -113,7 +113,7 @@ function DefaultHeader({ logo }: Props) {
             {/* Cart */}
             {userData?.id ? (
               <Link
-                href="/checkout"
+                href="/cart"
                 className="group relative flex h-11 w-11 items-center justify-center rounded-full border-2 border-gray-200 bg-white transition-all hover:border-black hover:bg-black focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:outline-none"
                 aria-label={t("cart")}
               >

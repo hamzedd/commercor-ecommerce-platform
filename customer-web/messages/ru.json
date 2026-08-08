@@ -1,4 +1,12 @@
 {
+  "yourSelection": "Ваш выбор",
+  "shoppingCart": "Корзина",
+  "cartDescription": "Проверьте товары и количество перед переходом к оформлению.",
+  "cartItemCount": "Товаров: {count}",
+  "cartItems": "Товары в корзине",
+  "emptyCartDescription": "Посмотрите коллекцию и добавьте понравившиеся товары.",
+  "continueShopping": "Продолжить покупки",
+  "cartSummary": "Итоги корзины",
   "productOverview": "Обзор товара",
   "breadcrumbs": "Навигационная цепочка",
   "productGallery": "Галерея изображений товара",

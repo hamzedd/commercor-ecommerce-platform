@@ -1,4 +1,12 @@
 {
+  "yourSelection": "Tu selección",
+  "shoppingCart": "Carrito de compras",
+  "cartDescription": "Revisa tus productos y cantidades antes de continuar al pago.",
+  "cartItemCount": "{count} artículos",
+  "cartItems": "Artículos del carrito",
+  "emptyCartDescription": "Explora la colección y añade algo que te encante.",
+  "continueShopping": "Seguir comprando",
+  "cartSummary": "Resumen del carrito",
   "productOverview": "Resumen del producto",
   "breadcrumbs": "Ruta de navegación",
   "productGallery": "Galería de imágenes del producto",
