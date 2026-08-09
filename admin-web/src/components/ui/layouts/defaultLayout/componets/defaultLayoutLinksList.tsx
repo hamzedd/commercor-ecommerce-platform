@@ -1,28 +1,54 @@
 import {
-  UploadOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
+  AppstoreOutlined,
+  BankOutlined,
+  FilterOutlined,
+  HomeOutlined,
+  InboxOutlined,
+  ShoppingCartOutlined,
+  TagsOutlined,
+  TeamOutlined,
+  UsergroupAddOutlined,
 } from "@ant-design/icons";
+import type { ReactNode } from "react";
 import { UserRoleEnum } from "../../../../../utils/enums/UserEnums.ts";
 
-export default [
+export type AdminNavigationItem = {
+  key: string;
+  icon: ReactNode;
+  label: string;
+  path: string;
+  roles: UserRoleEnum[];
+};
+
+const defaultLayoutLinksList: AdminNavigationItem[] = [
   {
-    key: "customers",
-    icon: <UserOutlined />,
-    label: "Customers",
-    path: "/admin/customers",
-    roles: [UserRoleEnum.ADMIN, UserRoleEnum.COMPANY],
+    key: "dashboard",
+    icon: <HomeOutlined />,
+    label: "Dashboard",
+    path: "/admin",
+    roles: Object.values(UserRoleEnum),
   },
   {
-    key: "company",
-    icon: <VideoCameraOutlined />,
-    label: "Company",
-    path: "/admin/companies",
-    roles: [UserRoleEnum.ADMIN, UserRoleEnum.COMPANY],
+    key: "orders",
+    icon: <ShoppingCartOutlined />,
+    label: "Orders",
+    path: "/admin/orders",
+    roles: [UserRoleEnum.ADMIN, UserRoleEnum.SALES, UserRoleEnum.COMPANY],
+  },
+  {
+    key: "products",
+    icon: <InboxOutlined />,
+    label: "Products",
+    path: "/admin/products",
+    roles: [
+      UserRoleEnum.ADMIN,
+      UserRoleEnum.COMPANY,
+      UserRoleEnum.STOCK_MANAGER,
+    ],
   },
   {
     key: "categories",
-    icon: <UploadOutlined />,
+    icon: <AppstoreOutlined />,
     label: "Categories",
     path: "/admin/categories",
     roles: [
@@ -33,7 +59,7 @@ export default [
   },
   {
     key: "brands",
-    icon: <UploadOutlined />,
+    icon: <TagsOutlined />,
     label: "Brands",
     path: "/admin/brands",
     roles: [
@@ -43,20 +69,9 @@ export default [
     ],
   },
   {
-    key: "products",
-    icon: <UploadOutlined />,
-    label: "Products",
-    path: "/admin/products",
-    roles: [
-      UserRoleEnum.ADMIN,
-      UserRoleEnum.COMPANY,
-      UserRoleEnum.STOCK_MANAGER,
-    ],
-  },
-  {
     key: "product-filters",
-    icon: <UploadOutlined />,
-    label: "Product Filters",
+    icon: <FilterOutlined />,
+    label: "Product filters",
     path: "/admin/product-filters",
     roles: [
       UserRoleEnum.ADMIN,
@@ -65,17 +80,26 @@ export default [
     ],
   },
   {
-    key: "orders",
-    icon: <UploadOutlined />,
-    label: "Orders",
-    path: "/admin/orders",
-    roles: [UserRoleEnum.ADMIN, UserRoleEnum.SALES, UserRoleEnum.COMPANY],
+    key: "customers",
+    icon: <TeamOutlined />,
+    label: "Customers",
+    path: "/admin/customers",
+    roles: [UserRoleEnum.ADMIN, UserRoleEnum.COMPANY],
+  },
+  {
+    key: "company",
+    icon: <BankOutlined />,
+    label: "Companies",
+    path: "/admin/companies",
+    roles: [UserRoleEnum.ADMIN, UserRoleEnum.COMPANY],
   },
   {
     key: "users",
-    icon: <UploadOutlined />,
-    label: "Users",
+    icon: <UsergroupAddOutlined />,
+    label: "Admin users",
     path: "/admin/users",
     roles: [UserRoleEnum.ADMIN],
   },
 ];
+
+export default defaultLayoutLinksList;
