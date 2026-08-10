@@ -13,6 +13,7 @@ import { ProductFilterOptionValuesService } from '@/src/modules/productFilters/s
 import { ProductEntity } from '@/src/libs/models/entities/product/Product.entity';
 import { ProductTranslationEntity } from '@/src/libs/models/entities/product/ProductTranslation.entity';
 import { ProductFilterOptionValueEntity } from '@/src/libs/models/entities/productFilter/ProductFilterOptionValue.entity';
+import { CategoryEntity } from '@/src/libs/models/entities/category/Category.entity';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ProductFilterOptionValueEntity } from '@/src/libs/models/entities/produ
       ProductEntity,
       ProductTranslationEntity,
       ProductFilterOptionValueEntity,
+      CategoryEntity,
     ]),
   ],
   controllers: [

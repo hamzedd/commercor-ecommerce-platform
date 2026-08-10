@@ -17,6 +17,7 @@ export type OrderItemType = {
 
 export type OrderType = {
   id: string | number;
+  status?: string;
   deliveryAmount: number;
   productAmount: number;
   address: AddressType;

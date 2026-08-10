@@ -1,88 +1,70 @@
+import { PictureOutlined } from "@ant-design/icons";
+import { Image, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import type {
   CategoryTranslationType,
   CategoryType,
 } from "../../../../../utils/types/categoryTypes.ts";
 import getImageSrcByBucketAndFileNames from "../../../../../utils/functions/getImageSrcByBucketAndFileNames.ts";
-import { Image } from "antd";
+
+function translationOf(translations?: CategoryTranslationType[]) {
+  return (
+    translations?.find((item) => item.lang?.toLowerCase() === "en") ??
+    translations?.[0]
+  );
+}
 
 export default [
   {
-    title: "Name",
-    dataIndex: ["translations"],
-    key: "name",
-    render: (translations) => {
-      if (!translations) return "-";
-      if (translations.EN && translations.EN.name) return translations.EN.name;
-      const first = Object.values(translations)[0] as CategoryTranslationType;
-      return (first && first.name) || "-";
+    title: "Category",
+    key: "category",
+    width: 320,
+    render: (_, category) => {
+      const translation = translationOf(category.translations);
+      return (
+        <div className="management-table-identity">
+          {category.image ? (
+            <Image
+              className="management-thumb"
+              width={56}
+              height={56}
+              preview={false}
+              src={getImageSrcByBucketAndFileNames({
+                bucketName: "categories",
+                fileName: category.image,
+              })}
+              alt={translation?.name || "Category"}
+            />
+          ) : (
+            <span className="management-thumb management-thumb--empty">
+              <PictureOutlined />
+            </span>
+          )}
+          <div>
+            <strong>{translation?.name || "Untitled category"}</strong>
+            <span>{translation?.slug || `ID: ${category.id}`}</span>
+          </div>
+        </div>
+      );
     },
-  },
-  {
-    title: "Image",
-    dataIndex: "image",
-    key: "image",
-    render: (image: string) => (
-      <Image
-        src={getImageSrcByBucketAndFileNames({
-          bucketName: "categories",
-          fileName: image,
-        })}
-        width={150}
-        height={150}
-        alt="Category Image"
-      />
-    ),
-  },
-  {
-    title: "ID",
-    dataIndex: "id",
-    key: "id",
-    render: (id: any) => id || "-",
-  },
-  {
-    title: "Parent ID",
-    dataIndex: "parentId",
-    key: "parentId",
-    render: (parentId: any) => parentId || "-",
   },
   {
     title: "Description",
-    dataIndex: ["translations"],
     key: "description",
-    render: (translations) => {
-      if (!translations) return "-";
-      if (translations.EN && translations.EN.description)
-        return translations.EN.description;
-      const first = Object.values(translations)[0] as CategoryTranslationType;
-      return (first && first.description) || "-";
-    },
+    ellipsis: true,
+    render: (_, category) => (
+      <span className="management-description">
+        {translationOf(category.translations)?.description || "No description"}
+      </span>
+    ),
   },
   {
-    title: "Meta Description",
-    dataIndex: ["translations"],
-    key: "metaDescription",
-    render: (translations) => {
-      if (!translations) return "-";
-      if (translations.EN && translations.EN.metaDescription)
-        return translations.EN.metaDescription;
-      const first = Object.values(translations)[0] as CategoryTranslationType;
-      return (first && first.metaDescription) || "-";
-    },
+    title: "Hierarchy",
+    key: "parentId",
+    width: 150,
+    render: (_, category) => (
+      <Tag>{category.parentId ? "Child category" : "Top level"}</Tag>
+    ),
   },
-  {
-    title: "Slug",
-    dataIndex: ["translations"],
-    key: "slug",
-    render: (translations) => {
-      if (!translations) return "-";
-      if (translations.EN && translations.EN.slug) return translations.EN.slug;
-      const first = Object.values(translations)[0] as CategoryTranslationType;
-      return (first && first.slug) || "-";
-    },
-  },
-  {
-    title: "Actions",
-    key: "actions",
-  },
+  { title: "Actions", key: "actions", width: 180, fixed: "right" },
 ] as ColumnsType<CategoryType>;

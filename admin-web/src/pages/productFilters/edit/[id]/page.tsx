@@ -1,12 +1,15 @@
 import { Link, useParams } from "react-router";
-import { Button, Tabs } from "antd";
+import { ArrowLeftOutlined } from "@ant-design/icons";
+import { Alert, Button, Tabs } from "antd";
 import ProductFilterEditTab from "../../../../components/pageComponents/productFilterEditPage/ProductFilterEditTab.tsx";
 import ProductFilterOptionsTab from "../../../../components/pageComponents/productFilterEditPage/ProductFilterOptionsTab.tsx";
 
 function EditProductFilterPage() {
   const { id } = useParams();
   if (!id) {
-    return;
+    return (
+      <Alert type="error" showIcon message="Product filter ID is missing" />
+    );
   }
   const tabs = [
     {
@@ -21,11 +24,24 @@ function EditProductFilterPage() {
     },
   ];
   return (
-    <div className={"flex flex-col gap-5"}>
-      <Link to={"/admin/product-filters"}>
-        <Button>Go Back</Button>
-      </Link>
-      <Tabs items={tabs}></Tabs>
+    <div className="management-page management-editor">
+      <header className="management-editor__header">
+        <Link to="/admin/product-filters">
+          <Button type="text" icon={<ArrowLeftOutlined />}>
+            Product Filters
+          </Button>
+        </Link>
+        <div>
+          <span className="management-kicker">Catalog attributes</span>
+          <h1>Edit product filter</h1>
+          <p>
+            Update filter content or manage its existing option relationships.
+          </p>
+        </div>
+      </header>
+      <section className="management-form-surface management-form-surface--tabs">
+        <Tabs items={tabs} />
+      </section>
     </div>
   );
 }

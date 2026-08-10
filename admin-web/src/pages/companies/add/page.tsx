@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 import { Button, Form, message } from "antd";
 import CompanyDetailForm from "../../../components/ui/forms/companyDetailForm/CompanyDetailForm.tsx";
 import { createCompanyDetailService } from "../../../service/apiServices/companyServices.ts";
@@ -27,16 +28,27 @@ function AddCompanyPage() {
   };
 
   return (
-    <div className={"flex flex-col gap-5"}>
-      <Link to={"/admin/companies"}>
-        <Button>Go Back</Button>
-      </Link>
-      <CompanyDetailForm
-        form={form}
-        onFinish={onFinish}
-        loading={loading}
-        onCancel={handleCancel}
-      />
+    <div className="management-page management-editor">
+      <header className="management-editor__header">
+        <Link to="/admin/companies">
+          <Button type="text" icon={<ArrowLeftOutlined />}>
+            Companies
+          </Button>
+        </Link>
+        <div>
+          <span className="management-kicker">Store content</span>
+          <h1>Create company detail</h1>
+          <p>Add an existing company-detail type with its text or image.</p>
+        </div>
+      </header>
+      <section className="management-form-surface">
+        <CompanyDetailForm
+          form={form}
+          onFinish={onFinish}
+          loading={loading}
+          onCancel={handleCancel}
+        />
+      </section>
     </div>
   );
 }

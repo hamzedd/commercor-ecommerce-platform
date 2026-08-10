@@ -1,6 +1,7 @@
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Column, Entity, ManyToMany, OneToMany } from 'typeorm';
 import { BaseEntity } from '@/src/libs/models/entities/BaseEntity';
 import { CategoryTranslationsEntity } from '@/src/libs/models/entities/category/CategoryTranslation.entity';
+import { ProductFilterEntity } from '@/src/libs/models/entities/productFilter/ProductFilter.entity';
 
 @Entity('categories')
 export class CategoryEntity extends BaseEntity {
@@ -16,4 +17,10 @@ export class CategoryEntity extends BaseEntity {
     { cascade: true },
   )
   translations: CategoryTranslationsEntity[];
+
+  @ManyToMany(
+    () => ProductFilterEntity,
+    (productFilter) => productFilter.categories,
+  )
+  productFilters: ProductFilterEntity[];
 }

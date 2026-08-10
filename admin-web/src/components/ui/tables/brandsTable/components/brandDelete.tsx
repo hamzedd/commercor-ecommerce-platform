@@ -1,21 +1,21 @@
-import {Button, message, Modal} from 'antd';
-import {deleteBrandsService} from "../../../../../service/apiServices/brandServices.ts";
+import { DeleteOutlined } from "@ant-design/icons";
+import { Button, message, Modal } from "antd";
+import { deleteBrandsService } from "../../../../../service/apiServices/brandServices.ts";
 
 interface DeleteBrandProps {
   brandId: string;
   brandName?: string;
   onDeleted?: () => void;
 }
- 
-function DeleteBrand({brandId, brandName, onDeleted}: DeleteBrandProps) {
 
+function DeleteBrand({ brandId, brandName, onDeleted }: DeleteBrandProps) {
   const handleDelete = () => {
     Modal.confirm({
-      title: 'Delete Brand',
+      title: "Delete Brand",
       content: `Are you sure you want to delete "${brandName}"? This action cannot be undone.`,
-      okText: 'Yes, Delete',
-      cancelText: 'Cancel',
-      okType: 'danger',
+      okText: "Yes, Delete",
+      cancelText: "Cancel",
+      okType: "danger",
       centered: true,
       width: 400,
       onOk: async () => {
@@ -28,12 +28,12 @@ function DeleteBrand({brandId, brandName, onDeleted}: DeleteBrandProps) {
 
   return (
     <Button
-      type="link"
+      type="text"
+      icon={<DeleteOutlined />}
       danger
       onClick={() => {
         handleDelete();
       }}
-      style={{padding: '4px 8px', cursor: 'pointer'}}
     >
       Delete
     </Button>

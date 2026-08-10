@@ -8,6 +8,8 @@ import type { ProductFilterTypeType } from "../../../../utils/types/productFilte
 import type { FormLanguageType } from "../../../../utils/types/formTypes.ts";
 import type { ProductFilterType } from "../../../../utils/types/productFilterTypes.ts";
 import countriesOptions from "../brandForm/components/countriesOptions.ts";
+import { getCategoriesService } from "../../../../service/apiServices/categoryServices.ts";
+import type { FormOptionType } from "../../../../utils/types/formTypes.ts";
 
 interface Props extends FormProps {
   loading: boolean;
@@ -17,6 +19,7 @@ interface Props extends FormProps {
 
 function ProductFilterForm({ onFinish, form, isEdit, ...props }: Props) {
   const [typeOptions, setTypeOptions] = useState<ProductFilterTypeType[]>([]);
+  const [categoryOptions, setCategoryOptions] = useState<FormOptionType[]>([]);
   const [activeLangTab, setActiveLangTab] = useState(countriesOptions[0].value);
   const [languages, setLanguages] = useState<FormLanguageType[]>(
     props?.initialValues
@@ -30,11 +33,25 @@ function ProductFilterForm({ onFinish, form, isEdit, ...props }: Props) {
   const { loading, onCancel } = props;
 
   useEffect(() => {
-    const getProductFilterTypes = async () => {
-      const res = await getProductFilterTypesService();
-      setTypeOptions(res);
+    const getFormOptions = async () => {
+      const [types, categories] = await Promise.all([
+        getProductFilterTypesService(),
+        getCategoriesService(),
+      ]);
+      setTypeOptions(types);
+      setCategoryOptions(
+        categories.map((category) => ({
+          label:
+            category.translations.find(
+              (translation) => translation.lang.toLowerCase() === "en",
+            )?.name ||
+            category.translations[0]?.name ||
+            category.id,
+          value: category.id,
+        })),
+      );
     };
-    getProductFilterTypes();
+    void getFormOptions();
   }, []);
 
   return (
@@ -52,6 +69,28 @@ function ProductFilterForm({ onFinish, form, isEdit, ...props }: Props) {
         autoComplete="off"
         {...props}
       >
+        <SelectInput
+          formProps={{
+            name: "categoryIds",
+            label: "Categories",
+            rules: [
+              {
+                required: true,
+                type: "array",
+                min: 1,
+                message: "Please select at least one category",
+              },
+            ],
+          }}
+          inputProps={{
+            mode: "multiple",
+            allowClear: true,
+            showSearch: true,
+            optionFilterProp: "label",
+            placeholder: "Select categories",
+            options: categoryOptions,
+          }}
+        />
         <SelectInput
           formProps={{
             name: "type",

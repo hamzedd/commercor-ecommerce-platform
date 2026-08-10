@@ -1,5 +1,6 @@
-import {Button, message, Modal} from 'antd';
-import {deleteCategoriesService} from "../../../../../service/apiServices/categoryServices.ts";
+import { DeleteOutlined } from "@ant-design/icons";
+import { Button, message, Modal } from "antd";
+import { deleteCategoriesService } from "../../../../../service/apiServices/categoryServices.ts";
 
 interface DeleteCategoryProps {
   categoryId: string;
@@ -7,15 +8,18 @@ interface DeleteCategoryProps {
   onDeleted?: () => void;
 }
 
-function DeleteCategory({categoryId, categoryName, onDeleted}: DeleteCategoryProps) {
-
+function DeleteCategory({
+  categoryId,
+  categoryName,
+  onDeleted,
+}: DeleteCategoryProps) {
   const handleDelete = () => {
     Modal.confirm({
-      title: 'Delete Category',
+      title: "Delete Category",
       content: `Are you sure you want to delete "${categoryName}"? This action cannot be undone.`,
-      okText: 'Yes, Delete',
-      cancelText: 'Cancel',
-      okType: 'danger',
+      okText: "Yes, Delete",
+      cancelText: "Cancel",
+      okType: "danger",
       centered: true,
       width: 400,
       onOk: async () => {
@@ -28,12 +32,12 @@ function DeleteCategory({categoryId, categoryName, onDeleted}: DeleteCategoryPro
 
   return (
     <Button
-      type="link"
+      type="text"
+      icon={<DeleteOutlined />}
       danger
       onClick={() => {
         handleDelete();
       }}
-      style={{padding: '4px 8px', cursor: 'pointer'}}
     >
       Delete
     </Button>

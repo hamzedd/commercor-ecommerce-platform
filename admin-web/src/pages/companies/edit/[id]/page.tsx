@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
-import { Button, Form, message, Spin } from "antd";
+import { ArrowLeftOutlined } from "@ant-design/icons";
+import { Button, Form, message, Skeleton } from "antd";
 import CompanyDetailForm from "../../../../components/ui/forms/companyDetailForm/CompanyDetailForm.tsx";
 import {
   getCompanyService,
@@ -48,22 +49,33 @@ function EditCompanyPage() {
   }, [id]);
 
   return (
-    <div className={"flex flex-col gap-5"}>
-      <Link to={"/admin/companies"}>
-        <Button>Go Back</Button>
-      </Link>
-      {initialValues ? (
-        <CompanyDetailForm
-          form={form}
-          isEdit
-          onFinish={onFinish}
-          loading={loading}
-          onCancel={handleCancel}
-          initialValues={initialValues}
-        />
-      ) : (
-        <Spin spinning />
-      )}
+    <div className="management-page management-editor">
+      <header className="management-editor__header">
+        <Link to="/admin/companies">
+          <Button type="text" icon={<ArrowLeftOutlined />}>
+            Companies
+          </Button>
+        </Link>
+        <div>
+          <span className="management-kicker">Store content</span>
+          <h1>Edit company detail</h1>
+          <p>Update this existing storefront detail and its image.</p>
+        </div>
+      </header>
+      <section className="management-form-surface">
+        {initialValues ? (
+          <CompanyDetailForm
+            form={form}
+            isEdit
+            onFinish={onFinish}
+            loading={loading}
+            onCancel={handleCancel}
+            initialValues={initialValues}
+          />
+        ) : (
+          <Skeleton active paragraph={{ rows: 6 }} />
+        )}
+      </section>
     </div>
   );
 }

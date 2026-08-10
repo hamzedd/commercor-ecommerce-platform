@@ -45,7 +45,11 @@ function ProductFilterEditTab({ filterId }: Props) {
     const fetchProduct = async () => {
       if (!filterId) return;
       const productdata = await getProductFilterService(filterId);
-      setInitialValues(productdata);
+      setInitialValues({
+        ...productdata,
+        categoryIds:
+          productdata.categories?.map((category) => category.id) || [],
+      });
     };
     fetchProduct();
   }, [filterId]);

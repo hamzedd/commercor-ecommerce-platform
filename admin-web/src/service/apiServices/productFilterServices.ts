@@ -49,10 +49,12 @@ export async function deleteProductFiltersService(id: string) {
     .then((response) => response.data);
 }
 
-export async function getProductFiltersWithOptionsService(): Promise<
-  ProductFilterWithOptionsType[]
-> {
+export async function getProductFiltersWithOptionsService(
+  categoryId?: string,
+): Promise<ProductFilterWithOptionsType[]> {
   return adminApi
-    .get("/products/filters/with-options")
+    .get("/products/filters/with-options", {
+      params: categoryId ? { categoryId } : undefined,
+    })
     .then((response) => response.data);
 }

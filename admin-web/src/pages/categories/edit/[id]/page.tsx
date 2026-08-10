@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
-import { Button, Form, message, Spin } from "antd";
+import { ArrowLeftOutlined } from "@ant-design/icons";
+import { Button, Form, message, Skeleton } from "antd";
 import CategoryForm from "../../../../components/ui/forms/categoryForm/CategoryForm";
 import {
   getCategoryService,
@@ -48,22 +49,33 @@ function EditCategoryPage() {
   }, [id]);
 
   return (
-    <div className={"flex flex-col gap-5"}>
-      <Link to={"/admin/categories"}>
-        <Button>Go Back</Button>
-      </Link>
-      {initialValues ? (
-        <CategoryForm
-          form={form}
-          isEdit
-          onFinish={onFinish}
-          loading={loading}
-          onCancel={handleCancel}
-          initialValues={initialValues}
-        />
-      ) : (
-        <Spin spinning />
-      )}
+    <div className="management-page management-editor">
+      <header className="management-editor__header">
+        <Link to="/admin/categories">
+          <Button type="text" icon={<ArrowLeftOutlined />}>
+            Categories
+          </Button>
+        </Link>
+        <div>
+          <span className="management-kicker">Catalog structure</span>
+          <h1>Edit category</h1>
+          <p>Update hierarchy, translations, and category imagery.</p>
+        </div>
+      </header>
+      <section className="management-form-surface">
+        {initialValues ? (
+          <CategoryForm
+            form={form}
+            isEdit
+            onFinish={onFinish}
+            loading={loading}
+            onCancel={handleCancel}
+            initialValues={initialValues}
+          />
+        ) : (
+          <Skeleton active paragraph={{ rows: 8 }} />
+        )}
+      </section>
     </div>
   );
 }

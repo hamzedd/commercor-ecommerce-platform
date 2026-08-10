@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { ApiBody } from '@nestjs/swagger';
 import { ProductFilterDto } from '@/src/libs/models/dtos/productsFilter/ProductFilter.dto';
@@ -30,8 +31,8 @@ export class ProductFiltersController {
   }
 
   @Get('with-options')
-  GetProductFiltersWithOptions() {
-    return this.productFiltersService.getProductFiltersWithOptions();
+  GetProductFiltersWithOptions(@Query('categoryId') categoryId?: string) {
+    return this.productFiltersService.getProductFiltersWithOptions(categoryId);
   }
 
   @Get('types')

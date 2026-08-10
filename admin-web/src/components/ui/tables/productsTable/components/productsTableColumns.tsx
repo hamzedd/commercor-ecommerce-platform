@@ -1,96 +1,91 @@
+import { PictureOutlined } from "@ant-design/icons";
+import { Image, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import type {
-  ProductImageType,
   ProductTranslationType,
   ProductType,
 } from "../../../../../utils/types/productTypes.ts";
-import { Carousel, Image } from "antd";
 import getImageSrcByBucketAndFileNames from "../../../../../utils/functions/getImageSrcByBucketAndFileNames.ts";
+
+function translationOf(translations?: ProductTranslationType[]) {
+  return (
+    translations?.find((item) => item.lang?.toLowerCase() === "en") ??
+    translations?.[0]
+  );
+}
 
 export default [
   {
-    title: "Name",
-    dataIndex: ["translations"],
-    key: "name",
-    render: (translations) => {
-      if (!translations) return "-";
-      if (translations.EN && translations.EN.name) return translations.EN.name;
-      const first = Object.values(translations)[0] as ProductTranslationType;
-      return (first && first.name) || "-";
-    },
-  },
-  {
-    title: "Images",
-    dataIndex: "images",
-    key: "images",
-    width: 150,
-    render: (images: ProductImageType[]) =>
-      !!images.length && (
-        <Carousel className={"w-[150px]"} dots autoplay autoplaySpeed={3000}>
-          {images?.map((img) => (
+    title: "Product",
+    key: "product",
+    width: 330,
+    render: (_, product) => {
+      const translation = translationOf(product.translations);
+      const image = product.images?.[0];
+      return (
+        <div className="management-table-identity">
+          {image ? (
             <Image
-              key={img.id}
-              width={150}
-              className={"object-contain"}
-              height={150}
+              className="management-thumb"
+              width={56}
+              height={56}
+              preview={false}
               src={getImageSrcByBucketAndFileNames({
                 bucketName: "products",
-                fileName: img.name,
+                fileName: image.name,
               })}
-            ></Image>
-          ))}
-        </Carousel>
-      ),
+              alt={translation?.name || "Product"}
+            />
+          ) : (
+            <span className="management-thumb management-thumb--empty">
+              <PictureOutlined />
+            </span>
+          )}
+          <div>
+            <strong>{translation?.name || "Untitled product"}</strong>
+            <span>{translation?.slug || `ID: ${product.id}`}</span>
+            {product.images?.length > 1 && (
+              <small>{product.images.length} images</small>
+            )}
+          </div>
+        </div>
+      );
+    },
   },
   {
     title: "Description",
-    dataIndex: ["translations"],
     key: "description",
-    render: (translations) => {
-      if (!translations) return "-";
-      if (translations.EN && translations.EN.description)
-        return translations.EN.description;
-      const first = Object.values(translations)[0] as ProductTranslationType;
-      return (first && first.description) || "-";
-    },
-  },
-  {
-    title: "Slug",
-    dataIndex: ["translations"],
-    key: "slug",
-    render: (translations) => {
-      if (!translations) return "-";
-      if (translations.EN && translations.EN.slug) return translations.EN.slug;
-      const first = Object.values(translations)[0] as ProductTranslationType;
-      return (first && first.slug) || "-";
-    },
+    ellipsis: true,
+    render: (_, product) => (
+      <span className="management-description">
+        {translationOf(product.translations)?.description || "No description"}
+      </span>
+    ),
   },
   {
     title: "Price",
     dataIndex: "price",
     key: "price",
-    render: (price: any) => price ?? "-",
+    width: 120,
+    render: (price?: string) => (
+      <strong className="management-price">{price ?? "—"}</strong>
+    ),
   },
   {
     title: "Stock",
     dataIndex: "stock",
     key: "stock",
-    render: (stock: any) => stock ?? "-",
+    width: 145,
+    render: (stock?: number) =>
+      stock === undefined || stock === null ? (
+        <Tag>Not set</Tag>
+      ) : stock === 0 ? (
+        <Tag color="error">Out of stock</Tag>
+      ) : stock <= 5 ? (
+        <Tag color="warning">Low · {stock}</Tag>
+      ) : (
+        <Tag color="success">In stock · {stock}</Tag>
+      ),
   },
-  {
-    title: "MetaDescription",
-    dataIndex: ["translations"],
-    key: "metaDescription",
-    render: (translations: any) => {
-      if (!translations) return "-";
-      if (translations.EN && translations.EN.metaDescription)
-        return translations.EN.metaDescription;
-      const first = Object.values(translations)[0] as any;
-      return (first && first.metaDescription) || "-";
-    },
-  },
-  {
-    title: "Actions",
-    key: "actions",
-  },
+  { title: "Actions", key: "actions", width: 180, fixed: "right" },
 ] as ColumnsType<ProductType>;

@@ -1,0 +1,413 @@
+import { createHotContext as __vite__createHotContext } from "/admin/@vite/client";import.meta.hot = __vite__createHotContext("/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx");import __vite__cjsImport0_react_jsxDevRuntime from "/admin/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=e7020805"; const jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];
+var _s = $RefreshSig$();
+import {
+  DownOutlined,
+  LogoutOutlined,
+  MenuFoldOutlined,
+  MenuOutlined,
+  MenuUnfoldOutlined,
+  UserOutlined
+} from "/admin/node_modules/.vite/deps/@ant-design_icons.js?v=e7020805";
+import {
+  Avatar,
+  Button,
+  Drawer,
+  Dropdown,
+  Layout,
+  Menu
+} from "/admin/node_modules/.vite/deps/antd.js?v=e7020805";
+import __vite__cjsImport3_react from "/admin/node_modules/.vite/deps/react.js?v=e7020805"; const useMemo = __vite__cjsImport3_react["useMemo"]; const useState = __vite__cjsImport3_react["useState"];
+import { Link, Outlet, useLocation, useNavigate } from "/admin/node_modules/.vite/deps/react-router.js?v=e7020805";
+import { useAuth } from "/admin/src/components/contexts/userContext/userContext.ts";
+import defaultLayoutLinksList from "/admin/src/components/ui/layouts/defaultLayout/componets/defaultLayoutLinksList.tsx";
+const { Content, Sider } = Layout;
+function Brand({ compact = false }) {
+  return /* @__PURE__ */ jsxDEV(
+    Link,
+    {
+      className: `admin-brand ${compact ? "admin-brand--compact" : ""}`,
+      to: "/admin",
+      "aria-label": "Commercor dashboard",
+      children: [
+        /* @__PURE__ */ jsxDEV("span", { className: "admin-brand__mark", "aria-hidden": "true", children: "C" }, void 0, false, {
+          fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx",
+          lineNumber: 32,
+          columnNumber: 7
+        }, this),
+        !compact && /* @__PURE__ */ jsxDEV("span", { className: "admin-brand__text", children: [
+          /* @__PURE__ */ jsxDEV("strong", { children: "Commercor" }, void 0, false, {
+            fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx",
+            lineNumber: 37,
+            columnNumber: 11
+          }, this),
+          /* @__PURE__ */ jsxDEV("small", { children: "Administration" }, void 0, false, {
+            fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx",
+            lineNumber: 38,
+            columnNumber: 11
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx",
+          lineNumber: 36,
+          columnNumber: 7
+        }, this)
+      ]
+    },
+    void 0,
+    true,
+    {
+      fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx",
+      lineNumber: 27,
+      columnNumber: 5
+    },
+    this
+  );
+}
+_c = Brand;
+function DefaultLayout() {
+  _s();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { resetUser, user } = useAuth();
+  const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const allowedLinks = useMemo(
+    () => defaultLayoutLinksList.filter((item) => item.roles.includes(user.role)),
+    [user.role]
+  );
+  const selectedKey = useMemo(() => {
+    const matches = allowedLinks.filter(
+      (item) => item.path === "/admin" ? location.pathname === item.path : location.pathname.toLowerCase().startsWith(item.path.toLowerCase())
+    );
+    return matches.sort((a, b) => b.path.length - a.path.length)[0]?.key;
+  }, [allowedLinks, location.pathname]);
+  const menuItems = allowedLinks.map((item) => ({
+    key: item.key,
+    icon: item.icon,
+    label: /* @__PURE__ */ jsxDEV(Link, { to: item.path, onClick: () => setMobileOpen(false), children: item.label }, void 0, false, {
+      fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx",
+      lineNumber: 71,
+      columnNumber: 5
+    }, this)
+  }));
+  const logout = () => {
+    resetUser();
+    navigate("/admin/login");
+  };
+  const accountItems = [
+    {
+      key: "identity",
+      label: /* @__PURE__ */ jsxDEV("div", { className: "account-summary", children: [
+        /* @__PURE__ */ jsxDEV("strong", { children: user.username || "Admin account" }, void 0, false, {
+          fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx",
+          lineNumber: 87,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("span", { children: user.email || "Profile loading…" }, void 0, false, {
+          fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx",
+          lineNumber: 88,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx",
+        lineNumber: 86,
+        columnNumber: 5
+      }, this),
+      disabled: true
+    },
+    { type: "divider" },
+    {
+      key: "logout",
+      icon: /* @__PURE__ */ jsxDEV(LogoutOutlined, {}, void 0, false, {
+        fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx",
+        lineNumber: 96,
+        columnNumber: 11
+      }, this),
+      label: "Sign out",
+      danger: true,
+      onClick: logout
+    }
+  ];
+  const navigation = /* @__PURE__ */ jsxDEV(
+    Menu,
+    {
+      className: "admin-menu",
+      mode: "inline",
+      selectedKeys: selectedKey ? [selectedKey] : [],
+      items: menuItems
+    },
+    void 0,
+    false,
+    {
+      fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx",
+      lineNumber: 104,
+      columnNumber: 3
+    },
+    this
+  );
+  return /* @__PURE__ */ jsxDEV(Layout, { className: "admin-shell", children: [
+    /* @__PURE__ */ jsxDEV("a", { className: "skip-link", href: "#admin-main", children: "Skip to main content" }, void 0, false, {
+      fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx",
+      lineNumber: 114,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV(
+      Sider,
+      {
+        className: "admin-sidebar",
+        width: 272,
+        collapsedWidth: 88,
+        collapsed,
+        trigger: null,
+        children: [
+          /* @__PURE__ */ jsxDEV(Brand, { compact: collapsed }, void 0, false, {
+            fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx",
+            lineNumber: 124,
+            columnNumber: 9
+          }, this),
+          /* @__PURE__ */ jsxDEV("nav", { "aria-label": "Primary navigation", children: navigation }, void 0, false, {
+            fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx",
+            lineNumber: 125,
+            columnNumber: 9
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { className: "admin-sidebar__footer", children: /* @__PURE__ */ jsxDEV(
+            Button,
+            {
+              type: "text",
+              icon: collapsed ? /* @__PURE__ */ jsxDEV(MenuUnfoldOutlined, {}, void 0, false, {
+                fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx",
+                lineNumber: 129,
+                columnNumber: 31
+              }, this) : /* @__PURE__ */ jsxDEV(MenuFoldOutlined, {}, void 0, false, {
+                fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx",
+                lineNumber: 129,
+                columnNumber: 56
+              }, this),
+              onClick: () => setCollapsed((value) => !value),
+              "aria-label": collapsed ? "Expand sidebar" : "Collapse sidebar",
+              children: !collapsed && "Collapse sidebar"
+            },
+            void 0,
+            false,
+            {
+              fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx",
+              lineNumber: 127,
+              columnNumber: 11
+            },
+            this
+          ) }, void 0, false, {
+            fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx",
+            lineNumber: 126,
+            columnNumber: 9
+          }, this)
+        ]
+      },
+      void 0,
+      true,
+      {
+        fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx",
+        lineNumber: 117,
+        columnNumber: 7
+      },
+      this
+    ),
+    /* @__PURE__ */ jsxDEV(
+      Drawer,
+      {
+        className: "admin-mobile-drawer",
+        placement: "left",
+        width: "min(86vw, 320px)",
+        open: mobileOpen,
+        onClose: () => setMobileOpen(false),
+        destroyOnHidden: true,
+        closable: false,
+        styles: { body: { padding: 0 } },
+        children: [
+          /* @__PURE__ */ jsxDEV(Brand, {}, void 0, false, {
+            fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx",
+            lineNumber: 148,
+            columnNumber: 9
+          }, this),
+          /* @__PURE__ */ jsxDEV("nav", { "aria-label": "Mobile navigation", children: navigation }, void 0, false, {
+            fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx",
+            lineNumber: 149,
+            columnNumber: 9
+          }, this)
+        ]
+      },
+      void 0,
+      true,
+      {
+        fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx",
+        lineNumber: 138,
+        columnNumber: 7
+      },
+      this
+    ),
+    /* @__PURE__ */ jsxDEV(Layout, { className: "admin-workspace", children: [
+      /* @__PURE__ */ jsxDEV("header", { className: "admin-header", children: [
+        /* @__PURE__ */ jsxDEV("div", { className: "admin-header__leading", children: [
+          /* @__PURE__ */ jsxDEV(
+            Button,
+            {
+              className: "admin-mobile-trigger",
+              type: "text",
+              icon: /* @__PURE__ */ jsxDEV(MenuOutlined, {}, void 0, false, {
+                fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx",
+                lineNumber: 158,
+                columnNumber: 21
+              }, this),
+              onClick: () => setMobileOpen(true),
+              "aria-label": "Open navigation"
+            },
+            void 0,
+            false,
+            {
+              fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx",
+              lineNumber: 155,
+              columnNumber: 13
+            },
+            this
+          ),
+          /* @__PURE__ */ jsxDEV("div", { children: [
+            /* @__PURE__ */ jsxDEV("span", { className: "admin-header__eyebrow", children: "Commerce workspace" }, void 0, false, {
+              fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx",
+              lineNumber: 163,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV("strong", { className: "admin-header__title", children: allowedLinks.find((item) => item.key === selectedKey)?.label || "Administration" }, void 0, false, {
+              fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx",
+              lineNumber: 164,
+              columnNumber: 15
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx",
+            lineNumber: 162,
+            columnNumber: 13
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx",
+          lineNumber: 154,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV(
+          Dropdown,
+          {
+            menu: { items: accountItems },
+            trigger: ["click"],
+            placement: "bottomRight",
+            children: /* @__PURE__ */ jsxDEV(
+              Button,
+              {
+                className: "admin-account",
+                type: "text",
+                "aria-label": "Open admin account menu",
+                children: [
+                  /* @__PURE__ */ jsxDEV(Avatar, { icon: /* @__PURE__ */ jsxDEV(UserOutlined, {}, void 0, false, {
+                    fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx",
+                    lineNumber: 180,
+                    columnNumber: 29
+                  }, this) }, void 0, false, {
+                    fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx",
+                    lineNumber: 180,
+                    columnNumber: 15
+                  }, this),
+                  /* @__PURE__ */ jsxDEV("span", { className: "admin-account__copy", children: [
+                    /* @__PURE__ */ jsxDEV("strong", { children: user.username || "Admin" }, void 0, false, {
+                      fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx",
+                      lineNumber: 182,
+                      columnNumber: 17
+                    }, this),
+                    /* @__PURE__ */ jsxDEV("small", { children: user.role ? user.role.replace("_", " ").toLowerCase() : "Loading profile" }, void 0, false, {
+                      fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx",
+                      lineNumber: 183,
+                      columnNumber: 17
+                    }, this)
+                  ] }, void 0, true, {
+                    fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx",
+                    lineNumber: 181,
+                    columnNumber: 15
+                  }, this),
+                  /* @__PURE__ */ jsxDEV(DownOutlined, { className: "admin-account__chevron" }, void 0, false, {
+                    fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx",
+                    lineNumber: 189,
+                    columnNumber: 15
+                  }, this)
+                ]
+              },
+              void 0,
+              true,
+              {
+                fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx",
+                lineNumber: 175,
+                columnNumber: 13
+              },
+              this
+            )
+          },
+          void 0,
+          false,
+          {
+            fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx",
+            lineNumber: 170,
+            columnNumber: 11
+          },
+          this
+        )
+      ] }, void 0, true, {
+        fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx",
+        lineNumber: 153,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV(Content, { id: "admin-main", className: "admin-content", tabIndex: -1, children: /* @__PURE__ */ jsxDEV(Outlet, {}, void 0, false, {
+        fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx",
+        lineNumber: 194,
+        columnNumber: 11
+      }, this) }, void 0, false, {
+        fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx",
+        lineNumber: 193,
+        columnNumber: 9
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx",
+      lineNumber: 152,
+      columnNumber: 7
+    }, this)
+  ] }, void 0, true, {
+    fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx",
+    lineNumber: 113,
+    columnNumber: 5
+  }, this);
+}
+_s(DefaultLayout, "wyaG09Z5Lvi0Bft6EhhT5Hg1Jv4=", false, function() {
+  return [useNavigate, useLocation, useAuth];
+});
+_c2 = DefaultLayout;
+export default DefaultLayout;
+var _c, _c2;
+$RefreshReg$(_c, "Brand");
+$RefreshReg$(_c2, "DefaultLayout");
+import * as RefreshRuntime from "/admin/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+function $RefreshReg$(type, id) {
+  return RefreshRuntime.register(type, "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx " + id);
+}
+function $RefreshSig$() {
+  return RefreshRuntime.createSignatureFunctionForTransform();
+}
+
+//# sourceMappingURL=data:application/json;base64,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dUJBQUMsV0FDRTVCLGVBQUtVLE9BQ0ZWLEtBQUtVLEtBQUs4QixRQUFRLEtBQUssR0FBRyxFQUFFekIsWUFBWSxJQUN4QyxxQkFITjtBQUFBO0FBQUE7QUFBQTtBQUFBLDJCQUlBO0FBQUEsdUJBTkY7QUFBQTtBQUFBO0FBQUE7QUFBQSx5QkFPQTtBQUFBLGtCQUNBLHVCQUFDLGdCQUFhLFdBQVUsNEJBQXhCO0FBQUE7QUFBQTtBQUFBO0FBQUEseUJBQWdEO0FBQUE7QUFBQTtBQUFBLGNBZGxEO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQSxZQWVBO0FBQUE7QUFBQSxVQXBCRjtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUEsUUFxQkE7QUFBQSxXQXRDRjtBQUFBO0FBQUE7QUFBQTtBQUFBLGFBdUNBO0FBQUEsTUFDQSx1QkFBQyxXQUFRLElBQUcsY0FBYSxXQUFVLGlCQUFnQixVQUFVLElBQzNELGlDQUFDLFlBQUQ7QUFBQTtBQUFBO0FBQUE7QUFBQSxhQUFPLEtBRFQ7QUFBQTtBQUFBO0FBQUE7QUFBQSxhQUVBO0FBQUEsU0EzQ0Y7QUFBQTtBQUFBO0FBQUE7QUFBQSxXQTRDQTtBQUFBLE9BbkZGO0FBQUE7QUFBQTtBQUFBO0FBQUEsU0FvRkE7QUFFSjtBQUFDbkIsR0ExSlFELGVBQWE7QUFBQSxVQUNIUixhQUNBRCxhQUNXRSxPQUFPO0FBQUE7QUFBQXFELE1BSDVCOUM7QUE0SlQsZUFBZUE7QUFBYyxJQUFBRCxJQUFBK0M7QUFBQUMsYUFBQWhELElBQUE7QUFBQWdELGFBQUFELEtBQUEiLCJuYW1lcyI6WyJEb3duT3V0bGluZWQiLCJMb2dvdXRPdXRsaW5lZCIsIk1lbnVGb2xkT3V0bGluZWQiLCJNZW51T3V0bGluZWQiLCJNZW51VW5mb2xkT3V0bGluZWQiLCJVc2VyT3V0bGluZWQiLCJBdmF0YXIiLCJCdXR0b24iLCJEcmF3ZXIiLCJEcm9wZG93biIsIkxheW91dCIsIk1lbnUiLCJ1c2VNZW1vIiwidXNlU3RhdGUiLCJMaW5rIiwiT3V0bGV0IiwidXNlTG9jYXRpb24iLCJ1c2VOYXZpZ2F0ZSIsInVzZUF1dGgiLCJkZWZhdWx0TGF5b3V0TGlua3NMaXN0IiwiQ29udGVudCIsIlNpZGVyIiwiQnJhbmQiLCJjb21wYWN0IiwiX2MiLCJEZWZhdWx0TGF5b3V0IiwiX3MiLCJuYXZpZ2F0ZSIsImxvY2F0aW9uIiwicmVzZXRVc2VyIiwidXNlciIsImNvbGxhcHNlZCIsInNldENvbGxhcHNlZCIsIm1vYmlsZU9wZW4iLCJzZXRNb2JpbGVPcGVuIiwiYWxsb3dlZExpbmtzIiwiZmlsdGVyIiwiaXRlbSIsInJvbGVzIiwiaW5jbHVkZXMiLCJyb2xlIiwic2VsZWN0ZWRLZXkiLCJtYXRjaGVzIiwicGF0aCIsInBhdGhuYW1lIiwidG9Mb3dlckNhc2UiLCJzdGFydHNXaXRoIiwic29ydCIsImEiLCJiIiwibGVuZ3RoIiwia2V5IiwibWVudUl0ZW1zIiwibWFwIiwiaWNvbiIsImxhYmVsIiwibG9nb3V0IiwiYWNjb3VudEl0ZW1zIiwidXNlcm5hbWUiLCJlbWFpbCIsImRpc2FibGVkIiwidHlwZSIsImRhbmdlciIsIm9uQ2xpY2siLCJuYXZpZ2F0aW9uIiwidmFsdWUiLCJib2R5IiwicGFkZGluZyIsImZpbmQiLCJpdGVtcyIsInJlcGxhY2UiLCJfYzIiLCIkUmVmcmVzaFJlZyQiXSwiaWdub3JlTGlzdCI6W10sInNvdXJjZXMiOlsiRGVmYXVsdExheW91dC50c3giXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHtcbiAgRG93bk91dGxpbmVkLFxuICBMb2dvdXRPdXRsaW5lZCxcbiAgTWVudUZvbGRPdXRsaW5lZCxcbiAgTWVudU91dGxpbmVkLFxuICBNZW51VW5mb2xkT3V0bGluZWQsXG4gIFVzZXJPdXRsaW5lZCxcbn0gZnJvbSBcIkBhbnQtZGVzaWduL2ljb25zXCI7XG5pbXBvcnQge1xuICBBdmF0YXIsXG4gIEJ1dHRvbixcbiAgRHJhd2VyLFxuICBEcm9wZG93bixcbiAgTGF5b3V0LFxuICBNZW51LFxuICB0eXBlIE1lbnVQcm9wcyxcbn0gZnJvbSBcImFudGRcIjtcbmltcG9ydCB7IHVzZU1lbW8sIHVzZVN0YXRlIH0gZnJvbSBcInJlYWN0XCI7XG5pbXBvcnQgeyBMaW5rLCBPdXRsZXQsIHVzZUxvY2F0aW9uLCB1c2VOYXZpZ2F0ZSB9IGZyb20gXCJyZWFjdC1yb3V0ZXJcIjtcbmltcG9ydCB7IHVzZUF1dGggfSBmcm9tIFwiLi4vLi4vLi4vY29udGV4dHMvdXNlckNvbnRleHQvdXNlckNvbnRleHQudHNcIjtcbmltcG9ydCBkZWZhdWx0TGF5b3V0TGlua3NMaXN0IGZyb20gXCIuL2NvbXBvbmV0cy9kZWZhdWx0TGF5b3V0TGlua3NMaXN0LnRzeFwiO1xuXG5jb25zdCB7IENvbnRlbnQsIFNpZGVyIH0gPSBMYXlvdXQ7XG5cbmZ1bmN0aW9uIEJyYW5kKHsgY29tcGFjdCA9IGZhbHNlIH06IHsgY29tcGFjdD86IGJvb2xlYW4gfSkge1xuICByZXR1cm4gKFxuICAgIDxMaW5rXG4gICAgICBjbGFzc05hbWU9e2BhZG1pbi1icmFuZCAke2NvbXBhY3QgPyBcImFkbWluLWJyYW5kLS1jb21wYWN0XCIgOiBcIlwifWB9XG4gICAgICB0bz1cIi9hZG1pblwiXG4gICAgICBhcmlhLWxhYmVsPVwiQ29tbWVyY29yIGRhc2hib2FyZFwiXG4gICAgPlxuICAgICAgPHNwYW4gY2xhc3NOYW1lPVwiYWRtaW4tYnJhbmRfX21hcmtcIiBhcmlhLWhpZGRlbj1cInRydWVcIj5cbiAgICAgICAgQ1xuICAgICAgPC9zcGFuPlxuICAgICAgeyFjb21wYWN0ICYmIChcbiAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwiYWRtaW4tYnJhbmRfX3RleHRcIj5cbiAgICAgICAgICA8c3Ryb25nPkNvbW1lcmNvcjwvc3Ryb25nPlxuICAgICAgICAgIDxzbWFsbD5BZG1pbmlzdHJhdGlvbjwvc21hbGw+XG4gICAgICAgIDwvc3Bhbj5cbiAgICAgICl9XG4gICAgPC9MaW5rPlxuICApO1xufVxuXG5mdW5jdGlvbiBEZWZhdWx0TGF5b3V0KCkge1xuICBjb25zdCBuYXZpZ2F0ZSA9IHVzZU5hdmlnYXRlKCk7XG4gIGNvbnN0IGxvY2F0aW9uID0gdXNlTG9jYXRpb24oKTtcbiAgY29uc3QgeyByZXNldFVzZXIsIHVzZXIgfSA9IHVzZUF1dGgoKTtcbiAgY29uc3QgW2NvbGxhcHNlZCwgc2V0Q29sbGFwc2VkXSA9IHVzZVN0YXRlKGZhbHNlKTtcbiAgY29uc3QgW21vYmlsZU9wZW4sIHNldE1vYmlsZU9wZW5dID0gdXNlU3RhdGUoZmFsc2UpO1xuXG4gIGNvbnN0IGFsbG93ZWRMaW5rcyA9IHVzZU1lbW8oXG4gICAgKCkgPT5cbiAgICAgIGRlZmF1bHRMYXlvdXRMaW5rc0xpc3QuZmlsdGVyKChpdGVtKSA9PiBpdGVtLnJvbGVzLmluY2x1ZGVzKHVzZXIucm9sZSkpLFxuICAgIFt1c2VyLnJvbGVdLFxuICApO1xuXG4gIGNvbnN0IHNlbGVjdGVkS2V5ID0gdXNlTWVtbygoKSA9PiB7XG4gICAgY29uc3QgbWF0Y2hlcyA9IGFsbG93ZWRMaW5rcy5maWx0ZXIoKGl0ZW0pID0+XG4gICAgICBpdGVtLnBhdGggPT09IFwiL2FkbWluXCJcbiAgICAgICAgPyBsb2NhdGlvbi5wYXRobmFtZSA9PT0gaXRlbS5wYXRoXG4gICAgICAgIDogbG9jYXRpb24ucGF0aG5hbWUudG9Mb3dlckNhc2UoKS5zdGFydHNXaXRoKGl0ZW0ucGF0aC50b0xvd2VyQ2FzZSgpKSxcbiAgICApO1xuICAgIHJldHVybiBtYXRjaGVzLnNvcnQoKGEsIGIpID0+IGIucGF0aC5sZW5ndGggLSBhLnBhdGgubGVuZ3RoKVswXT8ua2V5O1xuICB9LCBbYWxsb3dlZExpbmtzLCBsb2NhdGlvbi5wYXRobmFtZV0pO1xuXG4gIGNvbnN0IG1lbnVJdGVtczogTWVudVByb3BzW1wiaXRlbXNcIl0gPSBhbGxvd2VkTGlua3MubWFwKChpdGVtKSA9PiAoe1xuICAgIGtleTogaXRlbS5rZXksXG4gICAgaWNvbjogaXRlbS5pY29uLFxuICAgIGxhYmVsOiAoXG4gICAgICA8TGluayB0bz17aXRlbS5wYXRofSBvbkNsaWNrPXsoKSA9PiBzZXRNb2JpbGVPcGVuKGZhbHNlKX0+XG4gICAgICAgIHtpdGVtLmxhYmVsfVxuICAgICAgPC9MaW5rPlxuICAgICksXG4gIH0pKTtcblxuICBjb25zdCBsb2dvdXQgPSAoKSA9PiB7XG4gICAgcmVzZXRVc2VyKCk7XG4gICAgbmF2aWdhdGUoXCIvYWRtaW4vbG9naW5cIik7XG4gIH07XG5cbiAgY29uc3QgYWNjb3VudEl0ZW1zOiBNZW51UHJvcHNbXCJpdGVtc1wiXSA9IFtcbiAgICB7XG4gICAgICBrZXk6IFwiaWRlbnRpdHlcIixcbiAgICAgIGxhYmVsOiAoXG4gICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiYWNjb3VudC1zdW1tYXJ5XCI+XG4gICAgICAgICAgPHN0cm9uZz57dXNlci51c2VybmFtZSB8fCBcIkFkbWluIGFjY291bnRcIn08L3N0cm9uZz5cbiAgICAgICAgICA8c3Bhbj57dXNlci5lbWFpbCB8fCBcIlByb2ZpbGUgbG9hZGluZ+KAplwifTwvc3Bhbj5cbiAgICAgICAgPC9kaXY+XG4gICAgICApLFxuICAgICAgZGlzYWJsZWQ6IHRydWUsXG4gICAgfSxcbiAgICB7IHR5cGU6IFwiZGl2aWRlclwiIH0sXG4gICAge1xuICAgICAga2V5OiBcImxvZ291dFwiLFxuICAgICAgaWNvbjogPExvZ291dE91dGxpbmVkIC8+LFxuICAgICAgbGFiZWw6IFwiU2lnbiBvdXRcIixcbiAgICAgIGRhbmdlcjogdHJ1ZSxcbiAgICAgIG9uQ2xpY2s6IGxvZ291dCxcbiAgICB9LFxuICBdO1xuXG4gIGNvbnN0IG5hdmlnYXRpb24gPSAoXG4gICAgPE1lbnVcbiAgICAgIGNsYXNzTmFtZT1cImFkbWluLW1lbnVcIlxuICAgICAgbW9kZT1cImlubGluZVwiXG4gICAgICBzZWxlY3RlZEtleXM9e3NlbGVjdGVkS2V5ID8gW3NlbGVjdGVkS2V5XSA6IFtdfVxuICAgICAgaXRlbXM9e21lbnVJdGVtc31cbiAgICAvPlxuICApO1xuXG4gIHJldHVybiAoXG4gICAgPExheW91dCBjbGFzc05hbWU9XCJhZG1pbi1zaGVsbFwiPlxuICAgICAgPGEgY2xhc3NOYW1lPVwic2tpcC1saW5rXCIgaHJlZj1cIiNhZG1pbi1tYWluXCI+XG4gICAgICAgIFNraXAgdG8gbWFpbiBjb250ZW50XG4gICAgICA8L2E+XG4gICAgICA8U2lkZXJcbiAgICAgICAgY2xhc3NOYW1lPVwiYWRtaW4tc2lkZWJhclwiXG4gICAgICAgIHdpZHRoPXsyNzJ9XG4gICAgICAgIGNvbGxhcHNlZFdpZHRoPXs4OH1cbiAgICAgICAgY29sbGFwc2VkPXtjb2xsYXBzZWR9XG4gICAgICAgIHRyaWdnZXI9e251bGx9XG4gICAgICA+XG4gICAgICAgIDxCcmFuZCBjb21wYWN0PXtjb2xsYXBzZWR9IC8+XG4gICAgICAgIDxuYXYgYXJpYS1sYWJlbD1cIlByaW1hcnkgbmF2aWdhdGlvblwiPntuYXZpZ2F0aW9ufTwvbmF2PlxuICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImFkbWluLXNpZGViYXJfX2Zvb3RlclwiPlxuICAgICAgICAgIDxCdXR0b25cbiAgICAgICAgICAgIHR5cGU9XCJ0ZXh0XCJcbiAgICAgICAgICAgIGljb249e2NvbGxhcHNlZCA/IDxNZW51VW5mb2xkT3V0bGluZWQgLz4gOiA8TWVudUZvbGRPdXRsaW5lZCAvPn1cbiAgICAgICAgICAgIG9uQ2xpY2s9eygpID0+IHNldENvbGxhcHNlZCgodmFsdWUpID0+ICF2YWx1ZSl9XG4gICAgICAgICAgICBhcmlhLWxhYmVsPXtjb2xsYXBzZWQgPyBcIkV4cGFuZCBzaWRlYmFyXCIgOiBcIkNvbGxhcHNlIHNpZGViYXJcIn1cbiAgICAgICAgICA+XG4gICAgICAgICAgICB7IWNvbGxhcHNlZCAmJiBcIkNvbGxhcHNlIHNpZGViYXJcIn1cbiAgICAgICAgICA8L0J1dHRvbj5cbiAgICAgICAgPC9kaXY+XG4gICAgICA8L1NpZGVyPlxuXG4gICAgICA8RHJhd2VyXG4gICAgICAgIGNsYXNzTmFtZT1cImFkbWluLW1vYmlsZS1kcmF3ZXJcIlxuICAgICAgICBwbGFjZW1lbnQ9XCJsZWZ0XCJcbiAgICAgICAgd2lkdGg9XCJtaW4oODZ2dywgMzIwcHgpXCJcbiAgICAgICAgb3Blbj17bW9iaWxlT3Blbn1cbiAgICAgICAgb25DbG9zZT17KCkgPT4gc2V0TW9iaWxlT3BlbihmYWxzZSl9XG4gICAgICAgIGRlc3Ryb3lPbkhpZGRlblxuICAgICAgICBjbG9zYWJsZT17ZmFsc2V9XG4gICAgICAgIHN0eWxlcz17eyBib2R5OiB7IHBhZGRpbmc6IDAgfSB9fVxuICAgICAgPlxuICAgICAgICA8QnJhbmQgLz5cbiAgICAgICAgPG5hdiBhcmlhLWxhYmVsPVwiTW9iaWxlIG5hdmlnYXRpb25cIj57bmF2aWdhdGlvbn08L25hdj5cbiAgICAgIDwvRHJhd2VyPlxuXG4gICAgICA8TGF5b3V0IGNsYXNzTmFtZT1cImFkbWluLXdvcmtzcGFjZVwiPlxuICAgICAgICA8aGVhZGVyIGNsYXNzTmFtZT1cImFkbWluLWhlYWRlclwiPlxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiYWRtaW4taGVhZGVyX19sZWFkaW5nXCI+XG4gICAgICAgICAgICA8QnV0dG9uXG4gICAgICAgICAgICAgIGNsYXNzTmFtZT1cImFkbWluLW1vYmlsZS10cmlnZ2VyXCJcbiAgICAgICAgICAgICAgdHlwZT1cInRleHRcIlxuICAgICAgICAgICAgICBpY29uPXs8TWVudU91dGxpbmVkIC8+fVxuICAgICAgICAgICAgICBvbkNsaWNrPXsoKSA9PiBzZXRNb2JpbGVPcGVuKHRydWUpfVxuICAgICAgICAgICAgICBhcmlhLWxhYmVsPVwiT3BlbiBuYXZpZ2F0aW9uXCJcbiAgICAgICAgICAgIC8+XG4gICAgICAgICAgICA8ZGl2PlxuICAgICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJhZG1pbi1oZWFkZXJfX2V5ZWJyb3dcIj5Db21tZXJjZSB3b3Jrc3BhY2U8L3NwYW4+XG4gICAgICAgICAgICAgIDxzdHJvbmcgY2xhc3NOYW1lPVwiYWRtaW4taGVhZGVyX190aXRsZVwiPlxuICAgICAgICAgICAgICAgIHthbGxvd2VkTGlua3MuZmluZCgoaXRlbSkgPT4gaXRlbS5rZXkgPT09IHNlbGVjdGVkS2V5KT8ubGFiZWwgfHxcbiAgICAgICAgICAgICAgICAgIFwiQWRtaW5pc3RyYXRpb25cIn1cbiAgICAgICAgICAgICAgPC9zdHJvbmc+XG4gICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICA8RHJvcGRvd25cbiAgICAgICAgICAgIG1lbnU9e3sgaXRlbXM6IGFjY291bnRJdGVtcyB9fVxuICAgICAgICAgICAgdHJpZ2dlcj17W1wiY2xpY2tcIl19XG4gICAgICAgICAgICBwbGFjZW1lbnQ9XCJib3R0b21SaWdodFwiXG4gICAgICAgICAgPlxuICAgICAgICAgICAgPEJ1dHRvblxuICAgICAgICAgICAgICBjbGFzc05hbWU9XCJhZG1pbi1hY2NvdW50XCJcbiAgICAgICAgICAgICAgdHlwZT1cInRleHRcIlxuICAgICAgICAgICAgICBhcmlhLWxhYmVsPVwiT3BlbiBhZG1pbiBhY2NvdW50IG1lbnVcIlxuICAgICAgICAgICAgPlxuICAgICAgICAgICAgICA8QXZhdGFyIGljb249ezxVc2VyT3V0bGluZWQgLz59IC8+XG4gICAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cImFkbWluLWFjY291bnRfX2NvcHlcIj5cbiAgICAgICAgICAgICAgICA8c3Ryb25nPnt1c2VyLnVzZXJuYW1lIHx8IFwiQWRtaW5cIn08L3N0cm9uZz5cbiAgICAgICAgICAgICAgICA8c21hbGw+XG4gICAgICAgICAgICAgICAgICB7dXNlci5yb2xlXG4gICAgICAgICAgICAgICAgICAgID8gdXNlci5yb2xlLnJlcGxhY2UoXCJfXCIsIFwiIFwiKS50b0xvd2VyQ2FzZSgpXG4gICAgICAgICAgICAgICAgICAgIDogXCJMb2FkaW5nIHByb2ZpbGVcIn1cbiAgICAgICAgICAgICAgICA8L3NtYWxsPlxuICAgICAgICAgICAgICA8L3NwYW4+XG4gICAgICAgICAgICAgIDxEb3duT3V0bGluZWQgY2xhc3NOYW1lPVwiYWRtaW4tYWNjb3VudF9fY2hldnJvblwiIC8+XG4gICAgICAgICAgICA8L0J1dHRvbj5cbiAgICAgICAgICA8L0Ryb3Bkb3duPlxuICAgICAgICA8L2hlYWRlcj5cbiAgICAgICAgPENvbnRlbnQgaWQ9XCJhZG1pbi1tYWluXCIgY2xhc3NOYW1lPVwiYWRtaW4tY29udGVudFwiIHRhYkluZGV4PXstMX0+XG4gICAgICAgICAgPE91dGxldCAvPlxuICAgICAgICA8L0NvbnRlbnQ+XG4gICAgICA8L0xheW91dD5cbiAgICA8L0xheW91dD5cbiAgKTtcbn1cblxuZXhwb3J0IGRlZmF1bHQgRGVmYXVsdExheW91dDtcbiJdLCJmaWxlIjoiQzovVXNlcnMvQVNVUy9jb21tZXJjb3ItZWNvbW1lcmNlLXBsYXRmb3JtL2FkbWluLXdlYi9zcmMvY29tcG9uZW50cy91aS9sYXlvdXRzL2RlZmF1bHRMYXlvdXQvRGVmYXVsdExheW91dC50c3gifQ==

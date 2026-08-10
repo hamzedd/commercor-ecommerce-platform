@@ -1,4 +1,5 @@
 import type { ProductFilterOptionType } from "./productFilterOptionTypes.ts";
+import type { CategoryType } from "./categoryTypes.ts";
 
 export type ProductFilterTranslationType = {
   id: string;
@@ -11,6 +12,8 @@ export type ProductFilterTranslationType = {
 export type ProductFilterType = {
   id: string;
   type: string;
+  categoryIds: string[];
+  categories?: CategoryType[];
   translations: Array<ProductFilterTranslationType>;
 };
 

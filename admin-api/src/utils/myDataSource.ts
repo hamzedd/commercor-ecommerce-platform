@@ -1,4 +1,5 @@
 import { DataSource } from 'typeorm';
+import 'dotenv/config';
 import {
   DB_HOST,
   DB_NAME,
@@ -8,17 +9,18 @@ import {
   DB_USERNAME,
 } from '@/src/utils/environmentConstants';
 
-export async function myDataSource() {
-  return new DataSource({
-    type: DB_TYPE as any,
-    host: DB_HOST,
-    port: DB_PORT,
-    username: DB_USERNAME,
-    password: DB_PASSWORD,
-    database: DB_NAME,
-    entities: [
-      'dist/libs/models/entities/*.entity.{js,ts}',
-      'dist/libs/models/entities/*/*.entity.{js,ts}',
-    ],
-  });
-}
+const dataSource = new DataSource({
+  type: DB_TYPE as any,
+  host: DB_HOST,
+  port: DB_PORT,
+  username: DB_USERNAME,
+  password: DB_PASSWORD,
+  database: DB_NAME,
+  entities: [
+    'src/libs/models/entities/*.entity.ts',
+    'src/libs/models/entities/*/*.entity.ts',
+  ],
+  migrations: ['src/migrations/*.ts'],
+});
+
+export default dataSource;

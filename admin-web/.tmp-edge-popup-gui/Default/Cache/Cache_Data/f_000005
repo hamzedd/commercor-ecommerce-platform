@@ -1,0 +1,292 @@
+import { createHotContext as __vite__createHotContext } from "/admin/@vite/client";import.meta.hot = __vite__createHotContext("/src/App.tsx");import __vite__cjsImport0_react_jsxDevRuntime from "/admin/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=e7020805"; const jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];
+import { createBrowserRouter, RouterProvider } from "/admin/node_modules/.vite/deps/react-router.js?v=e7020805";
+import DefaultLayout from "/admin/src/components/ui/layouts/defaultLayout/DefaultLayout.tsx";
+import CategoriesPage from "/admin/src/pages/categories/page.tsx";
+import HomePage from "/admin/src/pages/page.tsx";
+import AddCategoryPage from "/admin/src/pages/categories/add/page.tsx";
+import EditCategoryPage from "/admin/src/pages/categories/edit/[id]/page.tsx";
+import ProductsPage from "/admin/src/pages/products/page.tsx";
+import EditProductPage from "/admin/src/pages/products/edit/[id]/page.tsx";
+import AddProductPage from "/admin/src/pages/products/add/page.tsx?t=1786316402120";
+import BrandsPage from "/admin/src/pages/brands/page.tsx";
+import EditBrandPage from "/admin/src/pages/brands/edit/[id]/page.tsx";
+import AddBrandPage from "/admin/src/pages/brands/add/page.tsx";
+import CustomersPage from "/admin/src/pages/customers/page.tsx";
+import EditCustomersPage from "/admin/src/pages/customers/edit/[id]/page.tsx";
+import AddCustomersPage from "/admin/src/pages/customers/add/page.tsx";
+import CompanyPage from "/admin/src/pages/companies/page.tsx";
+import EditCompanyPage from "/admin/src/pages/companies/edit/[id]/page.tsx";
+import AddCompanyPage from "/admin/src/pages/companies/add/page.tsx";
+import OrdersPage from "/admin/src/pages/orders/page.tsx";
+import ProductFiltersPage from "/admin/src/pages/productFilters/page.tsx";
+import AddProductFilterPage from "/admin/src/pages/productFilters/add/page.tsx";
+import EditProductFilterPage from "/admin/src/pages/productFilters/edit/[id]/page.tsx";
+import { UserContextProvider } from "/admin/src/components/contexts/userContext/UserContextProvider.tsx";
+import LoginPage from "/admin/src/pages/login/page.tsx";
+import UsersPage from "/admin/src/pages/users/page.tsx";
+import AddUserPage from "/admin/src/pages/users/add/page.tsx";
+import EditUserPage from "/admin/src/pages/users/edit/[id]/page.tsx";
+import NotFoundPage from "/admin/src/pages/not-found/page.tsx";
+import OrderPage from "/admin/src/pages/orders/[id]/page.tsx";
+function App() {
+  const router = createBrowserRouter(
+    [
+      {
+        path: "/admin/login",
+        element: /* @__PURE__ */ jsxDEV(LoginPage, {}, void 0, false, {
+          fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/App.tsx",
+          lineNumber: 35,
+          columnNumber: 14
+        }, this)
+      },
+      {
+        path: "/admin",
+        element: /* @__PURE__ */ jsxDEV(UserContextProvider, { children: /* @__PURE__ */ jsxDEV(DefaultLayout, {}, void 0, false, {
+          fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/App.tsx",
+          lineNumber: 41,
+          columnNumber: 11
+        }, this) }, void 0, false, {
+          fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/App.tsx",
+          lineNumber: 40,
+          columnNumber: 5
+        }, this),
+        children: [
+          {
+            index: true,
+            element: /* @__PURE__ */ jsxDEV(HomePage, {}, void 0, false, {
+              fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/App.tsx",
+              lineNumber: 47,
+              columnNumber: 16
+            }, this)
+          },
+          {
+            path: "categories",
+            element: /* @__PURE__ */ jsxDEV(CategoriesPage, {}, void 0, false, {
+              fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/App.tsx",
+              lineNumber: 51,
+              columnNumber: 16
+            }, this)
+          },
+          {
+            path: "categories/add",
+            element: /* @__PURE__ */ jsxDEV(AddCategoryPage, {}, void 0, false, {
+              fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/App.tsx",
+              lineNumber: 55,
+              columnNumber: 16
+            }, this)
+          },
+          {
+            path: "categories/edit/:id",
+            element: /* @__PURE__ */ jsxDEV(EditCategoryPage, {}, void 0, false, {
+              fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/App.tsx",
+              lineNumber: 59,
+              columnNumber: 16
+            }, this)
+          },
+          {
+            path: "customers",
+            element: /* @__PURE__ */ jsxDEV(CustomersPage, {}, void 0, false, {
+              fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/App.tsx",
+              lineNumber: 63,
+              columnNumber: 16
+            }, this)
+          },
+          {
+            path: "customers/add",
+            element: /* @__PURE__ */ jsxDEV(AddCustomersPage, {}, void 0, false, {
+              fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/App.tsx",
+              lineNumber: 67,
+              columnNumber: 16
+            }, this)
+          },
+          {
+            path: "customers/edit/:id",
+            element: /* @__PURE__ */ jsxDEV(EditCustomersPage, {}, void 0, false, {
+              fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/App.tsx",
+              lineNumber: 71,
+              columnNumber: 16
+            }, this)
+          },
+          {
+            path: "companies",
+            element: /* @__PURE__ */ jsxDEV(CompanyPage, {}, void 0, false, {
+              fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/App.tsx",
+              lineNumber: 75,
+              columnNumber: 16
+            }, this)
+          },
+          {
+            path: "companies/add",
+            element: /* @__PURE__ */ jsxDEV(AddCompanyPage, {}, void 0, false, {
+              fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/App.tsx",
+              lineNumber: 79,
+              columnNumber: 16
+            }, this)
+          },
+          {
+            path: "companies/edit/:id",
+            element: /* @__PURE__ */ jsxDEV(EditCompanyPage, {}, void 0, false, {
+              fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/App.tsx",
+              lineNumber: 83,
+              columnNumber: 16
+            }, this)
+          },
+          {
+            path: "products",
+            element: /* @__PURE__ */ jsxDEV(ProductsPage, {}, void 0, false, {
+              fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/App.tsx",
+              lineNumber: 87,
+              columnNumber: 16
+            }, this)
+          },
+          {
+            path: "products/add",
+            element: /* @__PURE__ */ jsxDEV(AddProductPage, {}, void 0, false, {
+              fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/App.tsx",
+              lineNumber: 91,
+              columnNumber: 16
+            }, this)
+          },
+          {
+            path: "products/edit/:id",
+            element: /* @__PURE__ */ jsxDEV(EditProductPage, {}, void 0, false, {
+              fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/App.tsx",
+              lineNumber: 95,
+              columnNumber: 16
+            }, this)
+          },
+          {
+            path: "product-filters",
+            element: /* @__PURE__ */ jsxDEV(ProductFiltersPage, {}, void 0, false, {
+              fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/App.tsx",
+              lineNumber: 99,
+              columnNumber: 16
+            }, this)
+          },
+          {
+            path: "product-filter/add",
+            element: /* @__PURE__ */ jsxDEV(AddProductFilterPage, {}, void 0, false, {
+              fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/App.tsx",
+              lineNumber: 103,
+              columnNumber: 16
+            }, this)
+          },
+          {
+            path: "product-filter/edit/:id",
+            element: /* @__PURE__ */ jsxDEV(EditProductFilterPage, {}, void 0, false, {
+              fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/App.tsx",
+              lineNumber: 107,
+              columnNumber: 16
+            }, this)
+          },
+          {
+            path: "brands",
+            element: /* @__PURE__ */ jsxDEV(BrandsPage, {}, void 0, false, {
+              fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/App.tsx",
+              lineNumber: 111,
+              columnNumber: 16
+            }, this)
+          },
+          {
+            path: "brands/add",
+            element: /* @__PURE__ */ jsxDEV(AddBrandPage, {}, void 0, false, {
+              fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/App.tsx",
+              lineNumber: 115,
+              columnNumber: 16
+            }, this)
+          },
+          {
+            path: "brands/edit/:id",
+            element: /* @__PURE__ */ jsxDEV(EditBrandPage, {}, void 0, false, {
+              fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/App.tsx",
+              lineNumber: 119,
+              columnNumber: 16
+            }, this)
+          },
+          {
+            path: "Orders",
+            element: /* @__PURE__ */ jsxDEV(OrdersPage, {}, void 0, false, {
+              fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/App.tsx",
+              lineNumber: 123,
+              columnNumber: 16
+            }, this)
+          },
+          {
+            path: "orders/:id",
+            element: /* @__PURE__ */ jsxDEV(OrderPage, {}, void 0, false, {
+              fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/App.tsx",
+              lineNumber: 127,
+              columnNumber: 16
+            }, this)
+          },
+          {
+            path: "users",
+            element: /* @__PURE__ */ jsxDEV(UsersPage, {}, void 0, false, {
+              fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/App.tsx",
+              lineNumber: 131,
+              columnNumber: 16
+            }, this)
+          },
+          {
+            path: "users/add",
+            element: /* @__PURE__ */ jsxDEV(AddUserPage, {}, void 0, false, {
+              fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/App.tsx",
+              lineNumber: 135,
+              columnNumber: 16
+            }, this)
+          },
+          {
+            path: "users/edit/:id",
+            element: /* @__PURE__ */ jsxDEV(EditUserPage, {}, void 0, false, {
+              fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/App.tsx",
+              lineNumber: 139,
+              columnNumber: 16
+            }, this)
+          }
+        ]
+      },
+      {
+        path: "*",
+        element: /* @__PURE__ */ jsxDEV(NotFoundPage, {}, void 0, false, {
+          fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/App.tsx",
+          lineNumber: 145,
+          columnNumber: 14
+        }, this)
+      }
+    ]
+  );
+  return /* @__PURE__ */ jsxDEV(RouterProvider, { router }, void 0, false, {
+    fileName: "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/App.tsx",
+    lineNumber: 149,
+    columnNumber: 10
+  }, this);
+}
+_c = App;
+export default App;
+var _c;
+$RefreshReg$(_c, "App");
+import * as RefreshRuntime from "/admin/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/App.tsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/App.tsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+function $RefreshReg$(type, id) {
+  return RefreshRuntime.register(type, "C:/Users/ASUS/commercor-ecommerce-platform/admin-web/src/App.tsx " + id);
+}
+function $RefreshSig$() {
+  return RefreshRuntime.createSignatureFunctionForTransform();
+}
+
+//# sourceMappingURL=data:application/json;base64,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LFlBQ0VELE1BQU07QUFBQSxZQUNOQyxTQUFTLHVCQUFDLGVBQUQ7QUFBQTtBQUFBO0FBQUE7QUFBQSxtQkFBVTtBQUFBLFVBQ3JCO0FBQUEsVUFDQTtBQUFBLFlBQ0VELE1BQU07QUFBQSxZQUNOQyxTQUFTLHVCQUFDLGVBQUQ7QUFBQTtBQUFBO0FBQUE7QUFBQSxtQkFBVTtBQUFBLFVBQ3JCO0FBQUEsVUFDQTtBQUFBLFlBQ0VELE1BQU07QUFBQSxZQUNOQyxTQUFTLHVCQUFDLGlCQUFEO0FBQUE7QUFBQTtBQUFBO0FBQUEsbUJBQVk7QUFBQSxVQUN2QjtBQUFBLFVBQ0E7QUFBQSxZQUNFRCxNQUFNO0FBQUEsWUFDTkMsU0FBUyx1QkFBQyxrQkFBRDtBQUFBO0FBQUE7QUFBQTtBQUFBLG1CQUFhO0FBQUEsVUFDeEI7QUFBQSxRQUFDO0FBQUEsTUFFTDtBQUFBLE1BQ0E7QUFBQSxRQUNFRCxNQUFNO0FBQUEsUUFDTkMsU0FBUyx1QkFBQyxrQkFBRDtBQUFBO0FBQUE7QUFBQTtBQUFBLGVBQWE7QUFBQSxNQUN4QjtBQUFBLElBQUM7QUFBQSxFQUNGO0FBRUQsU0FBTyx1QkFBQyxrQkFBZSxVQUFoQjtBQUFBO0FBQUE7QUFBQTtBQUFBLFNBQStCO0FBQ3hDO0FBQUNHLEtBdkhRTjtBQXlIVCxlQUFlQTtBQUFJLElBQUFNO0FBQUFDLGFBQUFELElBQUEiLCJuYW1lcyI6WyJjcmVhdGVCcm93c2VyUm91dGVyIiwiUm91dGVyUHJvdmlkZXIiLCJEZWZhdWx0TGF5b3V0IiwiQ2F0ZWdvcmllc1BhZ2UiLCJIb21lUGFnZSIsIkFkZENhdGVnb3J5UGFnZSIsIkVkaXRDYXRlZ29yeVBhZ2UiLCJQcm9kdWN0c1BhZ2UiLCJFZGl0UHJvZHVjdFBhZ2UiLCJBZGRQcm9kdWN0UGFnZSIsIkJyYW5kc1BhZ2UiLCJFZGl0QnJhbmRQYWdlIiwiQWRkQnJhbmRQYWdlIiwiQ3VzdG9tZXJzUGFnZSIsIkVkaXRDdXN0b21lcnNQYWdlIiwiQWRkQ3VzdG9tZXJzUGFnZSIsIkNvbXBhbnlQYWdlIiwiRWRpdENvbXBhbnlQYWdlIiwiQWRkQ29tcGFueVBhZ2UiLCJPcmRlcnNQYWdlIiwiUHJvZHVjdEZpbHRlcnNQYWdlIiwiQWRkUHJvZHVjdEZpbHRlclBhZ2UiLCJFZGl0UHJvZHVjdEZpbHRlclBhZ2UiLCJVc2VyQ29udGV4dFByb3ZpZGVyIiwiTG9naW5QYWdlIiwiVXNlcnNQYWdlIiwiQWRkVXNlclBhZ2UiLCJFZGl0VXNlclBhZ2UiLCJOb3RGb3VuZFBhZ2UiLCJPcmRlclBhZ2UiLCJBcHAiLCJyb3V0ZXIiLCJwYXRoIiwiZWxlbWVudCIsImNoaWxkcmVuIiwiaW5kZXgiLCJfYyIsIiRSZWZyZXNoUmVnJCJdLCJpZ25vcmVMaXN0IjpbXSwic291cmNlcyI6WyJBcHAudHN4Il0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IGNyZWF0ZUJyb3dzZXJSb3V0ZXIsIFJvdXRlclByb3ZpZGVyIH0gZnJvbSBcInJlYWN0LXJvdXRlclwiO1xyXG5pbXBvcnQgRGVmYXVsdExheW91dCBmcm9tIFwiLi9jb21wb25lbnRzL3VpL2xheW91dHMvZGVmYXVsdExheW91dC9EZWZhdWx0TGF5b3V0LnRzeFwiO1xyXG5pbXBvcnQgQ2F0ZWdvcmllc1BhZ2UgZnJvbSBcIi4vcGFnZXMvY2F0ZWdvcmllcy9wYWdlLnRzeFwiO1xyXG5pbXBvcnQgSG9tZVBhZ2UgZnJvbSBcIi4vcGFnZXMvcGFnZS50c3hcIjtcclxuaW1wb3J0IEFkZENhdGVnb3J5UGFnZSBmcm9tIFwiLi9wYWdlcy9jYXRlZ29yaWVzL2FkZC9wYWdlLnRzeFwiO1xyXG5pbXBvcnQgRWRpdENhdGVnb3J5UGFnZSBmcm9tIFwiLi9wYWdlcy9jYXRlZ29yaWVzL2VkaXQvW2lkXS9wYWdlLnRzeFwiO1xyXG5pbXBvcnQgUHJvZHVjdHNQYWdlIGZyb20gXCIuL3BhZ2VzL3Byb2R1Y3RzL3BhZ2UudHN4XCI7XHJcbmltcG9ydCBFZGl0UHJvZHVjdFBhZ2UgZnJvbSBcIi4vcGFnZXMvcHJvZHVjdHMvZWRpdC9baWRdL3BhZ2UudHN4XCI7XHJcbmltcG9ydCBBZGRQcm9kdWN0UGFnZSBmcm9tIFwiLi9wYWdlcy9wcm9kdWN0cy9hZGQvcGFnZS50c3hcIjtcclxuaW1wb3J0IEJyYW5kc1BhZ2UgZnJvbSBcIi4vcGFnZXMvYnJhbmRzL3BhZ2UudHN4XCI7XHJcbmltcG9ydCBFZGl0QnJhbmRQYWdlIGZyb20gXCIuL3BhZ2VzL2JyYW5kcy9lZGl0L1tpZF0vcGFnZS50c3hcIjtcclxuaW1wb3J0IEFkZEJyYW5kUGFnZSBmcm9tIFwiLi9wYWdlcy9icmFuZHMvYWRkL3BhZ2UudHN4XCI7XHJcbmltcG9ydCBDdXN0b21lcnNQYWdlIGZyb20gXCIuL3BhZ2VzL2N1c3RvbWVycy9wYWdlLnRzeFwiO1xyXG5pbXBvcnQgRWRpdEN1c3RvbWVyc1BhZ2UgZnJvbSBcIi4vcGFnZXMvY3VzdG9tZXJzL2VkaXQvW2lkXS9wYWdlLnRzeFwiO1xyXG5pbXBvcnQgQWRkQ3VzdG9tZXJzUGFnZSBmcm9tIFwiLi9wYWdlcy9jdXN0b21lcnMvYWRkL3BhZ2UudHN4XCI7XHJcbmltcG9ydCBDb21wYW55UGFnZSBmcm9tIFwiLi9wYWdlcy9jb21wYW5pZXMvcGFnZS50c3hcIjtcclxuaW1wb3J0IEVkaXRDb21wYW55UGFnZSBmcm9tIFwiLi9wYWdlcy9jb21wYW5pZXMvZWRpdC9baWRdL3BhZ2UudHN4XCI7XHJcbmltcG9ydCBBZGRDb21wYW55UGFnZSBmcm9tIFwiLi9wYWdlcy9jb21wYW5pZXMvYWRkL3BhZ2UudHN4XCI7XHJcbmltcG9ydCBPcmRlcnNQYWdlIGZyb20gXCIuL3BhZ2VzL29yZGVycy9wYWdlLnRzeFwiO1xyXG5pbXBvcnQgUHJvZHVjdEZpbHRlcnNQYWdlIGZyb20gXCIuL3BhZ2VzL3Byb2R1Y3RGaWx0ZXJzL3BhZ2UudHN4XCI7XHJcbmltcG9ydCBBZGRQcm9kdWN0RmlsdGVyUGFnZSBmcm9tIFwiLi9wYWdlcy9wcm9kdWN0RmlsdGVycy9hZGQvcGFnZS50c3hcIjtcclxuaW1wb3J0IEVkaXRQcm9kdWN0RmlsdGVyUGFnZSBmcm9tIFwiLi9wYWdlcy9wcm9kdWN0RmlsdGVycy9lZGl0L1tpZF0vcGFnZS50c3hcIjtcclxuaW1wb3J0IHsgVXNlckNvbnRleHRQcm92aWRlciB9IGZyb20gXCIuL2NvbXBvbmVudHMvY29udGV4dHMvdXNlckNvbnRleHQvVXNlckNvbnRleHRQcm92aWRlci50c3hcIjtcclxuaW1wb3J0IExvZ2luUGFnZSBmcm9tIFwiLi9wYWdlcy9sb2dpbi9wYWdlLnRzeFwiO1xyXG5pbXBvcnQgVXNlcnNQYWdlIGZyb20gXCIuL3BhZ2VzL3VzZXJzL3BhZ2UudHN4XCI7XHJcbmltcG9ydCBBZGRVc2VyUGFnZSBmcm9tIFwiLi9wYWdlcy91c2Vycy9hZGQvcGFnZS50c3hcIjtcclxuaW1wb3J0IEVkaXRVc2VyUGFnZSBmcm9tIFwiLi9wYWdlcy91c2Vycy9lZGl0L1tpZF0vcGFnZS50c3hcIjtcclxuaW1wb3J0IE5vdEZvdW5kUGFnZSBmcm9tIFwiLi9wYWdlcy9ub3QtZm91bmQvcGFnZS50c3hcIjtcclxuaW1wb3J0IE9yZGVyUGFnZSBmcm9tIFwiLi9wYWdlcy9vcmRlcnMvW2lkXS9wYWdlLnRzeFwiO1xyXG5cclxuZnVuY3Rpb24gQXBwKCkge1xyXG4gIGNvbnN0IHJvdXRlciA9IGNyZWF0ZUJyb3dzZXJSb3V0ZXIoW1xyXG4gICAge1xyXG4gICAgICBwYXRoOiBcIi9hZG1pbi9sb2dpblwiLFxyXG4gICAgICBlbGVtZW50OiA8TG9naW5QYWdlIC8+LFxyXG4gICAgfSxcclxuICAgIHtcclxuICAgICAgcGF0aDogXCIvYWRtaW5cIixcclxuICAgICAgZWxlbWVudDogKFxyXG4gICAgICAgIDxVc2VyQ29udGV4dFByb3ZpZGVyPlxyXG4gICAgICAgICAgPERlZmF1bHRMYXlvdXQgLz5cclxuICAgICAgICA8L1VzZXJDb250ZXh0UHJvdmlkZXI+XHJcbiAgICAgICksXHJcbiAgICAgIGNoaWxkcmVuOiBbXHJcbiAgICAgICAge1xyXG4gICAgICAgICAgaW5kZXg6IHRydWUsXHJcbiAgICAgICAgICBlbGVtZW50OiA8SG9tZVBhZ2UgLz4sXHJcbiAgICAgICAgfSxcclxuICAgICAgICB7XHJcbiAgICAgICAgICBwYXRoOiBcImNhdGVnb3JpZXNcIixcclxuICAgICAgICAgIGVsZW1lbnQ6IDxDYXRlZ29yaWVzUGFnZSAvPixcclxuICAgICAgICB9LFxyXG4gICAgICAgIHtcclxuICAgICAgICAgIHBhdGg6IFwiY2F0ZWdvcmllcy9hZGRcIixcclxuICAgICAgICAgIGVsZW1lbnQ6IDxBZGRDYXRlZ29yeVBhZ2UgLz4sXHJcbiAgICAgICAgfSxcclxuICAgICAgICB7XHJcbiAgICAgICAgICBwYXRoOiBcImNhdGVnb3JpZXMvZWRpdC86aWRcIixcclxuICAgICAgICAgIGVsZW1lbnQ6IDxFZGl0Q2F0ZWdvcnlQYWdlIC8+LFxyXG4gICAgICAgIH0sXHJcbiAgICAgICAge1xyXG4gICAgICAgICAgcGF0aDogXCJjdXN0b21lcnNcIixcclxuICAgICAgICAgIGVsZW1lbnQ6IDxDdXN0b21lcnNQYWdlIC8+LFxyXG4gICAgICAgIH0sXHJcbiAgICAgICAge1xyXG4gICAgICAgICAgcGF0aDogXCJjdXN0b21lcnMvYWRkXCIsXHJcbiAgICAgICAgICBlbGVtZW50OiA8QWRkQ3VzdG9tZXJzUGFnZSAvPixcclxuICAgICAgICB9LFxyXG4gICAgICAgIHtcclxuICAgICAgICAgIHBhdGg6IFwiY3VzdG9tZXJzL2VkaXQvOmlkXCIsXHJcbiAgICAgICAgICBlbGVtZW50OiA8RWRpdEN1c3RvbWVyc1BhZ2UgLz4sXHJcbiAgICAgICAgfSxcclxuICAgICAgICB7XHJcbiAgICAgICAgICBwYXRoOiBcImNvbXBhbmllc1wiLFxyXG4gICAgICAgICAgZWxlbWVudDogPENvbXBhbnlQYWdlIC8+LFxyXG4gICAgICAgIH0sXHJcbiAgICAgICAge1xyXG4gICAgICAgICAgcGF0aDogXCJjb21wYW5pZXMvYWRkXCIsXHJcbiAgICAgICAgICBlbGVtZW50OiA8QWRkQ29tcGFueVBhZ2UgLz4sXHJcbiAgICAgICAgfSxcclxuICAgICAgICB7XHJcbiAgICAgICAgICBwYXRoOiBcImNvbXBhbmllcy9lZGl0LzppZFwiLFxyXG4gICAgICAgICAgZWxlbWVudDogPEVkaXRDb21wYW55UGFnZSAvPixcclxuICAgICAgICB9LFxyXG4gICAgICAgIHtcclxuICAgICAgICAgIHBhdGg6IFwicHJvZHVjdHNcIixcclxuICAgICAgICAgIGVsZW1lbnQ6IDxQcm9kdWN0c1BhZ2UgLz4sXHJcbiAgICAgICAgfSxcclxuICAgICAgICB7XHJcbiAgICAgICAgICBwYXRoOiBcInByb2R1Y3RzL2FkZFwiLFxyXG4gICAgICAgICAgZWxlbWVudDogPEFkZFByb2R1Y3RQYWdlIC8+LFxyXG4gICAgICAgIH0sXHJcbiAgICAgICAge1xyXG4gICAgICAgICAgcGF0aDogXCJwcm9kdWN0cy9lZGl0LzppZFwiLFxyXG4gICAgICAgICAgZWxlbWVudDogPEVkaXRQcm9kdWN0UGFnZSAvPixcclxuICAgICAgICB9LFxyXG4gICAgICAgIHtcclxuICAgICAgICAgIHBhdGg6IFwicHJvZHVjdC1maWx0ZXJzXCIsXHJcbiAgICAgICAgICBlbGVtZW50OiA8UHJvZHVjdEZpbHRlcnNQYWdlIC8+LFxyXG4gICAgICAgIH0sXHJcbiAgICAgICAge1xyXG4gICAgICAgICAgcGF0aDogXCJwcm9kdWN0LWZpbHRlci9hZGRcIixcclxuICAgICAgICAgIGVsZW1lbnQ6IDxBZGRQcm9kdWN0RmlsdGVyUGFnZSAvPixcclxuICAgICAgICB9LFxyXG4gICAgICAgIHtcclxuICAgICAgICAgIHBhdGg6IFwicHJvZHVjdC1maWx0ZXIvZWRpdC86aWRcIixcclxuICAgICAgICAgIGVsZW1lbnQ6IDxFZGl0UHJvZHVjdEZpbHRlclBhZ2UgLz4sXHJcbiAgICAgICAgfSxcclxuICAgICAgICB7XHJcbiAgICAgICAgICBwYXRoOiBcImJyYW5kc1wiLFxyXG4gICAgICAgICAgZWxlbWVudDogPEJyYW5kc1BhZ2UgLz4sXHJcbiAgICAgICAgfSxcclxuICAgICAgICB7XHJcbiAgICAgICAgICBwYXRoOiBcImJyYW5kcy9hZGRcIixcclxuICAgICAgICAgIGVsZW1lbnQ6IDxBZGRCcmFuZFBhZ2UgLz4sXHJcbiAgICAgICAgfSxcclxuICAgICAgICB7XHJcbiAgICAgICAgICBwYXRoOiBcImJyYW5kcy9lZGl0LzppZFwiLFxyXG4gICAgICAgICAgZWxlbWVudDogPEVkaXRCcmFuZFBhZ2UgLz4sXHJcbiAgICAgICAgfSxcclxuICAgICAgICB7XHJcbiAgICAgICAgICBwYXRoOiBcIk9yZGVyc1wiLFxyXG4gICAgICAgICAgZWxlbWVudDogPE9yZGVyc1BhZ2UgLz4sXHJcbiAgICAgICAgfSxcclxuICAgICAgICB7XHJcbiAgICAgICAgICBwYXRoOiBcIm9yZGVycy86aWRcIixcclxuICAgICAgICAgIGVsZW1lbnQ6IDxPcmRlclBhZ2UgLz4sXHJcbiAgICAgICAgfSxcclxuICAgICAgICB7XHJcbiAgICAgICAgICBwYXRoOiBcInVzZXJzXCIsXHJcbiAgICAgICAgICBlbGVtZW50OiA8VXNlcnNQYWdlIC8+LFxyXG4gICAgICAgIH0sXHJcbiAgICAgICAge1xyXG4gICAgICAgICAgcGF0aDogXCJ1c2Vycy9hZGRcIixcclxuICAgICAgICAgIGVsZW1lbnQ6IDxBZGRVc2VyUGFnZSAvPixcclxuICAgICAgICB9LFxyXG4gICAgICAgIHtcclxuICAgICAgICAgIHBhdGg6IFwidXNlcnMvZWRpdC86aWRcIixcclxuICAgICAgICAgIGVsZW1lbnQ6IDxFZGl0VXNlclBhZ2UgLz4sXHJcbiAgICAgICAgfSxcclxuICAgICAgXSxcclxuICAgIH0sXHJcbiAgICB7XHJcbiAgICAgIHBhdGg6IFwiKlwiLFxyXG4gICAgICBlbGVtZW50OiA8Tm90Rm91bmRQYWdlIC8+LFxyXG4gICAgfSxcclxuICBdKTtcclxuXHJcbiAgcmV0dXJuIDxSb3V0ZXJQcm92aWRlciByb3V0ZXI9e3JvdXRlcn0gLz47XHJcbn1cclxuXHJcbmV4cG9ydCBkZWZhdWx0IEFwcDtcclxuIl0sImZpbGUiOiJDOi9Vc2Vycy9BU1VTL2NvbW1lcmNvci1lY29tbWVyY2UtcGxhdGZvcm0vYWRtaW4td2ViL3NyYy9BcHAudHN4In0=

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 import { Button, Form, message } from "antd";
 import CategoryForm from "../../../components/ui/forms/categoryForm/CategoryForm.tsx";
 import { createCategoriesService } from "../../../service/apiServices/categoryServices.ts";
@@ -31,16 +32,27 @@ function AddCategoryPage() {
   };
 
   return (
-    <div className={"flex flex-col gap-5"}>
-      <Link to={"/admin/categories"}>
-        <Button>Go Back</Button>
-      </Link>
-      <CategoryForm
-        form={form}
-        onFinish={onFinish}
-        loading={loading}
-        onCancel={handleCancel}
-      />
+    <div className="management-page management-editor">
+      <header className="management-editor__header">
+        <Link to="/admin/categories">
+          <Button type="text" icon={<ArrowLeftOutlined />}>
+            Categories
+          </Button>
+        </Link>
+        <div>
+          <span className="management-kicker">Catalog structure</span>
+          <h1>Create category</h1>
+          <p>Add translated category content, hierarchy, and imagery.</p>
+        </div>
+      </header>
+      <section className="management-form-surface">
+        <CategoryForm
+          form={form}
+          onFinish={onFinish}
+          loading={loading}
+          onCancel={handleCancel}
+        />
+      </section>
     </div>
   );
 }

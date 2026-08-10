@@ -32,10 +32,10 @@ import { FilesModule } from '@/src/modules/files/files.module';
       username: DB_USERNAME,
       password: DB_PASSWORD,
       database: DB_NAME,
-      synchronize: true,
+      synchronize: false,
       entities: [
-        'dist/libs/models/entities/*.entity.{js,ts}',
-        'dist/libs/models/entities/*/*.entity.{js,ts}',
+        __dirname + '/libs/models/entities/*.entity.{js,ts}',
+        __dirname + '/libs/models/entities/*/*.entity.{js,ts}',
       ],
     }),
     CategoriesModule,

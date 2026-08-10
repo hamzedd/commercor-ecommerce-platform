@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 import { Button, Form, message } from "antd";
 import ProductForm from "../../../components/ui/forms/productForm/ProductForm.tsx";
 import { createProductsService } from "../../../service/apiServices/productServices.ts";
@@ -27,16 +28,27 @@ function AddProductPage() {
   };
 
   return (
-    <div className={"flex flex-col gap-5"}>
-      <Link to={"/admin/products"}>
-        <Button>Go Back</Button>
-      </Link>
-      <ProductForm
-        form={form}
-        onFinish={onFinish}
-        loading={loading}
-        onCancel={handleCancel}
-      />
+    <div className="management-page management-editor">
+      <header className="management-editor__header">
+        <Link to="/admin/products">
+          <Button type="text" icon={<ArrowLeftOutlined />}>
+            Products
+          </Button>
+        </Link>
+        <div>
+          <span className="management-kicker">Catalog</span>
+          <h1>Create product</h1>
+          <p>Add product details, translations, pricing, stock, and imagery.</p>
+        </div>
+      </header>
+      <section className="management-form-surface">
+        <ProductForm
+          form={form}
+          onFinish={onFinish}
+          loading={loading}
+          onCancel={handleCancel}
+        />
+      </section>
     </div>
   );
 }

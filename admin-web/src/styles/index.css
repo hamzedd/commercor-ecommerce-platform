@@ -383,6 +383,293 @@ body {
   background: var(--admin-sidebar);
 }
 
+.management-page {
+  display: flex;
+  width: min(100%, 1280px);
+  margin: 0 auto;
+  flex-direction: column;
+  gap: 24px;
+}
+.management-list-page {
+  width: 100%;
+  margin: 0;
+}
+.management-hero {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+}
+.management-kicker,
+.management-surface__heading span:first-child {
+  color: var(--admin-accent);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+.management-hero h1,
+.management-editor__header h1 {
+  margin-top: 6px;
+  color: var(--admin-ink);
+  font-size: clamp(30px, 4vw, 42px);
+  line-height: 1.1;
+  letter-spacing: -0.045em;
+}
+.management-hero p,
+.management-editor__header p {
+  margin-top: 8px;
+  color: var(--admin-muted);
+  font-size: 14px;
+}
+.management-hero .ant-btn-primary {
+  border-color: var(--admin-ink);
+  background: var(--admin-ink);
+  box-shadow: none;
+}
+.management-hero .ant-btn-primary:hover {
+  border-color: var(--admin-accent) !important;
+  background: var(--admin-accent) !important;
+}
+.management-surface,
+.management-form-surface {
+  overflow: hidden;
+  border: 1px solid var(--admin-line);
+  border-radius: 16px;
+  background: var(--admin-surface);
+  box-shadow: 0 2px 3px rgba(37, 33, 29, 0.025);
+}
+.management-surface__heading {
+  display: flex;
+  min-height: 80px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--admin-line);
+}
+.management-surface__heading h2 {
+  margin-top: 3px;
+  font-size: 19px;
+  letter-spacing: -0.025em;
+}
+.management-count {
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: var(--admin-accent-soft);
+  color: var(--admin-accent);
+  font-size: 11px;
+  font-weight: 700;
+}
+.management-surface .ant-table-wrapper .ant-table {
+  border-radius: 0;
+}
+.management-surface .ant-table-thead > tr > th {
+  padding-block: 13px;
+  border-bottom-color: var(--admin-line);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.management-surface .ant-table-tbody > tr > td {
+  padding-block: 15px;
+  border-bottom-color: #eee9e4;
+}
+.management-table-identity,
+.management-mobile-card__top {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 13px;
+}
+.management-table-identity > div,
+.management-mobile-card__identity {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+.management-table-identity strong,
+.management-mobile-card__identity h3 {
+  overflow: hidden;
+  color: var(--admin-ink);
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.management-table-identity span,
+.management-table-identity small,
+.management-mobile-card__identity span {
+  overflow: hidden;
+  margin-top: 3px;
+  color: var(--admin-muted);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.management-thumb {
+  flex: 0 0 auto;
+  overflow: hidden;
+  border: 1px solid var(--admin-line);
+  border-radius: 10px;
+  background: #f7f4f0;
+  object-fit: cover;
+}
+.management-thumb--empty {
+  display: grid;
+  width: 56px;
+  height: 56px;
+  place-items: center;
+  color: #aaa197;
+  font-size: 18px;
+}
+.management-description {
+  color: #5d554d;
+}
+.management-price {
+  font-variant-numeric: tabular-nums;
+}
+.management-order-id {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+.management-order-id strong {
+  overflow: hidden;
+  color: var(--admin-ink);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.management-order-id span {
+  margin-top: 3px;
+  color: var(--admin-muted);
+  font-size: 10px;
+}
+.management-person {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 11px;
+}
+.management-person__avatar {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid #dfd3c7;
+  border-radius: 50%;
+  background: var(--admin-accent-soft);
+  color: var(--admin-accent);
+  font-size: 12px;
+  font-weight: 800;
+}
+.management-person > div {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+.management-person strong,
+.management-person span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.management-person strong {
+  font-size: 13px;
+}
+.management-person span:last-child {
+  margin-top: 2px;
+  color: var(--admin-muted);
+  font-size: 10px;
+}
+.management-email {
+  color: #5d554d;
+}
+.management-email:hover {
+  color: var(--admin-accent);
+}
+.management-company-key,
+.management-filter-card__heading {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 12px;
+}
+.management-detail-icon {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 10px;
+  background: var(--admin-accent-soft);
+  color: var(--admin-accent);
+  font-size: 15px;
+}
+.management-company-key > div {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+.management-company-key strong,
+.management-company-key span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.management-company-key span:last-child {
+  margin-top: 3px;
+  color: var(--admin-muted);
+  font-size: 10px;
+}
+.management-tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.management-tag-list .ant-tag {
+  margin: 0;
+}
+.management-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.management-actions .ant-btn {
+  padding-inline: 9px;
+}
+.management-mobile-list {
+  display: none;
+}
+.management-editor {
+  max-width: 960px;
+}
+.management-editor__header {
+  display: grid;
+  gap: 14px;
+}
+.management-editor__header > a {
+  width: fit-content;
+}
+.management-editor__header > a .ant-btn {
+  padding-inline: 0;
+  color: var(--admin-muted);
+}
+.management-form-surface {
+  padding: clamp(20px, 3vw, 34px);
+}
+.management-form-surface--tabs {
+  padding-top: 12px;
+}
+.management-form-surface .ant-tabs-nav {
+  margin-bottom: 24px;
+}
+.management-form-surface .ant-form-item:last-child {
+  margin-bottom: 0;
+  padding-top: 8px;
+}
+
 @media (max-width: 1023px) {
   .admin-sidebar {
     display: none;
@@ -442,6 +729,142 @@ body {
   }
   .dashboard-note {
     padding: 22px;
+  }
+  .management-page {
+    gap: 20px;
+  }
+  .management-hero {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .management-hero .ant-btn {
+    width: 100%;
+  }
+  .management-desktop-table {
+    display: none;
+  }
+  .management-mobile-list {
+    display: grid;
+    gap: 12px;
+    padding: 12px;
+    background: #faf8f5;
+  }
+  .management-mobile-card {
+    min-width: 0;
+    padding: 16px;
+    border: 1px solid var(--admin-line);
+    border-radius: 13px;
+    background: white;
+  }
+  .management-mobile-card__identity {
+    flex: 1;
+  }
+  .management-mobile-card__description {
+    display: -webkit-box;
+    margin-top: 14px;
+    overflow: hidden;
+    color: #5d554d;
+    font-size: 12px;
+    line-height: 1.6;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+  .management-mobile-card__facts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: 15px;
+    padding: 13px 0;
+    border-block: 1px solid #eee9e4;
+  }
+  .management-mobile-card__facts > div + div {
+    padding-left: 14px;
+    border-left: 1px solid #eee9e4;
+  }
+  .management-mobile-card__facts dt,
+  .management-category-parent > span {
+    color: var(--admin-muted);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .management-mobile-card__facts dd {
+    margin-top: 5px;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .management-mobile-card .management-actions {
+    justify-content: flex-end;
+    margin-top: 8px;
+  }
+  .management-order-card__heading {
+    display: flex;
+    min-width: 0;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .management-order-card__heading .management-order-id {
+    flex: 1;
+  }
+  .management-person--mobile {
+    margin-top: 16px;
+    padding: 13px;
+    border-radius: 10px;
+    background: #f7f4f0;
+  }
+  .management-customer-facts {
+    display: grid;
+    gap: 13px;
+    margin-top: 16px;
+    padding-block: 14px;
+    border-block: 1px solid #eee9e4;
+  }
+  .management-customer-facts dt {
+    color: var(--admin-muted);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .management-customer-facts dd {
+    margin-top: 3px;
+    overflow-wrap: anywhere;
+    color: var(--admin-ink);
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .management-filter-card__heading .management-mobile-card__identity {
+    flex: 1;
+  }
+  .management-category-parent {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 15px;
+    padding-block: 12px;
+    border-block: 1px solid #eee9e4;
+  }
+  .management-category-parent--stacked {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .management-empty {
+    padding: 36px 12px;
+  }
+  .management-form-surface {
+    padding: 18px 16px;
+  }
+  .management-form-surface .ant-space {
+    display: flex;
+    width: 100%;
+  }
+  .management-form-surface .ant-space-item {
+    flex: 1;
+  }
+  .management-form-surface .ant-space-item .ant-btn {
+    width: 100%;
   }
 }
 

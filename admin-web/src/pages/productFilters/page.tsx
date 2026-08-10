@@ -1,4 +1,5 @@
-import { Button, Space } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
+import { Alert, Button } from "antd";
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import { getProductFiltersService } from "../../service/apiServices/productFilterServices.ts";
@@ -7,14 +8,18 @@ import ProductFiltersTable from "../../components/ui/tables/productFiltersTable/
 
 function ProductFiltersPage() {
   const [loading, setLoading] = useState(false);
-  const [products, setProductFilters] = useState<ProductFilterType[]>([]);
+  const [productFilters, setProductFilters] = useState<ProductFilterType[]>([]);
+  const [error, setError] = useState(false);
   const navigate = useNavigate();
 
   const fetchProductFilters = async () => {
     try {
       setLoading(true);
+      setError(false);
       const data = await getProductFiltersService();
       setProductFilters(data);
+    } catch {
+      setError(true);
     } finally {
       setLoading(false);
     }
@@ -25,19 +30,42 @@ function ProductFiltersPage() {
   }, []);
 
   return (
-    <Space direction={"vertical"} className={"w-full"}>
-      <Button
-        type="primary"
-        onClick={() => navigate("/admin/product-filter/add")}
-      >
-        Add product Filter
-      </Button>
+    <div className="management-page management-list-page">
+      <header className="management-hero">
+        <div>
+          <span className="management-kicker">Catalog attributes</span>
+          <h1>Product Filters</h1>
+          <p>
+            Manage filter types, translations, and their existing option
+            relationships.
+          </p>
+        </div>
+        <Button
+          type="primary"
+          size="large"
+          icon={<PlusOutlined />}
+          onClick={() => navigate("/admin/product-filter/add")}
+        >
+          Create Product Filter
+        </Button>
+      </header>
+      {error && (
+        <Alert
+          type="error"
+          showIcon
+          message="Product filters could not be loaded"
+          description="Check your connection and try again."
+          action={
+            <Button onClick={() => void fetchProductFilters()}>Retry</Button>
+          }
+        />
+      )}
       <ProductFiltersTable
-        data={products}
+        data={productFilters}
         loading={loading}
         fetchData={fetchProductFilters}
       />
-    </Space>
+    </div>
   );
 }
 

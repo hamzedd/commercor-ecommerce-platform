@@ -11,6 +11,7 @@ export type CategoryTranslationType = {
 
 export type CategoryType = {
   id: string;
+  image?: string;
   created_at: string;
   parentId?: CategoryType["id"];
   translations: Array<CategoryTranslationType>;

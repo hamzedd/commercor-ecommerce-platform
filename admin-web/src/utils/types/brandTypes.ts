@@ -1,5 +1,5 @@
 export type BrandTranslationType = {
-  brandId: string | number;  
+  brandId: string | number;
   created_at: string;
   deleted_at: string;
   description: string;
@@ -9,9 +9,8 @@ export type BrandTranslationType = {
   metaTitle: string;
   name: string;
   slug: string;
-  updated_at: string; 
+  updated_at: string;
 };
-
 
 export type BrandImageType = {
   id: string;
@@ -22,7 +21,8 @@ export type BrandType = {
   createdAt?: string;
   deleted_at: string;
   id: string;
-  imagepath: string;
+  image?: string;
+  imagepath?: string;
   rank: number;
   translations?: Array<BrandTranslationType>;
   updated_at: string;

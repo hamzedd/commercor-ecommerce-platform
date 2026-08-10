@@ -1,3 +1,4 @@
+import { DeleteOutlined } from "@ant-design/icons";
 import { Button, message, Modal } from "antd";
 import { deleteCustomersService } from "../../../../../service/apiServices/customerServices.ts";
 
@@ -31,12 +32,12 @@ function DeleteCustomer({
 
   return (
     <Button
-      type="link"
+      type="text"
+      icon={<DeleteOutlined />}
       danger
       onClick={() => {
         handleDelete();
       }}
-      style={{ padding: "4px 8px", cursor: "pointer" }}
     >
       Delete
     </Button>

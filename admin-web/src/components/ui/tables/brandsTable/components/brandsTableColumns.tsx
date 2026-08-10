@@ -1,95 +1,89 @@
+import { PictureOutlined } from "@ant-design/icons";
+import { Image, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import type {
   BrandTranslationType,
   BrandType,
 } from "../../../../../utils/types/brandTypes.ts";
 import getImageSrcByBucketAndFileNames from "../../../../../utils/functions/getImageSrcByBucketAndFileNames.ts";
-import { Image } from "antd";
+
+export function brandTranslation(
+  brand: BrandType,
+): BrandTranslationType | undefined {
+  return (
+    brand.translations?.find((item) => item.lang?.toLowerCase() === "en") ??
+    brand.translations?.[0]
+  );
+}
+
+export function brandImage(brand: BrandType) {
+  return brand.image || brand.imagepath;
+}
 
 export default [
   {
-    title: "Name",
-    dataIndex: ["translations"],
-    key: "name",
-    render: (translations) => {
-      if (!translations) return "-";
-      if (translations.EN && translations.EN.name) return translations.EN.name;
-      const first = Object.values(translations)[0] as BrandTranslationType;
-      return (first && first.name) || "-";
+    title: "Brand",
+    key: "brand",
+    width: 340,
+    render: (_, brand) => {
+      const translation = brandTranslation(brand);
+      const image = brandImage(brand);
+      return (
+        <div className="management-table-identity">
+          {image ? (
+            <Image
+              className="management-thumb"
+              width={56}
+              height={56}
+              preview={false}
+              src={getImageSrcByBucketAndFileNames({
+                bucketName: "brands",
+                fileName: image,
+              })}
+              alt={translation?.name || "Brand"}
+            />
+          ) : (
+            <span className="management-thumb management-thumb--empty">
+              <PictureOutlined />
+            </span>
+          )}
+          <div>
+            <strong>{translation?.name || "Untitled brand"}</strong>
+            <span>{translation?.slug || `ID: ${brand.id}`}</span>
+            {brand.translations && (
+              <small>
+                {brand.translations.length}{" "}
+                {brand.translations.length === 1
+                  ? "translation"
+                  : "translations"}
+              </small>
+            )}
+          </div>
+        </div>
+      );
     },
-  },
-  {
-    title: "Image",
-    dataIndex: "image",
-    key: "image",
-    render: (image: string) => (
-      <Image
-        src={getImageSrcByBucketAndFileNames({
-          bucketName: "brands",
-          fileName: image,
-        })}
-        width={150}
-        height={150}
-        alt="Brand Image"
-      />
-    ),
   },
   {
     title: "Description",
-    dataIndex: ["translations"],
     key: "description",
-    render: (translations) => {
-      if (!translations) return "-";
-      if (translations.EN && translations.EN.description)
-        return translations.EN.description;
-      const first = Object.values(translations)[0] as BrandTranslationType;
-      return (first && first.description) || "-";
-    },
-  },
-  {
-    title: "Meta Title",
-    dataIndex: ["translations"],
-    key: "metaTitle",
-    render: (translations) => {
-      if (!translations) return "-";
-      if (translations.EN && translations.EN.metaTitle)
-        return translations.EN.metaTitle;
-      const first = Object.values(translations)[0] as BrandTranslationType;
-      return (first && first.metaTitle) || "-";
-    },
-  },
-  {
-    title: "Meta Description",
-    dataIndex: ["translations"],
-    key: "metaDescription",
-    render: (translations) => {
-      if (!translations) return "-";
-      if (translations.EN && translations.EN.metaDescription)
-        return translations.EN.metaDescription;
-      const first = Object.values(translations)[0] as BrandTranslationType;
-      return (first && first.metaDescription) || "-";
-    },
-  },
-  {
-    title: "Slug",
-    dataIndex: ["translations"],
-    key: "slug",
-    render: (translations) => {
-      if (!translations) return "-";
-      if (translations.EN && translations.EN.slug) return translations.EN.slug;
-      const first = Object.values(translations)[0] as BrandTranslationType;
-      return (first && first.slug) || "-";
-    },
+    ellipsis: true,
+    render: (_, brand) => (
+      <span className="management-description">
+        {brandTranslation(brand)?.description || "No description"}
+      </span>
+    ),
   },
   {
     title: "Rank",
     dataIndex: "rank",
     key: "rank",
-    render: (rank: any) =>
-      rank === null || rank === undefined ? "-" : String(rank),
+    width: 110,
+    render: (rank?: number) =>
+      rank === undefined || rank === null ? (
+        <Tag>Not set</Tag>
+      ) : (
+        <Tag color="gold">{rank}</Tag>
+      ),
   },
-  {
-    title: "Actions",
-    key: "actions",
-  },
+  { title: "Actions", key: "actions", width: 180, fixed: "right" },
 ] as ColumnsType<BrandType>;
