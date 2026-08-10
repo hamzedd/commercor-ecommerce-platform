@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
-import { Button, Form, message, Spin } from "antd";
+import { ArrowLeftOutlined } from "@ant-design/icons";
+import { Button, Form, message, Skeleton } from "antd";
 import UserForm from "../../../../components/ui/forms/userForm/UserForm";
 import {
   getUserService,
@@ -45,22 +46,35 @@ function EditUserPage() {
   }, [id]);
 
   return (
-    <div className={"flex flex-col gap-5"}>
-      <Link to={"/admin/users"}>
-        <Button>Go Back</Button>
-      </Link>
-      {initialValues ? (
-        <UserForm
-          form={form}
-          isEdit
-          onFinish={onFinish}
-          loading={loading}
-          onCancel={handleCancel}
-          initialValues={initialValues}
-        />
-      ) : (
-        <Spin spinning />
-      )}
+    <div className="management-page management-editor">
+      <header className="management-editor__header">
+        <Link to="/admin/users">
+          <Button type="text" icon={<ArrowLeftOutlined />}>
+            Admin users
+          </Button>
+        </Link>
+        <div>
+          <span className="management-kicker">Access control</span>
+          <h1>Edit admin user</h1>
+          <p>
+            Update account credentials and the assigned administrative role.
+          </p>
+        </div>
+      </header>
+      <section className="management-form-surface">
+        {initialValues ? (
+          <UserForm
+            form={form}
+            isEdit
+            onFinish={onFinish}
+            loading={loading}
+            onCancel={handleCancel}
+            initialValues={initialValues}
+          />
+        ) : (
+          <Skeleton active paragraph={{ rows: 5 }} />
+        )}
+      </section>
     </div>
   );
 }

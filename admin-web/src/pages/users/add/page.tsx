@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 import { Button, Form, message } from "antd";
 import UserForm from "../../../components/ui/forms/userForm/UserForm.tsx";
 import { addUsersService } from "../../../service/apiServices/usersServices.ts";
@@ -31,16 +32,27 @@ function AddUserPage() {
   };
 
   return (
-    <div className={"flex flex-col gap-5"}>
-      <Link to={"/admin/users"}>
-        <Button>Go Back</Button>
-      </Link>
-      <UserForm
-        form={form}
-        onFinish={onFinish}
-        loading={loading}
-        onCancel={handleCancel}
-      />
+    <div className="management-page management-editor">
+      <header className="management-editor__header">
+        <Link to="/admin/users">
+          <Button type="text" icon={<ArrowLeftOutlined />}>
+            Admin users
+          </Button>
+        </Link>
+        <div>
+          <span className="management-kicker">Access control</span>
+          <h1>Create admin user</h1>
+          <p>Add credentials and assign an existing administrative role.</p>
+        </div>
+      </header>
+      <section className="management-form-surface">
+        <UserForm
+          form={form}
+          onFinish={onFinish}
+          loading={loading}
+          onCancel={handleCancel}
+        />
+      </section>
     </div>
   );
 }
