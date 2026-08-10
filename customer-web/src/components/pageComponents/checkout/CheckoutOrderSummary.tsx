@@ -9,6 +9,8 @@ import { useRouter } from "@/src/i18n/navigation";
 import { createOrderService } from "@/src/service/apiServices/order.service";
 import { AddressType } from "@/src/utils/types/address.type";
 import { CreateOrderItemType } from "@/src/utils/types/order.type";
+import { useStoreSettings } from "@/src/components/providers/StoreSettingsProvider";
+import formatCurrency from "@/src/utils/functions/formatCurrency";
 
 interface Props {
   cart: CreateOrderItemType[];
@@ -16,8 +18,9 @@ interface Props {
   productPrices: Record<string, string | undefined>;
 }
 
-function CheckoutOrderSummary({ cart, productPrices }: Props) {
+function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
   const t = useTranslations();
+  const settings = useStoreSettings();
   const router = useRouter();
   const [selectedAddress, setSelectedAddress] = useState<AddressType["id"]>("");
 
@@ -49,13 +52,13 @@ function CheckoutOrderSummary({ cart, productPrices }: Props) {
         <div className="flex items-center justify-between gap-4">
           <dt className="text-sm text-stone-600">{t("subtotal")}</dt>
           <dd className="text-base font-semibold text-stone-950">
-            ${totalPrice.toFixed(2)}
+            {formatCurrency(totalPrice, settings.currencyCode, lang)}
           </dd>
         </div>
         <div className="mt-3 flex items-center justify-between gap-4 border-t border-stone-100 pt-3">
           <dt className="font-bold text-stone-950">{t("total")}</dt>
           <dd className="text-2xl font-bold tracking-tight text-stone-950">
-            ${totalPrice.toFixed(2)}
+            {formatCurrency(totalPrice, settings.currencyCode, lang)}
           </dd>
         </div>
       </dl>

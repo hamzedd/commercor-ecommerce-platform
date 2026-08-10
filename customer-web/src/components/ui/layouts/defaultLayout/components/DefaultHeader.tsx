@@ -11,7 +11,7 @@ import RegisterModal from "@/src/components/ui/modals/registerModal/RegisterModa
 import { useCurrentUserQuery } from "@/src/service/react-query/user/query/useCurrentUserQuery";
 import { Link } from "@/src/i18n/navigation";
 import { useModalStore } from "@/src/components/providers/modalStoreProvider";
-import { CompanyDetailType } from "@/src/utils/types/companyDetail.type";
+import { StoreSettingsType } from "@/src/utils/types/storeSettings.type";
 import getImageSrcByBucketAndFileNames from "@/src/utils/functions/getImageSrcByBucketAndFileNames";
 import {
   CART_UPDATED_EVENT,
@@ -19,10 +19,10 @@ import {
 } from "@/src/utils/cart/cartStorage";
 
 interface Props {
-  logo: CompanyDetailType;
+  settings: StoreSettingsType;
 }
 
-function DefaultHeader({ logo }: Props) {
+function DefaultHeader({ settings }: Props) {
   const t = useTranslations();
   const { data: userData } = useCurrentUserQuery();
 
@@ -72,13 +72,13 @@ function DefaultHeader({ logo }: Props) {
             href="/"
             className="flex min-w-0 shrink items-center gap-2 transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:outline-none md:shrink-0 md:gap-3"
           >
-            {logo?.image ? (
+            {settings.logo ? (
               <Image
                 src={getImageSrcByBucketAndFileNames({
                   bucketName: "commercor",
-                  fileName: logo.image,
+                  fileName: settings.logo,
                 })}
-                alt={logo.value || "Store logo"}
+                alt={`${settings.storeName} logo`}
                 className="h-9 max-w-32 object-contain md:h-11 md:max-w-none"
                 width={140}
                 height={44}
@@ -92,7 +92,7 @@ function DefaultHeader({ logo }: Props) {
 
                 <div className="hidden sm:block">
                   <p className="text-xl font-bold tracking-tight text-gray-950">
-                    {logo?.value || "Commercor"}
+                    {settings.storeName}
                   </p>
 
                   <p className="text-[10px] font-medium tracking-[0.2em] text-gray-400 uppercase">

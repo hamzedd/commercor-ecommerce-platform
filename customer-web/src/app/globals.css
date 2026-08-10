@@ -17,6 +17,40 @@
 }
 
 @layer base {
+  :root {
+    --store-primary: #1c1917;
+    --store-accent: #d97706;
+  }
+  a,
+  button {
+    --tw-ring-color: var(--store-accent);
+  }
+  .bg-amber-400,
+  .bg-amber-500,
+  .bg-amber-600 {
+    background-color: var(--store-accent) !important;
+  }
+  .bg-amber-100 {
+    background-color: color-mix(
+      in srgb,
+      var(--store-accent) 16%,
+      white
+    ) !important;
+  }
+  .text-amber-200,
+  .text-amber-300,
+  .text-amber-700,
+  .text-amber-800 {
+    color: var(--store-accent) !important;
+  }
+  .border-amber-300,
+  .border-amber-500,
+  .border-amber-600 {
+    border-color: var(--store-accent) !important;
+  }
+  .bg-stone-950 {
+    background-color: var(--store-primary) !important;
+  }
   input[type="number"]::-webkit-inner-spin-button,
   input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;

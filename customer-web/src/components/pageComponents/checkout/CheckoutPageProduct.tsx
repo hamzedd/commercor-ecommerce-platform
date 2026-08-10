@@ -11,6 +11,8 @@ import { notifyCartUpdated } from "@/src/utils/cart/cartStorage";
 import getImageSrcByBucketAndFileNames from "@/src/utils/functions/getImageSrcByBucketAndFileNames";
 import { CreateOrderItemType } from "@/src/utils/types/order.type";
 import { ProductType } from "@/src/utils/types/product.type";
+import { useStoreSettings } from "@/src/components/providers/StoreSettingsProvider";
+import formatCurrency from "@/src/utils/functions/formatCurrency";
 
 interface Props {
   productId: ProductType["id"];
@@ -30,6 +32,7 @@ function CheckoutPageProduct({
   setProductPrices,
 }: Props) {
   const t = useTranslations();
+  const settings = useStoreSettings();
   const { data, isLoading, error } = useProductQuery({ id: productId });
 
   const updateCart = (updatedCart: CreateOrderItemType[]) => {
@@ -139,7 +142,7 @@ function CheckoutPageProduct({
                 {translation?.name}
               </Link>
               <p className="mt-1 text-xs text-stone-500 sm:text-sm">
-                ${price.toFixed(2)} {t("each")}
+                {formatCurrency(price, settings.currencyCode, lang)} {t("each")}
               </p>
               {data.stock !== undefined && (
                 <p className="mt-1 text-xs text-stone-500">
@@ -148,7 +151,7 @@ function CheckoutPageProduct({
               )}
             </div>
             <p className="shrink-0 text-base font-bold text-stone-950 sm:text-lg">
-              ${totalPrice.toFixed(2)}
+              {formatCurrency(totalPrice, settings.currencyCode, lang)}
             </p>
           </div>
 

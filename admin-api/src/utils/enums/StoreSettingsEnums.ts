@@ -1,0 +1,28 @@
+export enum StoreSettingKey {
+  STORE_NAME = 'store_name',
+  LOGO = 'logo',
+  FAVICON = 'favicon',
+  PRIMARY_COLOR = 'primary_color',
+  ACCENT_COLOR = 'accent_color',
+  OPEN_GRAPH_IMAGE = 'open_graph_image',
+  CONTACT_EMAIL = 'contact_email',
+  PHONE = 'phone',
+  ADDRESS = 'address',
+  FACEBOOK_URL = 'facebook_url',
+  INSTAGRAM_URL = 'instagram_url',
+  TWITTER_URL = 'twitter_url',
+  LINKEDIN_URL = 'linkedin_url',
+  YOUTUBE_URL = 'youtube_url',
+  CURRENCY_CODE = 'currency_code',
+  DEFAULT_LOCALE = 'default_locale',
+  HOME_META_TITLE = 'home_meta_title',
+  HOME_META_DESCRIPTION = 'home_meta_description',
+}
+
+export const STORE_SETTING_IMAGE_KEYS = {
+  logo: StoreSettingKey.LOGO,
+  favicon: StoreSettingKey.FAVICON,
+  openGraphImage: StoreSettingKey.OPEN_GRAPH_IMAGE,
+} as const;
+
+export const SUPPORTED_STORE_LOCALES = ['en', 'ka', 'es', 'ru'] as const;

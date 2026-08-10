@@ -3,6 +3,8 @@ import { Link } from "@/src/i18n/navigation";
 import Image from "next/image";
 import getImageSrcByBucketAndFileNames from "@/src/utils/functions/getImageSrcByBucketAndFileNames";
 import { useTranslations } from "next-intl";
+import { useStoreSettings } from "@/src/components/providers/StoreSettingsProvider";
+import formatCurrency from "@/src/utils/functions/formatCurrency";
 
 export default function ProfileOrderItem({
   item,
@@ -12,6 +14,7 @@ export default function ProfileOrderItem({
   locale: string;
 }) {
   const t = useTranslations();
+  const settings = useStoreSettings();
 
   // Find translation for the current locale, fallback to first translation
   const productTranslation =
@@ -50,7 +53,7 @@ export default function ProfileOrderItem({
       </div>
       <div className="flex-shrink-0 text-right">
         <p className="text-sm font-semibold text-gray-800 sm:text-base">
-          ${item?.unitPrice}
+          {formatCurrency(item?.unitPrice || 0, settings.currencyCode, locale)}
         </p>
         <p className="text-xs text-gray-500 sm:text-sm">{t("perItem")}</p>
       </div>

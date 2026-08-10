@@ -2,6 +2,8 @@ import { OrderType } from "@/src/utils/types/order.type";
 import ProfileOrderStatusBadge from "@/src/components/pageComponents/profile/ProfileOrderStatusBadge";
 import ProfileOrderItem from "@/src/components/pageComponents/profile/ProfileOrderItem";
 import { useTranslations } from "next-intl";
+import { useStoreSettings } from "@/src/components/providers/StoreSettingsProvider";
+import formatCurrency from "@/src/utils/functions/formatCurrency";
 
 export default function ProfileOrderCard({
   order,
@@ -11,6 +13,7 @@ export default function ProfileOrderCard({
   locale: string;
 }) {
   const t = useTranslations();
+  const settings = useStoreSettings();
   const totalAmount = order.productAmount + order.deliveryAmount;
   const orderDate = new Date(order.created_at).toLocaleDateString("en-US", {
     year: "numeric",
@@ -45,7 +48,7 @@ export default function ProfileOrderCard({
                 {t("totalAmount")}
               </p>
               <p className="text-sm font-semibold text-gray-800 sm:text-sm">
-                ${totalAmount}
+                {formatCurrency(totalAmount, settings.currencyCode, locale)}
               </p>
             </div>
           </div>
@@ -69,18 +72,28 @@ export default function ProfileOrderCard({
           <div className="flex justify-between text-xs sm:text-sm">
             <span className="text-gray-600">{t("subtotal")}</span>
             <span className="font-medium text-gray-800">
-              ${order?.productAmount}
+              {formatCurrency(
+                order?.productAmount,
+                settings.currencyCode,
+                locale,
+              )}
             </span>
           </div>
           <div className="flex justify-between text-xs sm:text-sm">
             <span className="text-gray-600">{t("delivery")}</span>
             <span className="font-medium text-gray-800">
-              ${order?.deliveryAmount}
+              {formatCurrency(
+                order?.deliveryAmount,
+                settings.currencyCode,
+                locale,
+              )}
             </span>
           </div>
           <div className="flex justify-between border-t border-gray-200 pt-2 text-sm font-semibold sm:text-base">
             <span className="text-gray-800">{t("total")}</span>
-            <span className="text-gray-900">${totalAmount}</span>
+            <span className="text-gray-900">
+              {formatCurrency(totalAmount, settings.currencyCode, locale)}
+            </span>
           </div>
         </div>
       </div>

@@ -27,6 +27,7 @@ import AddUserPage from "./pages/users/add/page.tsx";
 import EditUserPage from "./pages/users/edit/[id]/page.tsx";
 import NotFoundPage from "./pages/not-found/page.tsx";
 import OrderPage from "./pages/orders/[id]/page.tsx";
+import SettingsPage from "./pages/settings/page.tsx";
 
 function App() {
   const router = createBrowserRouter([
@@ -125,6 +126,10 @@ function App() {
         {
           path: "orders/:id",
           element: <OrderPage />,
+        },
+        {
+          path: "settings",
+          element: <SettingsPage />,
         },
         {
           path: "users",

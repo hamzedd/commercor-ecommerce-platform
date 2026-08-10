@@ -9,6 +9,8 @@ import { Link } from "@/src/i18n/navigation";
 import { fetchCategories } from "@/src/service/apiServices/category.service";
 import { fetchProducts } from "@/src/service/apiServices/product.service";
 import getImageSrcByBucketAndFileNames from "@/src/utils/functions/getImageSrcByBucketAndFileNames";
+import { getStoreSettingsService } from "@/src/service/apiServices/storeSettings.service";
+import formatCurrency from "@/src/utils/functions/formatCurrency";
 
 interface Props {
   params: Promise<{ locale: string }>;
@@ -19,6 +21,7 @@ export default async function Home({ params }: Props) {
   const t = await getTranslations();
   const categories = await fetchCategories();
   const productsResponse = await fetchProducts({});
+  const settings = await getStoreSettingsService();
   const featuredProduct = productsResponse?.data?.[0];
   const featuredTranslation =
     featuredProduct?.translations?.find(
@@ -121,7 +124,11 @@ export default async function Home({ params }: Props) {
                         {t("price")}
                       </p>
                       <p className="text-xl font-bold">
-                        ${Number(featuredProduct.price).toFixed(2)}
+                        {formatCurrency(
+                          featuredProduct.price,
+                          settings.currencyCode,
+                          locale,
+                        )}
                       </p>
                     </div>
                   )}

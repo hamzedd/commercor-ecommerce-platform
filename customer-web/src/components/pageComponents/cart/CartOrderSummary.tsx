@@ -6,6 +6,8 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/src/i18n/navigation";
 import { CreateOrderItemType } from "@/src/utils/types/order.type";
 import { ProductType } from "@/src/utils/types/product.type";
+import { useStoreSettings } from "@/src/components/providers/StoreSettingsProvider";
+import formatCurrency from "@/src/utils/functions/formatCurrency";
 
 interface Props {
   cart: CreateOrderItemType[];
@@ -14,6 +16,7 @@ interface Props {
 
 function CartOrderSummary({ cart, productPrices }: Props) {
   const t = useTranslations();
+  const settings = useStoreSettings();
   const subtotal = cart.reduce(
     (total, item) =>
       total + Number(productPrices[item.productId] || 0) * item.quantity,
@@ -33,7 +36,7 @@ function CartOrderSummary({ cart, productPrices }: Props) {
         <div className="flex items-center justify-between gap-4">
           <dt className="text-sm text-stone-600">{t("subtotal")}</dt>
           <dd className="text-xl font-bold text-stone-950">
-            ${subtotal.toFixed(2)}
+            {formatCurrency(subtotal, settings.currencyCode)}
           </dd>
         </div>
       </dl>

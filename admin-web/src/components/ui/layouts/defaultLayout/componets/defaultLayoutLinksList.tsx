@@ -8,6 +8,7 @@ import {
   TagsOutlined,
   TeamOutlined,
   UsergroupAddOutlined,
+  SettingOutlined,
 } from "@ant-design/icons";
 import type { ReactNode } from "react";
 import { UserRoleEnum } from "../../../../../utils/enums/UserEnums.ts";
@@ -91,6 +92,13 @@ const defaultLayoutLinksList: AdminNavigationItem[] = [
     icon: <BankOutlined />,
     label: "Companies",
     path: "/admin/companies",
+    roles: [UserRoleEnum.ADMIN, UserRoleEnum.COMPANY],
+  },
+  {
+    key: "settings",
+    icon: <SettingOutlined />,
+    label: "Store Settings",
+    path: "/admin/settings",
     roles: [UserRoleEnum.ADMIN, UserRoleEnum.COMPANY],
   },
   {

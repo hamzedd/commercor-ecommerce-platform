@@ -11,6 +11,8 @@ import getImageSrcByBucketAndFileNames from "@/src/utils/functions/getImageSrcBy
 import { notifyCartUpdated } from "@/src/utils/cart/cartStorage";
 import { CreateOrderItemType } from "@/src/utils/types/order.type";
 import { ProductType } from "@/src/utils/types/product.type";
+import { useStoreSettings } from "@/src/components/providers/StoreSettingsProvider";
+import formatCurrency from "@/src/utils/functions/formatCurrency";
 
 interface Props {
   productId: ProductType["id"];
@@ -30,6 +32,7 @@ function CartItem({
   setProductPrices,
 }: Props) {
   const t = useTranslations();
+  const settings = useStoreSettings();
   const { data, isLoading, error } = useProductQuery({ id: productId });
 
   useEffect(() => {
@@ -133,11 +136,12 @@ function CartItem({
                 {translation?.name}
               </Link>
               <p className="mt-1 text-xs text-stone-500 sm:text-sm">
-                ${unitPrice.toFixed(2)} {t("each")}
+                {formatCurrency(unitPrice, settings.currencyCode, lang)}{" "}
+                {t("each")}
               </p>
             </div>
             <p className="shrink-0 text-base font-bold text-stone-950 sm:text-lg">
-              ${totalPrice.toFixed(2)}
+              {formatCurrency(totalPrice, settings.currencyCode, lang)}
             </p>
           </div>
 

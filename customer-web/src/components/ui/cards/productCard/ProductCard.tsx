@@ -8,6 +8,8 @@ import Image from "next/image";
 import getImageSrcByBucketAndFileNames from "@/src/utils/functions/getImageSrcByBucketAndFileNames";
 import { Link } from "@/src/i18n/navigation";
 import { useTranslations } from "next-intl";
+import { useStoreSettings } from "@/src/components/providers/StoreSettingsProvider";
+import formatCurrency from "@/src/utils/functions/formatCurrency";
 
 interface Props {
   product: ProductType;
@@ -18,6 +20,7 @@ interface Props {
 
 function ProductCard({ product, lang, className, titleClassName }: Props) {
   const t = useTranslations();
+  const settings = useStoreSettings();
 
   const productTranslation: ProductTranslationType =
     product?.translations?.find(
@@ -76,7 +79,7 @@ function ProductCard({ product, lang, className, titleClassName }: Props) {
         {/* Price */}
         <div className="flex items-center justify-between border-t pt-3">
           <p className={"text-lg font-bold text-gray-900 md:text-xl"}>
-            ${product.price}
+            {formatCurrency(product.price || 0, settings.currencyCode, lang)}
           </p>
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-black text-white opacity-0 transition-opacity group-hover:opacity-100 md:h-9 md:w-9">
             <svg

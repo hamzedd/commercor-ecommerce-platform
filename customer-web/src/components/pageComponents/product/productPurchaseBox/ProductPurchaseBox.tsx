@@ -14,6 +14,8 @@ import { useCurrentUserQuery } from "@/src/service/react-query/user/query/useCur
 import { notifyCartUpdated } from "@/src/utils/cart/cartStorage";
 import { CreateOrderItemType } from "@/src/utils/types/order.type";
 import { ProductType } from "@/src/utils/types/product.type";
+import { useStoreSettings } from "@/src/components/providers/StoreSettingsProvider";
+import formatCurrency from "@/src/utils/functions/formatCurrency";
 
 interface Props {
   product: ProductType;
@@ -21,6 +23,7 @@ interface Props {
 
 function ProductPurchaseBox({ product }: Props) {
   const t = useTranslations();
+  const settings = useStoreSettings();
   const { data: user } = useCurrentUserQuery();
   const router = useRouter();
   const toggleLogin = useModalStore((state) => state.toggleLogin);
@@ -60,7 +63,7 @@ function ProductPurchaseBox({ product }: Props) {
           {t("price")}
         </p>
         <p className="mt-1 text-3xl font-bold tracking-tight text-stone-950 sm:text-4xl">
-          ${product.price}
+          {formatCurrency(product.price || 0, settings.currencyCode)}
         </p>
         {product.stock !== undefined && (
           <div className="mt-3 flex items-center gap-2 text-sm">
