@@ -19,6 +19,7 @@ import { AuthGuard } from '@/src/libs/guards/auth.guard';
 import { RoleGuard } from '@/src/libs/guards/role.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ImagesValidationPipe } from '@/src/libs/pipes/images-validation.pipe';
+import { StoreSettingsDto } from '@/src/libs/models/dtos/companies/StoreSettings.dto';
 
 @Controller('companies')
 export class CompaniesController {
@@ -90,5 +91,26 @@ export class CompaniesController {
         image,
       },
     });
+  }
+}
+
+@Controller('store-settings')
+export class StoreSettingsController {
+  constructor(private readonly companiesService: CompaniesService) {}
+
+  @ApiBearerAuth()
+  @Role(UserRoleEnum.ADMIN, UserRoleEnum.COMPANY)
+  @UseGuards(AuthGuard, RoleGuard)
+  @Get()
+  getStoreSettings() {
+    return this.companiesService.getStoreSettings();
+  }
+
+  @ApiBearerAuth()
+  @Role(UserRoleEnum.ADMIN, UserRoleEnum.COMPANY)
+  @UseGuards(AuthGuard, RoleGuard)
+  @Put()
+  updateStoreSettings(@Body() data: StoreSettingsDto) {
+    return this.companiesService.updateStoreSettings(data);
   }
 }

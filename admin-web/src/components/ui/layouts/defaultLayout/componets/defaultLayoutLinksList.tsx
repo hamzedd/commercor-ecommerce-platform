@@ -2,6 +2,7 @@ import {
   UploadOutlined,
   UserOutlined,
   VideoCameraOutlined,
+  SettingOutlined,
 } from "@ant-design/icons";
 import { UserRoleEnum } from "../../../../../utils/enums/UserEnums.ts";
 
@@ -77,5 +78,12 @@ export default [
     label: "Users",
     path: "/admin/users",
     roles: [UserRoleEnum.ADMIN],
+  },
+  {
+    key: "settings",
+    icon: <SettingOutlined />,
+    label: "Store Settings",
+    path: "/admin/settings",
+    roles: [UserRoleEnum.ADMIN, UserRoleEnum.COMPANY],
   },
 ];
