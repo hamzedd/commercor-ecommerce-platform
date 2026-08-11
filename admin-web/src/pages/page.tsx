@@ -10,10 +10,13 @@ import {
   TagsOutlined,
   WarningOutlined,
 } from "@ant-design/icons";
-import { Alert, Button, Card, Col, Row, Skeleton, Space, Typography } from "antd";
+import { Alert, Button, Card, Col, Row, Skeleton, Typography } from "antd";
 import { Link } from "react-router";
 import DashboardKpiCard from "../components/pageComponents/dashboard/DashboardKpiCard.tsx";
 import RecentOrders from "../components/pageComponents/dashboard/RecentOrders.tsx";
+import WeeklyRevenueChart from "../components/pageComponents/dashboard/WeeklyRevenueChart.tsx";
+import OrderStatusChart from "../components/pageComponents/dashboard/OrderStatusChart.tsx";
+import TopSellingProducts from "../components/pageComponents/dashboard/TopSellingProducts.tsx";
 import { getDashboardService } from "../service/apiServices/dashboardServices.ts";
 import type { DashboardType } from "../utils/types/dashboardTypes.ts";
 
@@ -182,46 +185,57 @@ function HomePage() {
             </Row>
 
             <Row gutter={[20, 20]} className="mt-5">
-              <Col xs={24} xl={17}>
-                <RecentOrders orders={dashboard.recentOrders} />
+              <Col xs={24} xl={16}>
+                <WeeklyRevenueChart data={dashboard.weeklyRevenue} />
               </Col>
-              <Col xs={24} xl={7}>
-                <Card
-                  bordered={false}
-                  className="h-full border border-stone-200 shadow-sm"
-                  title={
-                    <div className="py-1">
-                      <div className="text-base font-bold text-stone-900">
-                        Quick Actions
-                      </div>
-                      <div className="text-xs font-normal text-stone-500">
-                        Common management tasks
-                      </div>
-                    </div>
-                  }
-                >
-                  <Space direction="vertical" size={10} className="w-full">
-                    {quickActions.map((action) => (
-                      <Link key={action.path} to={action.path}>
-                        <div className="group flex items-center gap-3 rounded-xl border border-stone-200 bg-stone-50 p-3.5 transition-all hover:border-amber-500 hover:bg-amber-50">
-                          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-stone-900 text-amber-400">
-                            {action.icon}
-                          </span>
-                          <span className="min-w-0">
-                            <span className="block font-semibold text-stone-900">
-                              {action.label}
-                            </span>
-                            <span className="block truncate text-xs text-stone-500">
-                              {action.description}
-                            </span>
-                          </span>
-                        </div>
-                      </Link>
-                    ))}
-                  </Space>
-                </Card>
+              <Col xs={24} xl={8}>
+                <OrderStatusChart data={dashboard.orderStatusBreakdown} />
               </Col>
             </Row>
+
+            <Row gutter={[20, 20]} className="mt-5">
+              <Col xs={24} xl={16}>
+                <RecentOrders orders={dashboard.recentOrders} />
+              </Col>
+              <Col xs={24} xl={8}>
+                <TopSellingProducts products={dashboard.topSellingProducts} />
+              </Col>
+            </Row>
+
+            <Card
+              bordered={false}
+              className="mt-5 border border-stone-200 shadow-sm"
+              title={
+                <div className="py-1">
+                  <div className="text-base font-bold text-stone-900">
+                    Quick Actions
+                  </div>
+                  <div className="text-xs font-normal text-stone-500">
+                    Common management tasks
+                  </div>
+                </div>
+              }
+            >
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-5">
+                {quickActions.map((action) => (
+                  <Link key={action.path} to={action.path}>
+                    <div className="group flex h-full items-center gap-3 rounded-xl border border-stone-200 bg-stone-50 p-3.5 transition-all hover:border-amber-500 hover:bg-amber-50">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-stone-900 text-amber-400">
+                        {action.icon}
+                      </span>
+                      <span className="min-w-0">
+                        <span className="block font-semibold text-stone-900">
+                          {action.label}
+                        </span>
+                        <span className="block truncate text-xs text-stone-500">
+                          {action.description}
+                        </span>
+                      </span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </Card>
           </>
         )}
       </div>
