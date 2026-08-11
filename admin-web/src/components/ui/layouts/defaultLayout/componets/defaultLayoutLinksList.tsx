@@ -3,10 +3,18 @@ import {
   UserOutlined,
   VideoCameraOutlined,
   SettingOutlined,
+  DashboardOutlined,
 } from "@ant-design/icons";
 import { UserRoleEnum } from "../../../../../utils/enums/UserEnums.ts";
 
 export default [
+  {
+    key: "dashboard",
+    icon: <DashboardOutlined />,
+    label: "Dashboard",
+    path: "/admin",
+    roles: [UserRoleEnum.ADMIN],
+  },
   {
     key: "customers",
     icon: <UserOutlined />,

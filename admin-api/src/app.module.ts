@@ -21,6 +21,7 @@ import { UsersModule } from '@/src/modules/users/users.module';
 import { AuthModule } from '@/src/modules/auth/auth.module';
 import { MinioModule } from '@/src/modules/minio/minio.module';
 import { FilesModule } from '@/src/modules/files/files.module';
+import { DashboardModule } from '@/src/modules/dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { FilesModule } from '@/src/modules/files/files.module';
     AuthModule,
     MinioModule,
     FilesModule,
+    DashboardModule,
   ],
   controllers: [],
   providers: [],
