@@ -1,22 +1,22 @@
 export type StoreSettingsType = {
   storeName: string;
-  logo?: string;
-  favicon?: string;
-  contactEmail?: string;
-  phone?: string;
-  address?: string;
-  facebookUrl?: string;
-  instagramUrl?: string;
-  twitterUrl?: string;
-  linkedinUrl?: string;
-  youtubeUrl?: string;
+  logo?: string | null;
+  favicon?: string | null;
+  contactEmail?: string | null;
+  phone?: string | null;
+  address?: string | null;
+  facebookUrl?: string | null;
+  instagramUrl?: string | null;
+  twitterUrl?: string | null;
+  linkedinUrl?: string | null;
+  youtubeUrl?: string | null;
   primaryColor: string;
   accentColor: string;
   currencyCode: string;
   defaultLocale: "en" | "ka" | "es" | "ru";
-  homeMetaTitle?: string;
-  homeMetaDescription?: string;
-  openGraphImage?: string;
+  homeMetaTitle?: string | null;
+  homeMetaDescription?: string | null;
+  openGraphImage?: string | null;
 };
 
 export const defaultStoreSettings: StoreSettingsType = {

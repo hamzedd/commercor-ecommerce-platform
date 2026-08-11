@@ -10,11 +10,12 @@ import { ProductEntity } from '@/src/libs/models/entities/product/Product.entity
 import { UserEntity } from '@/src/libs/models/entities/user/User.entity';
 import { DashboardController } from '@/src/modules/dashboard/dashboard.controller';
 import { DashboardService } from '@/src/modules/dashboard/dashboard.service';
+import { JWT_SECRET } from '@/src/utils/environmentConstants';
 
 @Module({
   imports: [
     JwtModule.register({
-      secret: process.env.JWT_SECRET,
+      secret: JWT_SECRET,
       signOptions: { expiresIn: '1d' },
     }),
     TypeOrmModule.forFeature([

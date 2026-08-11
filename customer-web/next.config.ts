@@ -1,29 +1,30 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 
+const filesBaseUrl = process.env.NEXT_PUBLIC_FILES_BASE_URL;
+const remotePatterns: NonNullable<NextConfig["images"]>["remotePatterns"] = [];
+
+if (filesBaseUrl) {
+  try {
+    const filesUrl = new URL(filesBaseUrl);
+    if (filesUrl.protocol === "http:" || filesUrl.protocol === "https:") {
+      remotePatterns.push({
+        protocol: filesUrl.protocol.slice(0, -1) as "http" | "https",
+        hostname: filesUrl.hostname,
+        port: filesUrl.port,
+        pathname: "/**",
+      });
+    }
+  } catch {
+    // Invalid values fail naturally where URLs are consumed at runtime.
+  }
+}
+
 const nextConfig: NextConfig = {
-  /* config options here */
   output: "standalone",
   images: {
-    domains: ["64.227.115.11"],
-    remotePatterns: [
-      {
-        protocol: "http",
-        hostname: "64.227.115.11", // Replace with your actual domain
-        port: "", // Leave empty if no specific port, or specify like '9000'
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "64.227.115.11",
-        port: "",
-        pathname: "/**",
-      },
-    ],
+    remotePatterns,
     unoptimized: true,
-  },
-  env: {
-    NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL,
   },
 };
 const withNextIntl = createNextIntlPlugin();

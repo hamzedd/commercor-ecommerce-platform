@@ -33,7 +33,7 @@ import { DashboardModule } from '@/src/modules/dashboard/dashboard.module';
       username: DB_USERNAME,
       password: DB_PASSWORD,
       database: DB_NAME,
-      synchronize: true,
+      synchronize: false,
       entities: [
         'dist/libs/models/entities/*.entity.{js,ts}',
         'dist/libs/models/entities/*/*.entity.{js,ts}',

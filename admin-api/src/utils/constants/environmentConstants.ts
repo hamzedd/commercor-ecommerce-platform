@@ -1,1 +1,1 @@
-export const JWT_SECRET = 'test_jwt_secret_key';
+export { JWT_SECRET } from '@/src/utils/environmentConstants';

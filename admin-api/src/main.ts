@@ -4,6 +4,7 @@ import { AppModule } from './app.module';
 import { ValidationError } from 'class-validator';
 import flattenValidationErrors from '@/src/utils/functions/flattenClassValidationErrors';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { PORT } from '@/src/utils/environmentConstants';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -49,6 +50,6 @@ async function bootstrap() {
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/admin', app, documentFactory);
   app.enableCors();
-  await app.listen(3000);
+  await app.listen(PORT);
 }
 bootstrap();

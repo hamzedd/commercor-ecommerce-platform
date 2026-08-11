@@ -120,7 +120,7 @@ function App() {
           element: <EditBrandPage />,
         },
         {
-          path: "Orders",
+          path: "orders",
           element: <OrdersPage />,
         },
         {

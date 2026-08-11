@@ -67,10 +67,6 @@ export class CompanyDetailsService {
         ? row?.image || null
         : row?.value || result[field];
     }
-    if (!byKey.get(StoreSettingKey.STORE_NAME)?.value) {
-      result.storeName =
-        byKey.get(StoreSettingKey.LOGO)?.value || result.storeName;
-    }
     return result;
   }
 }

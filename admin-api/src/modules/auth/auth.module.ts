@@ -4,13 +4,14 @@ import { UserEntity } from '@/src/libs/models/entities/user/User.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from '@/src/modules/auth/controllers/auth.controller';
 import { AuthService } from '@/src/modules/auth/services/auth.service';
+import { JWT_SECRET } from '@/src/utils/environmentConstants';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([UserEntity]),
     JwtModule.register({
       global: true,
-      secret: process.env.JWT_SECRET,
+      secret: JWT_SECRET,
       signOptions: { expiresIn: '1d' },
     }),
   ],
