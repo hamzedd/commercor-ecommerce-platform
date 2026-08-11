@@ -1,4 +1,10 @@
-import { IsArray, IsEnum, IsNotEmpty, ValidateNested } from 'class-validator';
+import {
+  ArrayUnique,
+  IsArray,
+  IsEnum,
+  IsNotEmpty,
+  ValidateNested,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { ProductFilterTranslationDto } from '@/src/libs/models/dtos/productsFilter/ProductFilterTranslation.dto';
 import { ApiProperty } from '@nestjs/swagger';
@@ -26,4 +32,12 @@ export class ProductFilterDto {
   @ValidateNested({ each: true })
   @Type(() => ProductFilterTranslationDto)
   translations: ProductFilterTranslationDto[];
+
+  @ApiProperty({
+    type: [String],
+    description: 'IDs of categories directly assigned to this filter',
+  })
+  @IsArray()
+  @ArrayUnique()
+  categoryIds: string[];
 }

@@ -5,6 +5,7 @@ import { ProductFilterDto } from '@/src/libs/models/dtos/productsFilter/ProductF
 import { ProductFilterEntity } from '@/src/libs/models/entities/productFilter/ProductFilter.entity';
 import { ProductFilterTranslationsEntity } from '@/src/libs/models/entities/productFilter/ProductFilterTranslation.entity';
 import { ProductFilterTypeEnum } from '@/src/utils/enums/ProductFilterEnums';
+import { CategoryEntity } from '@/src/libs/models/entities/category/Category.entity';
 
 @Injectable()
 export class ProductFiltersService {
@@ -13,7 +14,25 @@ export class ProductFiltersService {
     private readonly productFilterRepository: Repository<ProductFilterEntity>,
     @InjectRepository(ProductFilterTranslationsEntity)
     private readonly productFilterTranslationsEntityRepository: Repository<ProductFilterTranslationsEntity>,
+    @InjectRepository(CategoryEntity)
+    private readonly categoryRepository: Repository<CategoryEntity>,
   ) {}
+
+  private async getAssignedCategories(
+    categoryIds: string[],
+    repository = this.categoryRepository,
+  ) {
+    const uniqueCategoryIds = [...new Set(categoryIds || [])];
+    if (uniqueCategoryIds.length === 0) return [];
+
+    const categories = await repository.findBy({
+      id: In(uniqueCategoryIds),
+    });
+    if (categories.length !== uniqueCategoryIds.length) {
+      throw new BadRequestException('One or more categories were not found');
+    }
+    return categories;
+  }
 
   async createProductFilter(data: ProductFilterDto) {
     const nameExists = await this.productFilterRepository.find({
@@ -26,7 +45,12 @@ export class ProductFiltersService {
     if (nameExists.length > 0) {
       throw new BadRequestException('Product filter name must be unique');
     }
-    const newFilter = this.productFilterRepository.create(data);
+    const categories = await this.getAssignedCategories(data.categoryIds);
+    const newFilter = this.productFilterRepository.create({
+      type: data.type,
+      translations: data.translations,
+      categories,
+    });
 
     await this.productFilterRepository.save(newFilter);
 
@@ -35,13 +59,13 @@ export class ProductFiltersService {
 
   async getProductFilters() {
     return await this.productFilterRepository.find({
-      relations: ['translations'],
+      relations: ['translations', 'categories', 'categories.translations'],
     });
   }
 
   async getProductFilter(id: string) {
     return await this.productFilterRepository.findOne({
-      relations: ['translations'],
+      relations: ['translations', 'categories', 'categories.translations'],
       where: { id },
     });
   }
@@ -52,17 +76,18 @@ export class ProductFiltersService {
       const translationRepo = manager.getRepository(
         ProductFilterTranslationsEntity,
       );
+      const categoryRepo = manager.getRepository(CategoryEntity);
 
       const productFilter = await productFilterRepo.findOneOrFail({
         where: { id },
         lock: { mode: 'pessimistic_write' },
       });
 
-      Object.keys(data).forEach((key) => {
-        if (key !== 'translations') {
-          productFilter[key] = data[key];
-        }
-      });
+      productFilter.type = data.type;
+      productFilter.categories = await this.getAssignedCategories(
+        data.categoryIds,
+        categoryRepo,
+      );
 
       await translationRepo.delete({ productFilterId: id });
 
@@ -97,9 +122,15 @@ export class ProductFiltersService {
     }));
   }
 
-  async getProductFiltersWithOptions() {
+  async getProductFiltersWithOptions(categoryId?: string) {
     return await this.productFilterRepository.find({
-      relations: ['translations', 'options', 'options.translations'],
+      where: categoryId ? { categories: { id: categoryId } } : undefined,
+      relations: [
+        'translations',
+        'options',
+        'options.translations',
+        'categories',
+      ],
     });
   }
 }

@@ -3,7 +3,10 @@ import { getProductFiltersWithOptionsService } from "../../../service/apiService
 import type { ProductFilterValueType } from "../../../utils/types/productFilterValueTypes.ts";
 import EditProductPageFilter from "./EditProductPageFilter.tsx";
 import type { FormOptionType } from "../../../utils/types/formTypes.ts";
-import { getProductFilterValuesService } from "../../../service/apiServices/productServices.ts";
+import {
+  getProductFilterValuesService,
+  getProductService,
+} from "../../../service/apiServices/productServices.ts";
 import countriesOptions from "../../ui/forms/brandForm/components/countriesOptions.ts";
 
 interface Props {
@@ -33,7 +36,10 @@ function EditProductPageFiltersTab({ productId }: Props) {
   };
 
   const fetchFilterOptions = async () => {
-    const filtersResponse = await getProductFiltersWithOptionsService();
+    const product = await getProductService(productId);
+    const filtersResponse = await getProductFiltersWithOptionsService(
+      String(product.categoryId),
+    );
     setFilterOptions(
       filtersResponse.map((filter) => ({
         title:
