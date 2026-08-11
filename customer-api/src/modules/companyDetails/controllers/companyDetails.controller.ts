@@ -15,3 +15,12 @@ export class CompanyDetailsController {
     return this.companyDetailsService.getCompanyDetailByKey(key);
   }
 }
+
+@Controller('store-settings')
+export class StoreSettingsController {
+  constructor(private readonly companyDetailsService: CompanyDetailsService) {}
+  @Get()
+  getStoreSettings() {
+    return this.companyDetailsService.getPublicStoreSettings();
+  }
+}

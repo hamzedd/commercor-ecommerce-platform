@@ -4,6 +4,8 @@ import Image from "next/image";
 import getImageSrcByBucketAndFileNames from "@/src/utils/functions/getImageSrcByBucketAndFileNames";
 import { Link } from "@/src/i18n/navigation";
 import { useTranslations } from "next-intl";
+import { useStoreSettings } from "@/src/components/providers/StoreSettingsProvider";
+import formatCurrency from "@/src/utils/functions/formatCurrency";
 
 interface Props {
   product: ProductType;
@@ -13,6 +15,7 @@ interface Props {
 
 function SearchedProduct({ product, locale, setShow }: Props) {
   const t = useTranslations();
+  const settings = useStoreSettings();
   const productLocale =
     product.translations?.find(
       (translation) => translation.lang.toLowerCase() === locale.toLowerCase(),
@@ -61,7 +64,7 @@ function SearchedProduct({ product, locale, setShow }: Props) {
       {/* Price */}
       <div className="flex-shrink-0 text-right">
         <p className="text-lg font-bold text-gray-900 md:text-xl">
-          ${product.price}
+          {formatCurrency(product.price || 0, settings.currencyCode, locale)}
         </p>
         {product.stock !== undefined && (
           <p className="text-xs text-gray-500">

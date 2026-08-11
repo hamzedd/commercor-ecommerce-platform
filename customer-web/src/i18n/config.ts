@@ -7,6 +7,7 @@ export const pathnames = {
   "/profile": "/profile",
   "/categories/[slug]": "/categories/[slug]",
   "/products/[slug]": "/products/[slug]",
+  "/cart": "/cart",
   "/checkout": "/checkout",
 };
 

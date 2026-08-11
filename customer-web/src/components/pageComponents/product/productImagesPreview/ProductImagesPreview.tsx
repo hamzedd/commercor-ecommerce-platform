@@ -1,12 +1,14 @@
 "use client";
+
+import Image from "next/image";
+import { useTranslations } from "next-intl";
+import { useState } from "react";
+import ImageMagnifier from "@/src/components/ui/utis/imageMagnifier/ImageMagnifier";
+import getImageSrcByBucketAndFileNames from "@/src/utils/functions/getImageSrcByBucketAndFileNames";
 import {
   ProductImageType,
   ProductTranslationType,
 } from "@/src/utils/types/product.type";
-import getImageSrcByBucketAndFileNames from "@/src/utils/functions/getImageSrcByBucketAndFileNames";
-import ImageMagnifier from "@/src/components/ui/utis/imageMagnifier/ImageMagnifier";
-import Image from "next/image";
-import { useState } from "react";
 
 interface Props {
   images: ProductImageType[];
@@ -14,50 +16,77 @@ interface Props {
 }
 
 function ProductImagesPreview({ images, productTranslation }: Props) {
-  const [selectedImage, setSelectedImage] = useState<ProductImageType>(
-    images[0],
-  );
+  const t = useTranslations();
+  const [selectedImageId, setSelectedImageId] = useState(images[0]?.id);
+  const selectedImage =
+    images.find((image) => image.id === selectedImageId) || images[0];
+  const productName = productTranslation?.name || t("productImage");
 
   return (
-    <div className="flex w-full flex-col gap-4 rounded-xl bg-white p-4 shadow-sm md:flex-row md:gap-5 md:p-6 lg:w-auto">
-      {/* Thumbnail strip - horizontal on mobile, vertical on desktop */}
-      <div className="flex gap-2 overflow-x-auto md:h-[400px] md:w-auto md:flex-col md:overflow-x-visible md:overflow-y-auto lg:h-[500px]">
-        {images?.map((image, index) => (
-          <Image
-            key={image.id}
-            width={80}
-            height={80}
-            alt={`image ${index + 1} preview`}
-            src={getImageSrcByBucketAndFileNames({
-              bucketName: "products",
-              fileName: image.name,
-            })}
-            onClick={() => setSelectedImage(image)}
-            className={`h-16 w-16 flex-shrink-0 cursor-pointer rounded-lg border-2 object-contain p-1 transition-all md:h-20 md:w-20 ${
-              selectedImage.id === image.id
-                ? "border-black shadow-md"
-                : "border-gray-200 hover:border-gray-400"
-            }`}
-          />
-        ))}
+    <section
+      aria-label={t("productGallery")}
+      className="min-w-0 overflow-hidden rounded-2xl border border-stone-200 bg-white p-3 shadow-sm sm:p-5 md:flex md:gap-5"
+    >
+      <div className="order-2 mt-3 flex gap-2 overflow-x-auto pb-1 md:order-1 md:mt-0 md:max-h-[560px] md:w-20 md:shrink-0 md:flex-col md:overflow-y-auto md:pb-0">
+        {images.map((image, index) => {
+          const isSelected = selectedImage?.id === image.id;
+          return (
+            <button
+              key={image.id}
+              type="button"
+              aria-label={t("selectProductImage", { index: index + 1 })}
+              aria-pressed={isSelected}
+              onClick={() => setSelectedImageId(image.id)}
+              className={`relative h-16 w-16 shrink-0 overflow-hidden rounded-xl border-2 bg-stone-50 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:outline-none md:h-20 md:w-20 ${isSelected ? "border-amber-500" : "border-stone-200 hover:border-stone-400"}`}
+            >
+              <Image
+                fill
+                sizes="80px"
+                alt={t("productImagePreview", { index: index + 1 })}
+                src={getImageSrcByBucketAndFileNames({
+                  bucketName: "products",
+                  fileName: image.name,
+                })}
+                className="object-contain p-1.5"
+              />
+            </button>
+          );
+        })}
       </div>
 
-      {/* Main image display */}
-      <div className="flex items-center justify-center rounded-xl bg-gray-50 p-4">
-        <ImageMagnifier
-          src={getImageSrcByBucketAndFileNames({
-            bucketName: "products",
-            fileName: selectedImage.name,
-          })}
-          className={
-            "h-[300px] w-full rounded-lg object-contain md:h-[400px] md:w-auto lg:h-[500px]"
-          }
-          alt={productTranslation?.name || "Product Image"}
-          width={500}
-          height={500}
-        />
+      <div className="order-1 flex min-h-[320px] min-w-0 flex-1 items-center justify-center overflow-hidden rounded-xl bg-stone-100 p-3 sm:min-h-[420px] sm:p-6 md:order-2 lg:min-h-[560px]">
+        {selectedImage ? (
+          <ImageMagnifier
+            src={getImageSrcByBucketAndFileNames({
+              bucketName: "products",
+              fileName: selectedImage.name,
+            })}
+            className="h-auto max-h-[520px] w-full max-w-[620px] rounded-lg object-contain"
+            alt={productName}
+            width={620}
+            height={620}
+          />
+        ) : (
+          <div className="flex flex-col items-center gap-3 text-center text-stone-500">
+            <svg
+              aria-hidden
+              className="h-10 w-10"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909M3.75 19.5h16.5A1.5 1.5 0 0 0 21.75 18V6A1.5 1.5 0 0 0 20.25 4.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Z"
+              />
+            </svg>
+            <span className="text-sm font-medium">{t("noImage")}</span>
+          </div>
+        )}
       </div>
-    </div>
+    </section>
   );
 }
 

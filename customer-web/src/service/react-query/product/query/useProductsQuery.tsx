@@ -8,12 +8,14 @@ interface Props {
   categoryId?: string;
   productFilterValues?: string[];
   initialData?: PaginatedResponseType<ProductType>;
+  sortBy?: string;
 }
 export const useProductsQuery = ({
   page,
   categoryId,
   productFilterValues,
   initialData,
+  sortBy,
 }: Props) => {
   return useQuery<PaginatedResponseType<ProductType>, Error>({
     queryKey: [
@@ -23,12 +25,14 @@ export const useProductsQuery = ({
         page,
         categoryId,
         productFilterValues,
+        sortBy,
       },
     ],
     queryFn: async () => {
       const res = await getProductsService(
         {
           page,
+          ...(sortBy ? { sortBy: [sortBy] } : {}),
           ...(categoryId
             ? {
                 filter: {
@@ -53,5 +57,10 @@ export const useProductsQuery = ({
     retryOnMount: false,
     staleTime: 1000 * 60 * 60,
     retry: false,
+    initialData:
+      page === 1 && !productFilterValues?.length && sortBy === "id:DESC"
+        ? initialData
+        : undefined,
+    placeholderData: (previousData) => previousData,
   });
 };

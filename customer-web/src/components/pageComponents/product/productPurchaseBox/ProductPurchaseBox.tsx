@@ -1,12 +1,21 @@
 "use client";
-import { ProductType } from "@/src/utils/types/product.type";
-import { CreateOrderItemType } from "@/src/utils/types/order.type";
-import { useRouter } from "@/src/i18n/navigation";
-import { useModalStore } from "@/src/components/providers/modalStoreProvider";
-import { useCurrentUserQuery } from "@/src/service/react-query/user/query/useCurrentUserQuery";
-import { ShoppingCartOutlined, ThunderboltOutlined } from "@ant-design/icons";
-import { useState } from "react";
+
+import {
+  MinusOutlined,
+  PlusOutlined,
+  ShoppingCartOutlined,
+  ThunderboltOutlined,
+} from "@ant-design/icons";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
+import { useModalStore } from "@/src/components/providers/modalStoreProvider";
+import { useRouter } from "@/src/i18n/navigation";
+import { useCurrentUserQuery } from "@/src/service/react-query/user/query/useCurrentUserQuery";
+import { notifyCartUpdated } from "@/src/utils/cart/cartStorage";
+import { CreateOrderItemType } from "@/src/utils/types/order.type";
+import { ProductType } from "@/src/utils/types/product.type";
+import { useStoreSettings } from "@/src/components/providers/StoreSettingsProvider";
+import formatCurrency from "@/src/utils/functions/formatCurrency";
 
 interface Props {
   product: ProductType;
@@ -14,6 +23,7 @@ interface Props {
 
 function ProductPurchaseBox({ product }: Props) {
   const t = useTranslations();
+  const settings = useStoreSettings();
   const { data: user } = useCurrentUserQuery();
   const router = useRouter();
   const toggleLogin = useModalStore((state) => state.toggleLogin);
@@ -27,120 +37,106 @@ function ProductPurchaseBox({ product }: Props) {
     const cart: CreateOrderItemType[] = JSON.parse(
       localStorage.getItem("cart") || "[]",
     );
-
     const indexOfProduct = cart.findIndex(
       (value) => value.productId === product.id,
     );
-
-    if (indexOfProduct >= 0) {
+    if (indexOfProduct >= 0)
       cart[indexOfProduct].quantity = cart[indexOfProduct].quantity + quantity;
-    } else {
-      cart.push({
-        productId: product.id,
-        quantity: quantity,
-      });
-    }
+    else cart.push({ productId: product.id, quantity });
     localStorage.setItem("cart", JSON.stringify(cart));
+    notifyCartUpdated();
   };
 
   const handlePurchase = () => {
     handleAddInCard();
-    if (user) {
-      router.push("/checkout");
-    }
+    if (user) router.push("/checkout");
   };
 
-  const increaseQuantity = () => setQuantity((prev) => prev + 1);
+  const increaseQuantity = () => setQuantity((previous) => previous + 1);
   const decreaseQuantity = () =>
-    setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
+    setQuantity((previous) => (previous > 1 ? previous - 1 : 1));
 
   return (
-    <div
-      className={
-        "w-full rounded-xl border-2 border-gray-200 bg-white p-6 shadow-sm lg:sticky lg:top-24 lg:w-[360px]"
-      }
-    >
-      <h2 className={"mb-6 text-2xl font-bold text-gray-900"}>
-        {t("purchase")}
-      </h2>
-
-      {/* Price Display */}
-      <div className="mb-6 rounded-lg bg-gray-50 p-4">
-        <p className="mb-1 text-sm text-gray-600">{t("price")}</p>
-        <p className="text-3xl font-bold text-gray-900">${product.price}</p>
+    <aside className="w-full rounded-2xl border border-stone-200 bg-white p-5 shadow-sm sm:p-6 lg:sticky lg:top-28">
+      <div className="border-b border-stone-200 pb-5">
+        <p className="text-xs font-bold tracking-[0.16em] text-amber-700 uppercase">
+          {t("price")}
+        </p>
+        <p className="mt-1 text-3xl font-bold tracking-tight text-stone-950 sm:text-4xl">
+          {formatCurrency(product.price || 0, settings.currencyCode)}
+        </p>
+        {product.stock !== undefined && (
+          <div className="mt-3 flex items-center gap-2 text-sm">
+            <span
+              aria-hidden
+              className={`h-2.5 w-2.5 rounded-full ${product.stock > 0 ? "bg-emerald-500" : "bg-red-500"}`}
+            />
+            <span
+              className={`font-semibold ${product.stock > 0 ? "text-emerald-700" : "text-red-700"}`}
+            >
+              {product.stock > 0
+                ? `${product.stock} ${t("inStock")}`
+                : t("outOfStock")}
+            </span>
+          </div>
+        )}
       </div>
 
-      {/* Quantity Selector */}
-      <div className="mb-6">
-        <p className="mb-2 text-sm font-medium text-gray-700">
+      <div className="py-5">
+        <p className="mb-2 text-sm font-semibold text-stone-800">
           {t("quantity")}
         </p>
-        <div className="flex items-center gap-3">
+        <div className="flex w-fit items-center overflow-hidden rounded-xl border border-stone-300 bg-white">
           <button
+            type="button"
             onClick={decreaseQuantity}
-            className="flex h-10 w-10 items-center justify-center rounded-lg border-2 border-gray-300 font-bold text-gray-700 transition-colors hover:border-gray-400 hover:bg-gray-50"
+            disabled={quantity <= 1}
+            aria-label={t("decreaseQuantity")}
+            className="flex h-11 w-11 items-center justify-center transition-colors hover:bg-stone-100 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none focus-visible:ring-inset disabled:cursor-not-allowed disabled:opacity-40"
           >
-            −
+            <MinusOutlined aria-hidden />
           </button>
-          <span className="flex h-10 w-16 items-center justify-center rounded-lg border-2 border-gray-300 font-semibold">
+          <output
+            aria-live="polite"
+            className="flex h-11 min-w-12 items-center justify-center border-x border-stone-300 px-3 font-bold text-stone-950"
+          >
             {quantity}
-          </span>
+          </output>
           <button
+            type="button"
             onClick={increaseQuantity}
-            className="flex h-10 w-10 items-center justify-center rounded-lg border-2 border-gray-300 font-bold text-gray-700 transition-colors hover:border-gray-400 hover:bg-gray-50"
+            aria-label={t("increaseQuantity")}
+            className="flex h-11 w-11 items-center justify-center transition-colors hover:bg-stone-100 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none focus-visible:ring-inset"
           >
-            +
+            <PlusOutlined aria-hidden />
           </button>
         </div>
       </div>
 
-      {/* Stock Status */}
-      {product.stock !== undefined && (
-        <div className="mb-6">
-          <p className="text-sm text-gray-600">
-            <span className="font-medium">{t("availability")}:</span>{" "}
-            {product.stock > 0 ? (
-              <span className="font-semibold text-green-600">
-                {product.stock} {t("inStock")}
-              </span>
-            ) : (
-              <span className="font-semibold text-red-600">
-                {t("outOfStock")}
-              </span>
-            )}
-          </p>
-        </div>
-      )}
-
-      {/* Action Buttons */}
-      <div className="flex flex-col gap-3">
+      <div className="grid gap-3">
         <button
-          type={"button"}
-          className={
-            "flex items-center justify-center gap-2 rounded-lg border-2 border-black bg-white px-6 py-3 font-semibold text-black transition-all hover:bg-gray-50"
-          }
+          type="button"
           onClick={handleAddInCard}
+          className="flex min-h-12 items-center justify-center gap-2 rounded-xl border-2 border-stone-950 bg-white px-5 text-sm font-bold text-stone-950 transition-colors duration-200 hover:bg-stone-100 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:outline-none"
         >
-          <ShoppingCartOutlined className="text-lg" />
-          <span>{t("addToCart")}</span>
+          <ShoppingCartOutlined aria-hidden className="text-lg" />
+          {t("addToCart")}
         </button>
         <button
+          type="button"
           onClick={handlePurchase}
-          type={"button"}
-          className={
-            "flex items-center justify-center gap-2 rounded-lg bg-black px-6 py-3 font-semibold text-white transition-all hover:bg-gray-800"
-          }
+          className="flex min-h-12 items-center justify-center gap-2 rounded-xl bg-stone-950 px-5 text-sm font-bold text-white transition-colors duration-200 hover:bg-amber-600 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:outline-none"
         >
-          <ThunderboltOutlined className="text-lg" />
-          <span>{t("buyNow")}</span>
+          <ThunderboltOutlined aria-hidden className="text-lg" />
+          {t("buyNow")}
         </button>
       </div>
 
-      {/* Trust Badges */}
-      <div className="mt-6 space-y-2 border-t pt-6">
-        <div className="flex items-center gap-2 text-sm text-gray-600">
+      <div className="mt-6 border-t border-stone-200 pt-5">
+        <div className="flex items-center gap-3 rounded-xl bg-amber-50 p-3 text-sm text-stone-700">
           <svg
-            className="h-5 w-5 text-green-600"
+            aria-hidden
+            className="h-5 w-5 shrink-0 text-amber-700"
             fill="currentColor"
             viewBox="0 0 20 20"
           >
@@ -150,10 +146,10 @@ function ProductPurchaseBox({ product }: Props) {
               clipRule="evenodd"
             />
           </svg>
-          <span>{t("securePayment")}</span>
+          <span className="font-medium">{t("securePayment")}</span>
         </div>
       </div>
-    </div>
+    </aside>
   );
 }
 

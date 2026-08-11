@@ -1,9 +1,11 @@
-import React from "react";
-import { useUserAddressesQuery } from "@/src/service/react-query/user/query/useUserAddressesQuery";
-import { AddressType } from "@/src/utils/types/address.type";
-import { CheckCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  CheckCircleFilled,
+  EnvironmentOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
 import { useTranslations } from "next-intl";
 
+import { useUserAddressesQuery } from "@/src/service/react-query/user/query/useUserAddressesQuery";
 interface Props {
   onAddressSelect: (id: string) => void;
   selectedAddressId: string;
@@ -13,77 +15,95 @@ function CheckoutAddressList({ onAddressSelect, selectedAddressId }: Props) {
   const t = useTranslations();
   const { data: addresses, isLoading, error } = useUserAddressesQuery();
 
-  const handleSelectAddress = (address: AddressType) => {
-    if (onAddressSelect) {
-      onAddressSelect(address.id);
-    }
-  };
-
   if (isLoading) {
     return (
-      <div className="space-y-3">
-        <h3 className="text-lg font-semibold">{t("deliveryAddress")}</h3>
-        <div className="space-y-2">
-          {[1, 2].map((i) => (
+      <section aria-busy="true" aria-labelledby="delivery-address-heading">
+        <h3
+          id="delivery-address-heading"
+          className="text-lg font-bold text-stone-950"
+        >
+          {t("deliveryAddress")}
+        </h3>
+        <div className="mt-3 space-y-3">
+          {[1, 2].map((item) => (
             <div
-              key={i}
-              className="h-24 animate-pulse rounded-lg border bg-gray-100"
-            ></div>
+              key={item}
+              className="h-28 animate-pulse rounded-xl border border-stone-200 bg-stone-100 motion-reduce:animate-none"
+            />
           ))}
         </div>
-      </div>
+      </section>
     );
   }
 
   if (error) {
     return (
-      <div className="rounded-lg border border-red-200 bg-red-50 p-4">
-        <p className="text-sm text-red-600">{t("failedToLoadAddresses")}</p>
+      <div
+        role="alert"
+        className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-medium text-red-700"
+      >
+        {t("failedToLoadAddresses")}
       </div>
     );
   }
 
   return (
-    <div className="space-y-3">
-      <h3 className="text-lg font-semibold">{t("deliveryAddress")}</h3>
+    <section aria-labelledby="delivery-address-heading">
+      <div className="flex items-center gap-2">
+        <EnvironmentOutlined className="text-amber-700" aria-hidden />
+        <h3
+          id="delivery-address-heading"
+          className="text-lg font-bold text-stone-950"
+        >
+          {t("deliveryAddress")}
+        </h3>
+      </div>
 
       {!addresses || addresses.length === 0 ? (
-        <div className="rounded-lg border border-dashed border-gray-300 bg-gray-50 p-6 text-center">
-          <p className="mb-3 text-sm text-gray-600">{t("noAddressesFound")}</p>
+        <div className="mt-3 rounded-xl border border-dashed border-stone-300 bg-stone-50 p-5 text-center">
+          <p className="text-sm leading-6 text-stone-600">
+            {t("noAddressesFound")}
+          </p>
           <button
             type="button"
-            className="flex items-center gap-2 rounded-lg bg-black px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
+            className="mx-auto mt-4 flex min-h-11 items-center gap-2 rounded-xl bg-stone-950 px-4 py-2 text-sm font-bold text-white transition-colors duration-200 hover:bg-amber-600 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:outline-none"
           >
-            <PlusOutlined className="h-4 w-4" />
+            <PlusOutlined aria-hidden />
             {t("addAddress")}
           </button>
         </div>
       ) : (
-        <div className="space-y-2">
+        <div
+          className="mt-3 space-y-3"
+          role="radiogroup"
+          aria-label={t("deliveryAddress")}
+        >
           {addresses.map((address) => {
             const isSelected = selectedAddressId === address.id;
             return (
               <button
                 key={address.id}
                 type="button"
-                onClick={() => handleSelectAddress(address)}
-                className={`w-full rounded-lg border-2 p-4 text-left transition-all ${
+                role="radio"
+                aria-checked={isSelected}
+                onClick={() => onAddressSelect(address.id)}
+                className={`w-full rounded-xl border p-4 text-left transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:outline-none ${
                   isSelected
-                    ? "border-black bg-gray-50"
-                    : "border-gray-200 bg-white hover:border-gray-300"
+                    ? "border-amber-600 bg-amber-50"
+                    : "border-stone-200 bg-white hover:border-stone-400 hover:bg-stone-50"
                 }`}
               >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex-1">
-                    <div className="mb-2 flex items-center gap-2">
-                      {isSelected && (
-                        <CheckCircleOutlined className="h-5 w-5 text-black" />
-                      )}
-                      <h4 className="font-medium text-gray-900">
-                        {address.street}
-                      </h4>
-                    </div>
-                    <p className="text-sm text-gray-600">
+                <div className="flex items-start gap-3">
+                  <span
+                    className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border ${isSelected ? "border-amber-600 text-amber-700" : "border-stone-300 text-transparent"}`}
+                  >
+                    <CheckCircleFilled aria-hidden />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block font-bold text-stone-950">
+                      {address.street}
+                    </span>
+                    <span className="mt-1 block text-sm leading-5 text-stone-600">
                       {address.detail && (
                         <>
                           {address.detail}
@@ -91,18 +111,18 @@ function CheckoutAddressList({ onAddressSelect, selectedAddressId }: Props) {
                         </>
                       )}
                       {address.city}, {address.country}
-                    </p>
-                    <p className="mt-2 text-sm text-gray-500">
+                    </span>
+                    <span className="mt-2 block text-sm text-stone-500">
                       {t("phone")}: {address.phoneNumber}
-                    </p>
-                  </div>
+                    </span>
+                  </span>
                 </div>
               </button>
             );
           })}
         </div>
       )}
-    </div>
+    </section>
   );
 }
 
