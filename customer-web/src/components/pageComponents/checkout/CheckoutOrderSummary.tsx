@@ -18,7 +18,7 @@ import {
 import { useStoreSettings } from "@/src/components/providers/StoreSettingsProvider";
 import formatCurrency from "@/src/utils/functions/formatCurrency";
 import { getRewardsService } from "@/src/service/apiServices/rewards.service";
-import { InputNumber } from "antd";
+import { Input, InputNumber } from "antd";
 import PayPalPaymentButton from "./PayPalPaymentButton";
 import {
   initializePaymentService,
@@ -47,6 +47,8 @@ function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
   }>();
   const [usePoints, setUsePoints] = useState(0);
   const [useCashback, setUseCashback] = useState(0);
+  const [couponInput, setCouponInput] = useState("");
+  const [couponCode, setCouponCode] = useState("");
   const [rewards, setRewards] = useState<{
     pointsBalance: number;
     cashbackBalance: number;
@@ -54,6 +56,7 @@ function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
     cashbackEnabled: boolean;
   }>();
   useEffect(() => {
+    const stored=window.sessionStorage.getItem("commercor-coupon")||""; setCouponInput(stored); setCouponCode(stored);
     getRewardsService()
       .then(setRewards)
       .catch(() => setRewards(undefined));
@@ -74,6 +77,7 @@ function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
         addressId: selectedAddress,
         usePoints,
         useCashback,
+        couponCode: couponCode || undefined,
       })
         .then(setQuote)
         .catch((error) => {
@@ -90,7 +94,7 @@ function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
       controller.abort();
       window.clearTimeout(timer);
     };
-  }, [cart, selectedAddress, usePoints, useCashback, t]);
+  }, [cart, selectedAddress, usePoints, useCashback, couponCode, t]);
 
   const handleCheckout = async () => {
     if (!quote) return;
@@ -102,6 +106,7 @@ function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
         addressId: selectedAddress,
         usePoints,
         useCashback,
+        couponCode: couponCode || undefined,
       });
       const initialization = await initializePaymentService(paymentId);
       setPendingPayment({ id: paymentId, url: paymentUrl, initialization });
@@ -153,6 +158,7 @@ function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
             </dd>
           </div>
         )}
+        {quote && quote.couponDiscount > 0 && <div className="mt-3 flex justify-between text-sm text-emerald-700"><dt>{t("couponDiscount")} ({quote.couponCode})</dt><dd>-{formatCurrency(quote.couponDiscount,settings.currencyCode,lang)}</dd></div>}
         {quote && quote.cashbackUsed > 0 && (
           <div className="mt-3 flex justify-between text-sm text-emerald-700">
             <dt>Cashback used</dt>
@@ -198,6 +204,7 @@ function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
           </dd>
         </div>
       </dl>
+      <div className="mt-5 rounded-xl bg-stone-50 p-4"><label className="text-sm font-semibold" htmlFor="coupon-code">{t("couponCode")}</label><div className="mt-2 flex gap-2"><Input id="coupon-code" value={couponInput} placeholder={t("couponCode")} onChange={e=>setCouponInput(e.target.value.toUpperCase())}/><button type="button" className="rounded-lg bg-stone-900 px-4 text-sm font-bold text-white disabled:bg-stone-300" disabled={!couponInput.trim()||couponInput.trim()===couponCode} onClick={()=>{const code=couponInput.trim().toUpperCase();window.sessionStorage.setItem("commercor-coupon",code);setCouponCode(code)}}>{t("applyCoupon")}</button></div>{couponCode&&<button type="button" className="mt-2 text-sm font-semibold text-red-700" onClick={()=>{window.sessionStorage.removeItem("commercor-coupon");setCouponInput("");setCouponCode("")}}>{t("removeCoupon")}</button>}</div>
       {rewards && (rewards.pointsEnabled || rewards.cashbackEnabled) && (
         <div className="mt-5 space-y-3 rounded-xl bg-stone-50 p-4">
           {rewards.pointsEnabled && rewards.pointsBalance > 0 && (

@@ -5,6 +5,7 @@ export type CreateOrderRequestType = {
   addressId: string;
   usePoints?: number;
   useCashback?: number;
+  couponCode?: string;
 };
 
 export type CreateOrderItemType = {
@@ -23,6 +24,8 @@ export type CheckoutQuoteType = {
   pointsDiscount: number;
   cashbackUsed: number;
   discountedSubtotal: number;
+  couponCode: string | null;
+  couponDiscount: number;
 };
 
 export type OrderType = {

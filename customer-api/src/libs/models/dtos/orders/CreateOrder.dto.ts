@@ -7,6 +7,8 @@ import {
   IsInt,
   IsNumber,
   Min,
+  IsString,
+  MaxLength,
   ValidateNested,
 } from 'class-validator';
 import { CreateOrderItemDto } from '@/src/libs/models/dtos/orders/CreateOrderItem.dto';
@@ -52,4 +54,11 @@ export class CreateOrderDto {
   @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0)
   useCashback?: number;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  @Transform(({ value }) => typeof value === 'string' ? value.trim().toUpperCase() : value)
+  couponCode?: string;
 }

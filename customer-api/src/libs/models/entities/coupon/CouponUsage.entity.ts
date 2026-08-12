@@ -1,0 +1,13 @@
+import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
+import { BaseEntity } from '../BaseEntity';
+import { CouponEntity } from './Coupon.entity';
+@Entity('coupon_usages')
+@Index('UQ_coupon_usage_order', ['orderId'], { unique: true })
+@Index('IDX_coupon_usage_coupon_customer', ['couponId', 'customerId'])
+export class CouponUsageEntity extends BaseEntity {
+  @ManyToOne(() => CouponEntity, (coupon) => coupon.usages, { onDelete: 'RESTRICT' }) @JoinColumn({ name: 'couponId' }) coupon: CouponEntity;
+  @Column() couponId: string;
+  @Column() customerId: string;
+  @Column() orderId: string;
+  @Column({ type: 'decimal', precision: 12, scale: 2 }) discountAmount: number;
+}

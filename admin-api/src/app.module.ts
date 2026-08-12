@@ -24,6 +24,7 @@ import { FilesModule } from '@/src/modules/files/files.module';
 import { DashboardModule } from '@/src/modules/dashboard/dashboard.module';
 import { CommerceModule } from '@/src/modules/commerce/commerce.module';
 import { RewardsModule } from '@/src/modules/rewards/rewards.module';
+import { CouponsModule } from '@/src/modules/coupons/coupons.module';
 
 @Module({
   imports: [
@@ -56,6 +57,7 @@ import { RewardsModule } from '@/src/modules/rewards/rewards.module';
     DashboardModule,
     CommerceModule,
     RewardsModule,
+    CouponsModule,
   ],
   controllers: [],
   providers: [],

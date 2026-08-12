@@ -42,6 +42,7 @@ export class OrdersService {
       customerId,
       data.usePoints || 0,
       data.useCashback || 0,
+      data.couponCode,
     );
     const { items: _items, ...quote } = pricing;
     return quote;
@@ -72,6 +73,7 @@ export class OrdersService {
         customerId,
         data.usePoints || 0,
         data.useCashback || 0,
+        data.couponCode,
         true,
       );
       const order = ordersRepo.create({
@@ -85,6 +87,9 @@ export class OrdersService {
         pointsRedeemed: pricing.pointsRedeemed,
         pointsDiscountAmount: pricing.pointsDiscount,
         cashbackUsed: pricing.cashbackUsed,
+        couponId: pricing.coupon?.id || null,
+        couponCode: pricing.couponCode,
+        couponDiscountAmount: pricing.couponDiscount,
       });
 
       const orderItems: OrderItemEntity[] = [];
@@ -152,6 +157,8 @@ export class OrdersService {
         pointsDiscount: pricing.pointsDiscount,
         cashbackUsed: pricing.cashbackUsed,
         discountedSubtotal: pricing.discountedSubtotal,
+        couponCode: pricing.couponCode,
+        couponDiscount: pricing.couponDiscount,
         total: pricing.total,
         currencyCode: pricing.currencyCode,
       };

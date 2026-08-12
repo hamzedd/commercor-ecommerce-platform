@@ -172,5 +172,10 @@
   "noResultsFound": "Результаты не найдены",
   "tryDifferentKeywords": "Попробуйте другие ключевые слова или проверьте правописание",
   "result": "результат",
-  "results": "результатов"
+  "results": "результатов",
+  "couponCode": "Код купона",
+  "applyCoupon": "Применить",
+  "removeCoupon": "Удалить купон",
+  "couponDiscount": "Скидка по купону",
+  "couponValidatedAtCheckout": "Купон будет безопасно проверен при оформлении заказа."
 }

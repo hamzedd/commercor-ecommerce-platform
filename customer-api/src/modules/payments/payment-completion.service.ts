@@ -7,6 +7,8 @@ import { ProductEntity } from '@/src/libs/models/entities/product/Product.entity
 import { PaymentStatus, OrderStatus } from '@/src/utils/enums/PaymentEnums';
 import { assertCompletion, VerifiedPaymentEvent } from './payment-state';
 import { RewardsService } from '@/src/modules/rewards/rewards.service';
+import { CouponEntity } from '@/src/libs/models/entities/coupon/Coupon.entity';
+import { CouponUsageEntity } from '@/src/libs/models/entities/coupon/CouponUsage.entity';
 
 @Injectable()
 export class PaymentCompletionService {
@@ -27,7 +29,15 @@ export class PaymentCompletionService {
       order.status = OrderStatus.COMPLETED;
       await manager.getRepository(PaymentEntity).save(payment);
       await manager.getRepository(OrderEntity).save(order);
-      await this.rewards.grant(manager, order.customerId, order.id, payment.id, Math.max(0, Number(order.productAmount) - Number(order.pointsDiscountAmount) - Number(order.cashbackUsed)));
+      if(order.couponId){
+        const coupon=await manager.getRepository(CouponEntity).findOne({where:{id:order.couponId},lock:{mode:'pessimistic_write'}}); if(!coupon)throw new BadRequestException('Order coupon no longer exists');
+        if(!(await manager.getRepository(CouponUsageEntity).existsBy({orderId:order.id}))){
+          if(coupon.usageLimit!=null&&coupon.totalUsageCount>=coupon.usageLimit)throw new BadRequestException('Coupon usage limit has been reached');
+          const customerCount=await manager.getRepository(CouponUsageEntity).countBy({couponId:coupon.id,customerId:order.customerId}); if(coupon.usageLimitPerCustomer!=null&&customerCount>=coupon.usageLimitPerCustomer)throw new BadRequestException('Coupon customer usage limit has been reached');
+          await manager.getRepository(CouponUsageEntity).save(manager.getRepository(CouponUsageEntity).create({couponId:coupon.id,customerId:order.customerId,orderId:order.id,discountAmount:Number(order.couponDiscountAmount)})); coupon.totalUsageCount+=1; await manager.getRepository(CouponEntity).save(coupon);
+        }
+      }
+      await this.rewards.grant(manager, order.customerId, order.id, payment.id, Math.max(0, Number(order.productAmount) - Number(order.couponDiscountAmount) - Number(order.pointsDiscountAmount) - Number(order.cashbackUsed)));
       return { status: payment.status, idempotent: false };
     });
   }

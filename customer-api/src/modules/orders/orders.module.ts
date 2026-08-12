@@ -7,10 +7,12 @@ import { CustomerEntity } from '@/src/libs/models/entities/customer/Customer.ent
 import { OrderItemEntity } from '@/src/libs/models/entities/order/OrderItem.entity';
 import { PricingService } from './services/pricing.service';
 import { RewardsModule } from '@/src/modules/rewards/rewards.module';
+import { CouponEntity } from '@/src/libs/models/entities/coupon/Coupon.entity';
+import { CouponUsageEntity } from '@/src/libs/models/entities/coupon/CouponUsage.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([OrderEntity, CustomerEntity, OrderItemEntity]),
+    TypeOrmModule.forFeature([OrderEntity, CustomerEntity, OrderItemEntity, CouponEntity, CouponUsageEntity]),
     RewardsModule,
   ],
   controllers: [OrdersController],

@@ -172,5 +172,10 @@
   "noResultsFound": "No se encontraron resultados",
   "tryDifferentKeywords": "Intenta con diferentes palabras clave o verifica la ortografía",
   "result": "resultado",
-  "results": "resultados"
+  "results": "resultados",
+  "couponCode": "Código de cupón",
+  "applyCoupon": "Aplicar",
+  "removeCoupon": "Quitar cupón",
+  "couponDiscount": "Descuento del cupón",
+  "couponValidatedAtCheckout": "Tu cupón se validará de forma segura al finalizar la compra."
 }

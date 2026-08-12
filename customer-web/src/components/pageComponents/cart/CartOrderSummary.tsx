@@ -2,6 +2,7 @@
 
 import { LockOutlined } from "@ant-design/icons";
 import { useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
 
 import { Link } from "@/src/i18n/navigation";
 import { CreateOrderItemType } from "@/src/utils/types/order.type";
@@ -17,6 +18,8 @@ interface Props {
 function CartOrderSummary({ cart, productPrices }: Props) {
   const t = useTranslations();
   const settings = useStoreSettings();
+  const [couponCode,setCouponCode]=useState("");
+  useEffect(()=>setCouponCode(window.sessionStorage.getItem("commercor-coupon")||""),[]);
   const subtotal = cart.reduce(
     (total, item) =>
       total + Number(productPrices[item.productId] || 0) * item.quantity,
@@ -40,6 +43,7 @@ function CartOrderSummary({ cart, productPrices }: Props) {
           </dd>
         </div>
       </dl>
+      <div className="mt-5 rounded-xl bg-stone-50 p-4"><label htmlFor="cart-coupon" className="text-sm font-semibold">{t("couponCode")}</label><div className="mt-2 flex gap-2"><input id="cart-coupon" value={couponCode} onChange={e=>setCouponCode(e.target.value.toUpperCase())} placeholder={t("couponCode")} className="min-w-0 flex-1 rounded-lg border border-stone-300 px-3 py-2 text-sm"/><button type="button" onClick={()=>window.sessionStorage.setItem("commercor-coupon",couponCode.trim().toUpperCase())} className="rounded-lg bg-stone-900 px-3 text-sm font-bold text-white">{t("applyCoupon")}</button></div>{couponCode&&<button type="button" onClick={()=>{setCouponCode("");window.sessionStorage.removeItem("commercor-coupon")}} className="mt-2 text-sm font-semibold text-red-700">{t("removeCoupon")}</button>}<p className="mt-2 text-xs text-stone-500">{t("couponValidatedAtCheckout")}</p></div>
 
       <Link
         href="/checkout"

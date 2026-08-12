@@ -172,5 +172,10 @@
   "noResultsFound": "No results found",
   "tryDifferentKeywords": "Try different keywords or check your spelling",
   "result": "result",
-  "results": "results"
+  "results": "results",
+  "couponCode": "Coupon code",
+  "applyCoupon": "Apply",
+  "removeCoupon": "Remove coupon",
+  "couponDiscount": "Coupon discount",
+  "couponValidatedAtCheckout": "Your coupon will be validated securely at checkout."
 }

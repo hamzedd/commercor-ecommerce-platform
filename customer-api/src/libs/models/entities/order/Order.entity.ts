@@ -41,6 +41,9 @@ export class OrderEntity extends BaseEntity {
   @Column({ type: 'integer', default: 0 }) pointsRedeemed: number;
   @Column({ type: 'decimal', precision: 12, scale: 2, default: 0 }) pointsDiscountAmount: number;
   @Column({ type: 'decimal', precision: 12, scale: 2, default: 0 }) cashbackUsed: number;
+  @Column({ nullable: true }) couponId: string | null;
+  @Column({ nullable: true, length: 100 }) couponCode: string | null;
+  @Column({ type: 'decimal', precision: 12, scale: 2, default: 0 }) couponDiscountAmount: number;
 
   @Column()
   status: string;

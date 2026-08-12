@@ -1,0 +1,2 @@
+export type CouponCalculation={type:'percentage'|'fixed';value:number;maximumDiscountAmount?:number|null};
+export function calculateCouponDiscount(subtotal:number,coupon:CouponCalculation){const raw=coupon.type==='percentage'?subtotal*coupon.value/100:coupon.value;return Number(Math.max(0,Math.min(subtotal,raw,coupon.maximumDiscountAmount==null?Infinity:coupon.maximumDiscountAmount)).toFixed(2));}

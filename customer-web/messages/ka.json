@@ -172,5 +172,10 @@
   "noResultsFound": "შედეგები ვერ მოიძებნა",
   "tryDifferentKeywords": "სცადეთ სხვა საძიებო სიტყვები ან შეამოწმეთ მართლწერა",
   "result": "შედეგი",
-  "results": "შედეგები"
+  "results": "შედეგები",
+  "couponCode": "კუპონის კოდი",
+  "applyCoupon": "გამოყენება",
+  "removeCoupon": "კუპონის წაშლა",
+  "couponDiscount": "კუპონის ფასდაკლება",
+  "couponValidatedAtCheckout": "კუპონი უსაფრთხოდ შემოწმდება შეკვეთის გაფორმებისას."
 }

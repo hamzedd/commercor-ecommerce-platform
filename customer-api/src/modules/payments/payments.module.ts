@@ -22,6 +22,8 @@ import { PaymentRefundEntity } from '@/src/libs/models/entities/payment/PaymentR
 import { CustomerRewardAccountEntity } from '@/src/libs/models/entities/reward/CustomerRewardAccount.entity';
 import { RewardTransactionEntity } from '@/src/libs/models/entities/reward/RewardTransaction.entity';
 import { VerifiedRefundService } from './services/verified-refund.service';
+import { CouponEntity } from '@/src/libs/models/entities/coupon/Coupon.entity';
+import { CouponUsageEntity } from '@/src/libs/models/entities/coupon/CouponUsage.entity';
 
 @Module({
   imports: [
@@ -34,6 +36,8 @@ import { VerifiedRefundService } from './services/verified-refund.service';
       PaymentRefundEntity,
       CustomerRewardAccountEntity,
       RewardTransactionEntity,
+      CouponEntity,
+      CouponUsageEntity,
     ]),
     RewardsModule,
   ],
