@@ -10,6 +10,15 @@ export type CreateOrderItemType = {
   quantity: number;
 };
 
+export type CheckoutQuoteType = {
+  subtotal: number;
+  shippingAmount: number;
+  taxAmount: number;
+  total: number;
+  currencyCode: string;
+  pricesIncludeTax: boolean;
+};
+
 export type OrderType = {
   id: string;
   created_at: string;
@@ -20,6 +29,8 @@ export type OrderType = {
   addressId: string;
   productAmount: number;
   deliveryAmount: number;
+  taxAmount: number;
+  finalTotal: number;
   status: string;
   orderItems: OrderItemType[];
 };

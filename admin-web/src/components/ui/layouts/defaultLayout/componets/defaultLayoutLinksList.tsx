@@ -3,6 +3,7 @@ import {
   UserOutlined,
   VideoCameraOutlined,
   SettingOutlined,
+  DollarOutlined,
   DashboardOutlined,
 } from "@ant-design/icons";
 import { UserRoleEnum } from "../../../../../utils/enums/UserEnums.ts";
@@ -85,6 +86,13 @@ export default [
     icon: <UploadOutlined />,
     label: "Users",
     path: "/admin/users",
+    roles: [UserRoleEnum.ADMIN],
+  },
+  {
+    key: "commerce-settings",
+    icon: <DollarOutlined />,
+    label: "Shipping & Tax",
+    path: "/admin/commerce-settings",
     roles: [UserRoleEnum.ADMIN],
   },
   {

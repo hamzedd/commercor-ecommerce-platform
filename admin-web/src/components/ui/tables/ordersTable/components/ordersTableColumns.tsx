@@ -24,7 +24,7 @@ export default [
     title: "Amount",
     dataIndex: ["amount"],
     key: "amount",
-    render: (_, order: OrderType) => order.deliveryAmount + order.productAmount,
+    render: (_, order: OrderType) => order.finalTotal ?? order.deliveryAmount + order.productAmount + (order.taxAmount || 0),
   },
   {
     title: "Actions",

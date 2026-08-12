@@ -33,6 +33,12 @@ export class OrderEntity extends BaseEntity {
   @Column()
   deliveryAmount: number;
 
+  @Column({ type: 'decimal', precision: 12, scale: 2, default: 0 })
+  taxAmount: number;
+
+  @Column({ type: 'decimal', precision: 12, scale: 2, default: 0 })
+  finalTotal: number;
+
   @Column()
   status: string;
 }

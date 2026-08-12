@@ -94,8 +94,12 @@ export class DashboardService {
           status: order.status,
           createdAt: order.created_at,
           totalAmount: Math.max(
-            Number(order.productAmount || 0) +
-              Number(order.deliveryAmount || 0) -
+            Number(
+              order.finalTotal ??
+                Number(order.productAmount || 0) +
+                  Number(order.deliveryAmount || 0) +
+                  Number(order.taxAmount || 0),
+            ) -
               refundedAmount,
             0,
           ),
@@ -125,7 +129,7 @@ export class DashboardService {
         'date',
       )
       .addSelect(
-        'COALESCE(SUM(GREATEST(COALESCE(order.productAmount, 0) + COALESCE(order.deliveryAmount, 0) - COALESCE(payment.refundedAmount, 0), 0)), 0)',
+        'COALESCE(SUM(GREATEST(COALESCE(order.finalTotal, COALESCE(order.productAmount, 0) + COALESCE(order.deliveryAmount, 0) + COALESCE(order.taxAmount, 0)) - COALESCE(payment.refundedAmount, 0), 0)), 0)',
         'revenue',
       )
       .where('payment.status = :paymentStatus', {

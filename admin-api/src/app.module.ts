@@ -22,6 +22,7 @@ import { AuthModule } from '@/src/modules/auth/auth.module';
 import { MinioModule } from '@/src/modules/minio/minio.module';
 import { FilesModule } from '@/src/modules/files/files.module';
 import { DashboardModule } from '@/src/modules/dashboard/dashboard.module';
+import { CommerceModule } from '@/src/modules/commerce/commerce.module';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { DashboardModule } from '@/src/modules/dashboard/dashboard.module';
     MinioModule,
     FilesModule,
     DashboardModule,
+    CommerceModule,
   ],
   controllers: [],
   providers: [],

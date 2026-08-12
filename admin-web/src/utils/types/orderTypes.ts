@@ -19,6 +19,8 @@ export type OrderType = {
   id: string | number;
   deliveryAmount: number;
   productAmount: number;
+  taxAmount: number;
+  finalTotal: number;
   address: AddressType;
   customer: CustomerType;
   orderItems: OrderItemType[];

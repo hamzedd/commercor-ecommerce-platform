@@ -21,6 +21,13 @@ export class OrdersController {
   }
 
   @ApiBearerAuth()
+  @UseGuards(AuthGuard)
+  @Post('quote')
+  quote(@Req() req: GuardedApiResponse, @Body() data: CreateOrderDto) {
+    return this.ordersService.quote(req?.user.id, data);
+  }
+
+  @ApiBearerAuth()
   @ApiOperation({
     description: 'get customer orders',
   })

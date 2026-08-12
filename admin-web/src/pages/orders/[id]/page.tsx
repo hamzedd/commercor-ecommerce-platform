@@ -106,11 +106,12 @@ function OrderPage() {
             <Descriptions.Item label="Delivery Amount">
               {orderData.deliveryAmount.toFixed(2)}
             </Descriptions.Item>
+            <Descriptions.Item label="Tax Amount">
+              {(orderData.taxAmount || 0).toFixed(2)}
+            </Descriptions.Item>
             <Descriptions.Item label="Total Amount">
               <Text strong>
-                {(orderData.productAmount + orderData.deliveryAmount).toFixed(
-                  2,
-                )}
+                {(orderData.finalTotal ?? orderData.productAmount + orderData.deliveryAmount + (orderData.taxAmount || 0)).toFixed(2)}
               </Text>
             </Descriptions.Item>
           </Descriptions>

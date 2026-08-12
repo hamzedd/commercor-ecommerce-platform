@@ -12,6 +12,7 @@ import { CreateOrderDto } from '@/src/libs/models/dtos/orders/CreateOrder.dto';
 import { PaymentEntity } from '@/src/libs/models/entities/payment/Payment.entity';
 import { DOMAIN_URL } from '@/src/utils/environmentConstants';
 import { InjectRepository } from '@nestjs/typeorm';
+import { PricingService } from './pricing.service';
 
 @Injectable()
 export class OrdersService {
@@ -21,7 +22,16 @@ export class OrdersService {
     private ordersRepository: Repository<OrderEntity>,
     @InjectRepository(OrderItemEntity)
     private orderItemsRepository: Repository<OrderItemEntity>,
+    private readonly pricingService: PricingService,
   ) {}
+
+  async quote(customerId: string, data: CreateOrderDto) {
+    const address = await this.dataSource.manager.findOneBy(AddressEntity, { id: data.addressId, customerId });
+    if (!address) throw new BadRequestException('Customer has no address');
+    const pricing = await this.pricingService.calculate(this.dataSource.manager, data.items, address.country);
+    const { items: _items, ...quote } = pricing;
+    return quote;
+  }
 
   async create(customerId: string, data: CreateOrderDto) {
     if (!customerId) throw new BadRequestException('customerId is required');
@@ -41,57 +51,43 @@ export class OrdersService {
 
       if (!address) throw new BadRequestException('Customer has no address');
 
+      const pricing = await this.pricingService.calculate(manager, data.items, address.country, true);
       const order = ordersRepo.create({
         customerId,
         addressId: address.id,
         status: 'completed',
-        deliveryAmount: 0,
-        productAmount: 0,
+        deliveryAmount: pricing.shippingAmount,
+        productAmount: pricing.subtotal,
+        taxAmount: pricing.taxAmount,
+        finalTotal: pricing.total,
       });
-
-      let totalAmount = 0;
 
       const orderItems: OrderItemEntity[] = [];
 
-      for (const item of data.items) {
-        const product = await manager.findOne(ProductEntity, {
-          where: { id: item.productId },
-          lock: { mode: 'pessimistic_write' },
-        });
-
-        if (!product)
-          throw new NotFoundException(`Product not found: ${item.productId}`);
-        if (product.stock < item.quantity)
-          throw new BadRequestException(
-            `Not enough stock for product ${product.id}`,
-          );
-
+      for (const item of pricing.items) {
+        const product = item.product;
         product.stock -= item.quantity;
         await productsRepo.save(product);
-
-        const unitPrice = parseFloat(product.price.toString());
 
         orderItems.push(
           orderItemsRepo.create({
             order,
             productId: product.id,
             quantity: item.quantity,
-            unitPrice,
+            unitPrice: item.unitPrice,
           }),
         );
 
-        totalAmount += unitPrice * item.quantity;
       }
 
       let newPayment = paymentsRepo.create({
-        totalAmount: order.deliveryAmount + order.productAmount,
+        totalAmount: pricing.total,
         refundedAmount: 0,
         status: 'completed',
       });
 
       newPayment = await paymentsRepo.save(newPayment);
 
-      order.productAmount = Number(totalAmount.toFixed(2));
       order.payment = newPayment;
       const savedOrder = await ordersRepo.save(order);
 
@@ -106,6 +102,11 @@ export class OrdersService {
 
       return {
         paymentUrl: `${DOMAIN_URL}/payment-status/${newPayment.id}`,
+        subtotal: pricing.subtotal,
+        shippingAmount: pricing.shippingAmount,
+        taxAmount: pricing.taxAmount,
+        total: pricing.total,
+        currencyCode: pricing.currencyCode,
       };
     });
   }
