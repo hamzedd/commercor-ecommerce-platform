@@ -1,0 +1,3 @@
+import { PaymentStatus } from '../../utils/enums/PaymentEnums';
+export function remainingRefundable(paid:number,refunded:number){return Number(Math.max(0,paid-refunded).toFixed(2));}
+export function assertRefund(status:string,amount:number,remaining:number){if(![PaymentStatus.COMPLETED,PaymentStatus.PARTIALLY_REFUNDED].includes(status as PaymentStatus))throw new Error('Only completed payments can be refunded');if(!Number.isFinite(amount)||amount<=0)throw new Error('Refund amount must be greater than zero');if(amount>remaining)throw new Error('Refund amount exceeds remaining refundable amount');}

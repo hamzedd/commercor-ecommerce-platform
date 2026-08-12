@@ -22,5 +22,6 @@ export class RewardsService {
     if(cashback){a.cashbackBalance=Number(a.cashbackBalance)-cashback;await repo.save(repo.create({customerId,orderId,paymentId,type:RewardTransactionType.USE_CASHBACK,pointsAmount:null,cashbackAmount:-cashback,description:'Cashback used on order',expiresAt:null}));}
     if(a.pointsBalance<0||Number(a.cashbackBalance)<0)this.bad('Reward balance cannot become negative.'); await manager.getRepository(CustomerRewardAccountEntity).save(a);
   }
+  async restoreRedemption(manager:EntityManager,customerId:string,orderId:string,paymentId:string,points:number,cashback:number,description:string){if(!points&&!cashback)return;const ledger=manager.getRepository(RewardTransactionEntity);if(await ledger.existsBy({orderId,type:RewardTransactionType.ADMIN_ADJUSTMENT}))return;const a=await this.account(manager,customerId,true);a.pointsBalance+=points;a.cashbackBalance=Number(a.cashbackBalance)+cashback;await manager.getRepository(CustomerRewardAccountEntity).save(a);await ledger.save(ledger.create({customerId,orderId,paymentId,type:RewardTransactionType.ADMIN_ADJUSTMENT,pointsAmount:points||null,cashbackAmount:cashback||null,description,expiresAt:null}));}
   bad(message:string):never{throw new BadRequestException(message);}
 }

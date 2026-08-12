@@ -14,6 +14,7 @@ import { DOMAIN_URL } from '@/src/utils/environmentConstants';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PricingService } from './pricing.service';
 import { RewardsService } from '@/src/modules/rewards/rewards.service';
+import { OrderStatus, PaymentStatus } from '@/src/utils/enums/PaymentEnums';
 
 @Injectable()
 export class OrdersService {
@@ -57,7 +58,7 @@ export class OrdersService {
       const order = ordersRepo.create({
         customerId,
         addressId: address.id,
-        status: 'completed',
+        status: OrderStatus.PENDING,
         deliveryAmount: pricing.shippingAmount,
         productAmount: pricing.subtotal,
         taxAmount: pricing.taxAmount,
@@ -88,7 +89,12 @@ export class OrdersService {
       let newPayment = paymentsRepo.create({
         totalAmount: pricing.total,
         refundedAmount: 0,
-        status: 'completed',
+        status: PaymentStatus.PENDING,
+        paidAmount: null,
+        currencyCode: pricing.currencyCode.toUpperCase(),
+        provider: null,
+        externalTransactionId: null,
+        completedAt: null,
       });
 
       newPayment = await paymentsRepo.save(newPayment);
@@ -97,7 +103,6 @@ export class OrdersService {
       const savedOrder = await ordersRepo.save(order);
 
       await this.rewardsService.redeem(manager, customerId, savedOrder.id, newPayment.id, pricing.pointsRedeemed, pricing.pointsDiscount, pricing.cashbackUsed);
-      await this.rewardsService.grant(manager, customerId, savedOrder.id, newPayment.id, pricing.discountedSubtotal);
 
       await Promise.all(
         orderItems.map((item) =>
@@ -125,7 +130,7 @@ export class OrdersService {
 
   async getCustomerOrders(customerId: string) {
     const orders = await this.ordersRepository.find({
-      where: { customerId, status: 'completed' },
+      where: { customerId },
     });
 
     return await Promise.all(

@@ -8,9 +8,9 @@ import { useParams } from "next/navigation";
 
 function PaymentStatusPage() {
   const { id } = useParams<{ id: string }>();
-  const { data, isLoading } = usePaymentStatusQuery({ id });
+  const { data, isLoading, isError } = usePaymentStatusQuery({ id });
 
-  if (isLoading) {
+  if (isLoading || data?.status === "pending") {
     return <PaymentStatusLoading />;
   }
 
@@ -18,7 +18,9 @@ function PaymentStatusPage() {
     return <PaymentStatusSuccess />;
   }
 
-  return <PaymentStatusFail />;
+  if (isError || data?.status === "failed" || data?.status === "cancelled") return <PaymentStatusFail />;
+
+  return <PaymentStatusLoading />;
 }
 
 export default PaymentStatusPage;

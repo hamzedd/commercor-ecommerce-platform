@@ -1,9 +1,12 @@
-import { Body, Controller, Get, Put, Param } from '@nestjs/common';
+import { Body, Controller, Get, Put, Param, UseGuards } from '@nestjs/common';
 import { OrderDto } from '@/src/libs/models/dtos/orders/Order.dto';
 import { OrdersService } from '../services/orders.service';
 import { ApiBody } from '@nestjs/swagger';
+import { AuthGuard } from '@/src/libs/guards/auth.guard'; import { RoleGuard } from '@/src/libs/guards/role.guard'; import { Role } from '@/src/libs/decorators/roles.decorator'; import { UserRoleEnum } from '@/src/utils/enums/UserEnums';
 
 @Controller('orders')
+@Role(UserRoleEnum.ADMIN,UserRoleEnum.SALES)
+@UseGuards(AuthGuard,RoleGuard)
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 

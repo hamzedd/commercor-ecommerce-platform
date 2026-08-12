@@ -1,9 +1,12 @@
-import { Body, Controller, Get, Put, Param } from '@nestjs/common';
+import { Body, Controller, Get, Put, Param, UseGuards } from '@nestjs/common';
 import { PaymentRefundDto } from '@/src/libs/models/dtos/payments/PaymentRefund.dto';
 import { PaymentsService } from '@/src/modules/payments/services/payments.service';
 import { ApiBody } from '@nestjs/swagger';
+import { AuthGuard } from '@/src/libs/guards/auth.guard'; import { RoleGuard } from '@/src/libs/guards/role.guard'; import { Role } from '@/src/libs/decorators/roles.decorator'; import { UserRoleEnum } from '@/src/utils/enums/UserEnums';
 
 @Controller('payments')
+@Role(UserRoleEnum.ADMIN)
+@UseGuards(AuthGuard,RoleGuard)
 export class PaymentsController {
   constructor(private readonly paymentsService: PaymentsService) {}
 

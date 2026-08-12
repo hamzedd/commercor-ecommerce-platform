@@ -3,6 +3,11 @@ export type PaymentType = {
   totalAmount: number;
   refundedAmount: number;
   status: string;
+  paidAmount: number | null;
+  currencyCode: string | null;
+  provider: string | null;
+  externalTransactionId: string | null;
+  completedAt: string | null;
   createdAt?: string;
   updatedAt?: string;
 };

@@ -164,11 +164,20 @@ function OrderPage() {
                 {orderData.payment.status.toUpperCase()}
               </Tag>
             </Descriptions.Item>
-            <Descriptions.Item label="Total Amount">
+            <Descriptions.Item label="Expected Amount">
               {orderData.payment.totalAmount.toFixed(2)}
+            </Descriptions.Item>
+            <Descriptions.Item label="Paid Amount">
+              {orderData.payment.paidAmount == null ? "Not paid" : `${orderData.payment.paidAmount.toFixed(2)} ${orderData.payment.currencyCode || ""}`}
             </Descriptions.Item>
             <Descriptions.Item label="Refunded Amount">
               {orderData.payment.refundedAmount.toFixed(2)}
+            </Descriptions.Item>
+            <Descriptions.Item label="Provider">
+              {orderData.payment.provider || "Not assigned"}
+            </Descriptions.Item>
+            <Descriptions.Item label="Transaction Reference">
+              {orderData.payment.externalTransactionId || "Not available"}
             </Descriptions.Item>
             {orderData.payment.createdAt && (
               <Descriptions.Item label="Payment Date">

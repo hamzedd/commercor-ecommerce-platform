@@ -1,4 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { PaymentEntity } from '@/src/libs/models/entities/payment/Payment.entity';
+import { PaymentStatus } from '@/src/utils/enums/PaymentEnums';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { OrderEntity } from '@/src/libs/models/entities/order/Order.entity';
@@ -55,6 +57,8 @@ export class OrdersService {
       const order = await orderRepo.findOneOrFail({
         where: { id },
       });
+      const payment=await manager.getRepository(PaymentEntity).findOneBy({id:order.paymentId});
+      if(!payment||payment.status!==PaymentStatus.COMPLETED)throw new BadRequestException('Unpaid orders cannot enter fulfillment states');
       Object.assign(order, data);
 
       await orderRepo.save(order);

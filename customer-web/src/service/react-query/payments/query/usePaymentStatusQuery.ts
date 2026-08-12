@@ -12,7 +12,11 @@ export const usePaymentStatusQuery = ({ id }: { id?: string }) => {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     retryOnMount: false,
-    staleTime: 1000 * 60 * 60,
+    staleTime: 0,
+    refetchInterval: (query) =>
+      query.state.data?.status === "pending" && query.state.dataUpdateCount < 15
+        ? 2000
+        : false,
     retry: false,
   });
 };
