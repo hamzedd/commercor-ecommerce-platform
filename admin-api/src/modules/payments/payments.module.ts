@@ -8,10 +8,11 @@ import { CustomerRewardAccountEntity } from '@/src/libs/models/entities/reward/C
 import { RewardTransactionEntity } from '@/src/libs/models/entities/reward/RewardTransaction.entity';
 import { PaymentRefundEntity } from '@/src/libs/models/entities/payment/PaymentRefund.entity';
 import { JwtModule } from '@nestjs/jwt'; import { JWT_SECRET } from '@/src/utils/environmentConstants'; import { UserEntity } from '@/src/libs/models/entities/user/User.entity'; import { AuthGuard } from '@/src/libs/guards/auth.guard'; import { RoleGuard } from '@/src/libs/guards/role.guard';
+import { PayPalRefundService } from './services/paypal-refund.service';
 
 @Module({
   imports: [JwtModule.register({secret:JWT_SECRET,signOptions:{expiresIn:'1d'}}),TypeOrmModule.forFeature([PaymentEntity, PaymentRefundEntity, OrderEntity, CustomerRewardAccountEntity, RewardTransactionEntity,UserEntity])],
   controllers: [PaymentsController],
-  providers: [PaymentsService,AuthGuard,RoleGuard],
+  providers: [PaymentsService, PayPalRefundService, AuthGuard, RoleGuard],
 })
 export class PaymentsModule {}

@@ -186,6 +186,9 @@ function OrderPage() {
             <Descriptions.Item label="Transaction Reference">
               {orderData.payment.externalTransactionId || "Not available"}
             </Descriptions.Item>
+            <Descriptions.Item label="Provider Order Reference">
+              {orderData.payment.providerPaymentId || "Not available"}
+            </Descriptions.Item>
             <Descriptions.Item label="Expires At">
               {orderData.payment.expiresAt || "Not applicable"}
             </Descriptions.Item>

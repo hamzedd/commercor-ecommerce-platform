@@ -6,13 +6,24 @@ import { useEffect, useState } from "react";
 
 import CheckoutAddressList from "@/src/components/pageComponents/checkout/CheckoutAddressList";
 import { useRouter } from "@/src/i18n/navigation";
-import { createOrderService, getCheckoutQuoteService } from "@/src/service/apiServices/order.service";
+import {
+  createOrderService,
+  getCheckoutQuoteService,
+} from "@/src/service/apiServices/order.service";
 import { AddressType } from "@/src/utils/types/address.type";
-import { CheckoutQuoteType, CreateOrderItemType } from "@/src/utils/types/order.type";
+import {
+  CheckoutQuoteType,
+  CreateOrderItemType,
+} from "@/src/utils/types/order.type";
 import { useStoreSettings } from "@/src/components/providers/StoreSettingsProvider";
 import formatCurrency from "@/src/utils/functions/formatCurrency";
 import { getRewardsService } from "@/src/service/apiServices/rewards.service";
 import { InputNumber } from "antd";
+import PayPalPaymentButton from "./PayPalPaymentButton";
+import {
+  initializePaymentService,
+  PaymentInitialization,
+} from "@/src/service/apiServices/payment.service";
 
 interface Props {
   cart: CreateOrderItemType[];
@@ -29,30 +40,79 @@ function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
   const [quoteLoading, setQuoteLoading] = useState(false);
   const [quoteError, setQuoteError] = useState<string>();
   const [submitting, setSubmitting] = useState(false);
+  const [pendingPayment, setPendingPayment] = useState<{
+    id: string;
+    url: string;
+    initialization: PaymentInitialization;
+  }>();
   const [usePoints, setUsePoints] = useState(0);
   const [useCashback, setUseCashback] = useState(0);
-  const [rewards, setRewards] = useState<{pointsBalance:number;cashbackBalance:number;pointsEnabled:boolean;cashbackEnabled:boolean}>();
-  useEffect(()=>{getRewardsService().then(setRewards).catch(()=>setRewards(undefined));},[]);
+  const [rewards, setRewards] = useState<{
+    pointsBalance: number;
+    cashbackBalance: number;
+    pointsEnabled: boolean;
+    cashbackEnabled: boolean;
+  }>();
+  useEffect(() => {
+    getRewardsService()
+      .then(setRewards)
+      .catch(() => setRewards(undefined));
+  }, []);
 
   useEffect(() => {
-    if (!selectedAddress || cart.length === 0) { setQuote(undefined); setQuoteError(undefined); return; }
+    if (!selectedAddress || cart.length === 0) {
+      setQuote(undefined);
+      setQuoteError(undefined);
+      return;
+    }
     const controller = new AbortController();
     const timer = window.setTimeout(() => {
-      setQuoteLoading(true); setQuoteError(undefined);
-      getCheckoutQuoteService({ items: cart, addressId: selectedAddress, usePoints, useCashback })
+      setQuoteLoading(true);
+      setQuoteError(undefined);
+      getCheckoutQuoteService({
+        items: cart,
+        addressId: selectedAddress,
+        usePoints,
+        useCashback,
+      })
         .then(setQuote)
-        .catch((error) => { if (!controller.signal.aborted) { setQuote(undefined); setQuoteError(error?.response?.data?.message || t("quoteError")); } })
-        .finally(() => { if (!controller.signal.aborted) setQuoteLoading(false); });
+        .catch((error) => {
+          if (!controller.signal.aborted) {
+            setQuote(undefined);
+            setQuoteError(error?.response?.data?.message || t("quoteError"));
+          }
+        })
+        .finally(() => {
+          if (!controller.signal.aborted) setQuoteLoading(false);
+        });
     }, 250);
-    return () => { controller.abort(); window.clearTimeout(timer); };
+    return () => {
+      controller.abort();
+      window.clearTimeout(timer);
+    };
   }, [cart, selectedAddress, usePoints, useCashback, t]);
 
   const handleCheckout = async () => {
     if (!quote) return;
-    try { setSubmitting(true); setQuoteError(undefined); const { paymentUrl } = await createOrderService({ items: cart, addressId: selectedAddress, usePoints, useCashback });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      router.push(paymentUrl as any);
-    } catch (error: unknown) { const requestError = error as { response?: { data?: { message?: string } } }; setQuoteError(requestError.response?.data?.message || t("checkoutError")); setSubmitting(false); }
+    try {
+      setSubmitting(true);
+      setQuoteError(undefined);
+      const { paymentUrl, paymentId } = await createOrderService({
+        items: cart,
+        addressId: selectedAddress,
+        usePoints,
+        useCashback,
+      });
+      const initialization = await initializePaymentService(paymentId);
+      setPendingPayment({ id: paymentId, url: paymentUrl, initialization });
+      setSubmitting(false);
+    } catch (error: unknown) {
+      const requestError = error as {
+        response?: { data?: { message?: string } };
+      };
+      setQuoteError(requestError.response?.data?.message || t("checkoutError"));
+      setSubmitting(false);
+    }
   };
 
   const totalPrice = cart.reduce((total, item) => {
@@ -73,22 +133,121 @@ function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
         <div className="flex items-center justify-between gap-4">
           <dt className="text-sm text-stone-600">{t("subtotal")}</dt>
           <dd className="text-base font-semibold text-stone-950">
-            {formatCurrency(quote?.subtotal ?? totalPrice, settings.currencyCode, lang)}
+            {formatCurrency(
+              quote?.subtotal ?? totalPrice,
+              settings.currencyCode,
+              lang,
+            )}
           </dd>
         </div>
-        {quote&&quote.pointsDiscount>0&&<div className="mt-3 flex justify-between text-sm text-emerald-700"><dt>Points discount</dt><dd>-{formatCurrency(quote.pointsDiscount,settings.currencyCode,lang)}</dd></div>}
-        {quote&&quote.cashbackUsed>0&&<div className="mt-3 flex justify-between text-sm text-emerald-700"><dt>Cashback used</dt><dd>-{formatCurrency(quote.cashbackUsed,settings.currencyCode,lang)}</dd></div>}
-        <div className="mt-3 flex items-center justify-between gap-4"><dt className="text-sm text-stone-600">{t("shipping")}</dt><dd className="font-semibold text-stone-950">{quoteLoading ? t("recalculating") : quote ? formatCurrency(quote.shippingAmount, settings.currencyCode, lang) : "--"}</dd></div>
-        <div className="mt-3 flex items-center justify-between gap-4"><dt className="text-sm text-stone-600">{t("tax")}</dt><dd className="font-semibold text-stone-950">{quoteLoading ? t("recalculating") : quote ? formatCurrency(quote.taxAmount, settings.currencyCode, lang) : "--"}</dd></div>
+        {quote && quote.pointsDiscount > 0 && (
+          <div className="mt-3 flex justify-between text-sm text-emerald-700">
+            <dt>Points discount</dt>
+            <dd>
+              -
+              {formatCurrency(
+                quote.pointsDiscount,
+                settings.currencyCode,
+                lang,
+              )}
+            </dd>
+          </div>
+        )}
+        {quote && quote.cashbackUsed > 0 && (
+          <div className="mt-3 flex justify-between text-sm text-emerald-700">
+            <dt>Cashback used</dt>
+            <dd>
+              -{formatCurrency(quote.cashbackUsed, settings.currencyCode, lang)}
+            </dd>
+          </div>
+        )}
+        <div className="mt-3 flex items-center justify-between gap-4">
+          <dt className="text-sm text-stone-600">{t("shipping")}</dt>
+          <dd className="font-semibold text-stone-950">
+            {quoteLoading
+              ? t("recalculating")
+              : quote
+                ? formatCurrency(
+                    quote.shippingAmount,
+                    settings.currencyCode,
+                    lang,
+                  )
+                : "--"}
+          </dd>
+        </div>
+        <div className="mt-3 flex items-center justify-between gap-4">
+          <dt className="text-sm text-stone-600">{t("tax")}</dt>
+          <dd className="font-semibold text-stone-950">
+            {quoteLoading
+              ? t("recalculating")
+              : quote
+                ? formatCurrency(quote.taxAmount, settings.currencyCode, lang)
+                : "--"}
+          </dd>
+        </div>
         <div className="mt-3 flex items-center justify-between gap-4 border-t border-stone-100 pt-3">
           <dt className="font-bold text-stone-950">{t("total")}</dt>
           <dd className="text-2xl font-bold tracking-tight text-stone-950">
-            {quoteLoading ? t("recalculating") : formatCurrency(quote?.total ?? totalPrice, settings.currencyCode, lang)}
+            {quoteLoading
+              ? t("recalculating")
+              : formatCurrency(
+                  quote?.total ?? totalPrice,
+                  settings.currencyCode,
+                  lang,
+                )}
           </dd>
         </div>
       </dl>
-      {rewards&&(rewards.pointsEnabled||rewards.cashbackEnabled)&&<div className="mt-5 space-y-3 rounded-xl bg-stone-50 p-4">{rewards.pointsEnabled&&rewards.pointsBalance>0&&<label className="block text-sm font-semibold">Use points <span className="font-normal text-stone-500">({rewards.pointsBalance.toLocaleString()} available)</span><InputNumber min={0} max={rewards.pointsBalance} precision={0} value={usePoints} onChange={v=>setUsePoints(Number(v||0))} className="mt-2 w-full"/></label>}{rewards.cashbackEnabled&&rewards.cashbackBalance>0&&<label className="block text-sm font-semibold">Use cashback <span className="font-normal text-stone-500">({formatCurrency(rewards.cashbackBalance,settings.currencyCode,lang)} available)</span><InputNumber min={0} max={rewards.cashbackBalance} precision={2} value={useCashback} onChange={v=>setUseCashback(Number(v||0))} className="mt-2 w-full"/></label>}</div>}
-      {quoteError && <p role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 p-3 text-sm font-medium text-red-700">{quoteError}</p>}
+      {rewards && (rewards.pointsEnabled || rewards.cashbackEnabled) && (
+        <div className="mt-5 space-y-3 rounded-xl bg-stone-50 p-4">
+          {rewards.pointsEnabled && rewards.pointsBalance > 0 && (
+            <label className="block text-sm font-semibold">
+              Use points{" "}
+              <span className="font-normal text-stone-500">
+                ({rewards.pointsBalance.toLocaleString()} available)
+              </span>
+              <InputNumber
+                min={0}
+                max={rewards.pointsBalance}
+                precision={0}
+                value={usePoints}
+                onChange={(v) => setUsePoints(Number(v || 0))}
+                className="mt-2 w-full"
+              />
+            </label>
+          )}
+          {rewards.cashbackEnabled && rewards.cashbackBalance > 0 && (
+            <label className="block text-sm font-semibold">
+              Use cashback{" "}
+              <span className="font-normal text-stone-500">
+                (
+                {formatCurrency(
+                  rewards.cashbackBalance,
+                  settings.currencyCode,
+                  lang,
+                )}{" "}
+                available)
+              </span>
+              <InputNumber
+                min={0}
+                max={rewards.cashbackBalance}
+                precision={2}
+                value={useCashback}
+                onChange={(v) => setUseCashback(Number(v || 0))}
+                className="mt-2 w-full"
+              />
+            </label>
+          )}
+        </div>
+      )}
+      {quoteError && (
+        <p
+          role="alert"
+          className="mt-4 rounded-xl border border-red-200 bg-red-50 p-3 text-sm font-medium text-red-700"
+        >
+          {quoteError}
+        </p>
+      )}
 
       <div className="mt-6">
         <CheckoutAddressList
@@ -97,15 +256,34 @@ function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
         />
       </div>
 
-      <button
-        type="button"
-        onClick={handleCheckout}
-        disabled={cart.length === 0 || !selectedAddress || !quote || quoteLoading || submitting}
-        className="mt-6 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-stone-950 px-5 text-sm font-bold text-white transition-colors duration-200 hover:bg-amber-600 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-stone-300 disabled:text-stone-500"
-      >
-        <LockOutlined aria-hidden />
-        {submitting ? t("processingPayment") : t("proceedToCheckout")}
-      </button>
+      {!pendingPayment && (
+        <button
+          type="button"
+          onClick={handleCheckout}
+          disabled={
+            cart.length === 0 ||
+            !selectedAddress ||
+            !quote ||
+            quoteLoading ||
+            submitting
+          }
+          className="mt-6 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-stone-950 px-5 text-sm font-bold text-white transition-colors duration-200 hover:bg-amber-600 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-stone-300 disabled:text-stone-500"
+        >
+          <LockOutlined aria-hidden />
+          {submitting ? t("processingPayment") : t("proceedToCheckout")}
+        </button>
+      )}
+      {pendingPayment?.initialization.provider === "paypal" && (
+        <PayPalPaymentButton
+          paymentId={pendingPayment.id}
+          initialization={pendingPayment.initialization}
+          onCompleted={() => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            router.push(pendingPayment.url as any);
+          }}
+          onError={setQuoteError}
+        />
+      )}
 
       <div className="mt-4 grid gap-2 text-xs font-medium text-stone-500 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
         <p className="flex items-center gap-2">

@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import {  Repository } from 'typeorm';
 import { PaymentEntity } from '@/src/libs/models/entities/payment/Payment.entity';
 import { PaymentRefundDto } from '@/src/libs/models/dtos/payments/PaymentRefund.dto';
-import { BadRequestException, NotImplementedException } from '@nestjs/common';
+import { BadRequestException } from '@nestjs/common';
 import { OrderEntity } from '@/src/libs/models/entities/order/Order.entity';
 import { CustomerRewardAccountEntity } from '@/src/libs/models/entities/reward/CustomerRewardAccount.entity';
 import { RewardTransactionEntity } from '@/src/libs/models/entities/reward/RewardTransaction.entity';
@@ -11,12 +11,14 @@ import { RewardTransactionType } from '@/src/utils/enums/RewardEnums';
 import { PaymentRefundEntity } from '@/src/libs/models/entities/payment/PaymentRefund.entity';
 import { OrderStatus, PaymentStatus } from '@/src/utils/enums/PaymentEnums';
 import { assertRefund, remainingRefundable } from '../payment-state';
+import { PayPalRefundService } from './paypal-refund.service';
 
 @Injectable()
 export class PaymentsService {
     constructor(
         @InjectRepository(PaymentEntity)
         private readonly paymentRepository: Repository<PaymentEntity>,
+        private readonly paypalRefunds: PayPalRefundService,
       ) {}
 
       async getAllPayments(): Promise<PaymentEntity[]> {
@@ -33,7 +35,23 @@ export class PaymentsService {
         id: string,
         data: PaymentRefundDto,
       ): Promise<{ message: string }> {
-        throw new NotImplementedException('No payment provider refund integration is configured. A browser or admin request cannot confirm a provider refund.');
+        const payment = await this.paymentRepository.findOneByOrFail({ id });
+        if (payment.provider !== 'paypal' || !payment.externalTransactionId || !payment.currencyCode) {
+          throw new BadRequestException('Payment is not a refundable PayPal capture');
+        }
+        const paid = Number(payment.paidAmount ?? payment.totalAmount);
+        const remaining = remainingRefundable(paid, Number(payment.refundedAmount));
+        try { assertRefund(payment.status, data.refundedAmount, remaining); }
+        catch (error) { throw new BadRequestException((error as Error).message); }
+        const result = await this.paypalRefunds.refund(
+          payment.externalTransactionId,
+          data.refundedAmount,
+          payment.currencyCode,
+          `payment:${id}:refund:${Number(payment.refundedAmount).toFixed(2)}:${data.refundedAmount.toFixed(2)}`,
+        );
+        return this.recordVerifiedRefund(id, {
+          provider: 'paypal', externalRefundId: result.externalRefundId, amount: result.amount,
+        });
       }
 
       async recordVerifiedRefund(id:string,event:{provider:string;externalRefundId:string;amount:number}) {

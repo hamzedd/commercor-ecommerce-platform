@@ -111,6 +111,7 @@ export class OrdersService {
         paidAmount: null,
         currencyCode: pricing.currencyCode.toUpperCase(),
         provider: null,
+        providerPaymentId: null,
         externalTransactionId: null,
         completedAt: null,
         expiresAt: pendingPaymentExpiresAt(),
@@ -142,6 +143,7 @@ export class OrdersService {
       );
 
       return {
+        paymentId: newPayment.id,
         paymentUrl: `${DOMAIN_URL}/payment-status/${newPayment.id}`,
         subtotal: pricing.subtotal,
         shippingAmount: pricing.shippingAmount,

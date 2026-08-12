@@ -19,6 +19,8 @@ export class PaymentEntity extends BaseEntity {
     | null;
   @Column({ type: 'varchar', nullable: true }) provider: string | null;
   @Column({ type: 'varchar', nullable: true, unique: true })
+  providerPaymentId: string | null;
+  @Column({ type: 'varchar', nullable: true, unique: true })
   externalTransactionId: string | null;
   @Column({ type: 'timestamp', nullable: true }) completedAt: Date | null;
 

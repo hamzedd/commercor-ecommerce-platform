@@ -7,7 +7,7 @@ import api from "@/src/service/apis/api";
 
 export async function createOrderService(
   data: CreateOrderRequestType,
-): Promise<{ paymentUrl: string }> {
+): Promise<{ paymentUrl: string; paymentId: string }> {
   return api.post("/orders", data).then((res) => res.data);
 }
 

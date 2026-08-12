@@ -14,7 +14,7 @@ export class PaymentInitializationService {
   ) {}
 
   async initialize(paymentId: string, customerId: string) {
-    return this.dataSource.transaction(async (manager) => {
+    const input = await this.dataSource.transaction(async (manager) => {
       const payment = await manager.getRepository(PaymentEntity).findOne({
         where: { id: paymentId },
         lock: { mode: 'pessimistic_write' },
@@ -45,7 +45,7 @@ export class PaymentInitializationService {
         throw new BadRequestException('Payment currency is missing');
       }
 
-      return this.providers.getConfiguredProvider().createPayment({
+      return {
         paymentId: payment.id,
         orderId: order.id,
         customerId,
@@ -53,7 +53,25 @@ export class PaymentInitializationService {
         currencyCode: payment.currencyCode.toUpperCase(),
         returnUrl: `${DOMAIN_URL}/payment-status/${payment.id}`,
         idempotencyKey: `payment:${payment.id}:initialize`,
-      });
+      };
     });
+
+    const result = await this.providers.getConfiguredProvider().createPayment(input);
+    await this.dataSource.transaction(async (manager) => {
+      const payment = await manager.getRepository(PaymentEntity).findOne({
+        where: { id: paymentId },
+        lock: { mode: 'pessimistic_write' },
+      });
+      if (!payment || payment.status !== PaymentStatus.PENDING) {
+        throw new BadRequestException('Payment is no longer pending');
+      }
+      if (payment.providerPaymentId && payment.providerPaymentId !== result.providerPaymentId) {
+        throw new BadRequestException('Payment already has another provider reference');
+      }
+      payment.provider = result.provider;
+      payment.providerPaymentId = result.providerPaymentId;
+      await manager.getRepository(PaymentEntity).save(payment);
+    });
+    return result;
   }
 }

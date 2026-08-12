@@ -12,7 +12,7 @@ async function bootstrap() {
     defaultMaxLimit: 100,
   });
 
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { rawBody: true });
   app.setGlobalPrefix('api');
   app.useGlobalPipes(
     new ValidationPipe({

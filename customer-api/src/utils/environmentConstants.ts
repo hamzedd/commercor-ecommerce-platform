@@ -31,3 +31,20 @@ if (!Number.isInteger(pendingExpiryMinutes) || pendingExpiryMinutes <= 0) {
 }
 
 export const PAYMENT_PENDING_EXPIRY_MINUTES = pendingExpiryMinutes;
+
+export const PAYPAL_ENV = (process.env.PAYPAL_ENV || 'sandbox').toLowerCase();
+if (!['sandbox', 'live'].includes(PAYPAL_ENV)) {
+  throw new Error('PAYPAL_ENV must be sandbox or live');
+}
+export const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID || '';
+export const PAYPAL_CLIENT_SECRET = process.env.PAYPAL_CLIENT_SECRET || '';
+export const PAYPAL_WEBHOOK_ID = process.env.PAYPAL_WEBHOOK_ID || '';
+
+if (
+  PAYMENT_PROVIDER === 'paypal' &&
+  (!PAYPAL_CLIENT_ID || !PAYPAL_CLIENT_SECRET || !PAYPAL_WEBHOOK_ID)
+) {
+  throw new Error(
+    'PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET and PAYPAL_WEBHOOK_ID are required when PAYMENT_PROVIDER=paypal',
+  );
+}

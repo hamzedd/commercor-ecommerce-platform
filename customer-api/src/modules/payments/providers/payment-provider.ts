@@ -17,9 +17,11 @@ export type CreateProviderPaymentRequest = {
 
 export type CreateProviderPaymentResult = {
   provider: string;
+  publicClientId?: string;
   redirectUrl?: string;
   clientToken?: string;
   providerPaymentId: string;
+  currencyCode: string;
 };
 
 export type VerifyWebhookRequest = {
@@ -36,6 +38,7 @@ export type NormalizedPaymentEvent = {
   amount: number;
   currencyCode: string;
   refundAmount?: number;
+  relatedTransactionId?: string;
 };
 
 export type RefundProviderPaymentRequest = {

@@ -3,7 +3,13 @@ import { PaymentInitializationService } from './payment-initialization.service';
 import { PaymentStatus } from '@/src/utils/enums/PaymentEnums';
 
 describe('PaymentInitializationService', () => {
-  const provider = { createPayment: jest.fn(async (input) => input) };
+  const provider = {
+    createPayment: jest.fn(async (input) => ({
+      ...input,
+      provider: 'paypal',
+      providerPaymentId: 'paypal-order',
+    })),
+  };
   const providers = { getConfiguredProvider: () => provider };
 
   function service(payment: any, order: any) {
@@ -12,6 +18,7 @@ describe('PaymentInitializationService', () => {
         findOne: jest.fn(async () =>
           entity.name === 'PaymentEntity' ? payment : order,
         ),
+        save: jest.fn(async (value) => value),
       })),
     };
     const dataSource = {

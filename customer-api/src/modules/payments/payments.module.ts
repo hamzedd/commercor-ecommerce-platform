@@ -15,6 +15,13 @@ import { PaymentProviderRegistry } from './providers/payment-provider.registry';
 import { PaymentInitializationService } from './services/payment-initialization.service';
 import { PaymentExpirationService } from './services/payment-expiration.service';
 import { PaymentExpirationWorker } from './services/payment-expiration.worker';
+import { PayPalPaymentProvider } from './providers/paypal.provider';
+import { PayPalPaymentService } from './services/paypal-payment.service';
+import { PayPalWebhookService } from './services/paypal-webhook.service';
+import { PaymentRefundEntity } from '@/src/libs/models/entities/payment/PaymentRefund.entity';
+import { CustomerRewardAccountEntity } from '@/src/libs/models/entities/reward/CustomerRewardAccount.entity';
+import { RewardTransactionEntity } from '@/src/libs/models/entities/reward/RewardTransaction.entity';
+import { VerifiedRefundService } from './services/verified-refund.service';
 
 @Module({
   imports: [
@@ -24,6 +31,9 @@ import { PaymentExpirationWorker } from './services/payment-expiration.worker';
       ProductEntity,
       CustomerEntity,
       PaymentEntity,
+      PaymentRefundEntity,
+      CustomerRewardAccountEntity,
+      RewardTransactionEntity,
     ]),
     RewardsModule,
   ],
@@ -35,7 +45,11 @@ import { PaymentExpirationWorker } from './services/payment-expiration.worker';
     PaymentExpirationService,
     PaymentExpirationWorker,
     ManualDisabledPaymentProvider,
+    PayPalPaymentProvider,
     PaymentProviderRegistry,
+    PayPalPaymentService,
+    PayPalWebhookService,
+    VerifiedRefundService,
     AuthGuard,
   ],
   exports: [PaymentCompletionService, PaymentExpirationService],

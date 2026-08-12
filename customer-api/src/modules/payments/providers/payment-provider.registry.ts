@@ -2,13 +2,20 @@ import { Injectable } from '@nestjs/common';
 import { PAYMENT_PROVIDER } from '@/src/utils/environmentConstants';
 import { ManualDisabledPaymentProvider } from './manual-disabled.provider';
 import { PaymentProvider } from './payment-provider';
+import { PayPalPaymentProvider } from './paypal.provider';
 
 @Injectable()
 export class PaymentProviderRegistry {
   private readonly providers: ReadonlyMap<string, PaymentProvider>;
 
-  constructor(manualDisabled: ManualDisabledPaymentProvider) {
-    this.providers = new Map([[manualDisabled.name, manualDisabled]]);
+  constructor(
+    manualDisabled: ManualDisabledPaymentProvider,
+    paypal: PayPalPaymentProvider,
+  ) {
+    this.providers = new Map<string, PaymentProvider>([
+      [manualDisabled.name, manualDisabled],
+      [paypal.name, paypal],
+    ]);
     this.getConfiguredProvider();
   }
 

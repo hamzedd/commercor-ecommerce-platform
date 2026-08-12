@@ -6,6 +6,7 @@ export type PaymentType = {
   paidAmount: number | null;
   currencyCode: string | null;
   provider: string | null;
+  providerPaymentId: string | null;
   externalTransactionId: string | null;
   completedAt: string | null;
   expiresAt: string | null;

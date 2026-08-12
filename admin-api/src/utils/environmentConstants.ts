@@ -13,3 +13,6 @@ export const MINIO_ENDPOINT = process.env.MINIO_ENDPOINT;
 export const MINIO_PORT = process.env.MINIO_PORT;
 export const MINIO_ACCESS_KEY = process.env.MINIO_ACCESS_KEY;
 export const MINIO_SECRET_KEY = process.env.MINIO_SECRET_KEY;
+export const PAYPAL_ENV = (process.env.PAYPAL_ENV || 'sandbox').toLowerCase();
+export const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID || '';
+export const PAYPAL_CLIENT_SECRET = process.env.PAYPAL_CLIENT_SECRET || '';
