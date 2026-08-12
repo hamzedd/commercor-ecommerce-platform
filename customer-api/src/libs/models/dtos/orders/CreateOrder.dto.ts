@@ -3,6 +3,10 @@ import {
   ArrayMinSize,
   IsNotEmpty,
   IsUUID,
+  IsOptional,
+  IsInt,
+  IsNumber,
+  Min,
   ValidateNested,
 } from 'class-validator';
 import { CreateOrderItemDto } from '@/src/libs/models/dtos/orders/CreateOrderItem.dto';
@@ -34,4 +38,18 @@ export class CreateOrderDto {
   @IsNotEmpty()
   @IsUUID()
   addressId: AddressEntity['id'];
+
+  @ApiProperty({ required: false, default: 0 })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(0)
+  usePoints?: number;
+
+  @ApiProperty({ required: false, default: 0 })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber({ maxDecimalPlaces: 2 })
+  @Min(0)
+  useCashback?: number;
 }

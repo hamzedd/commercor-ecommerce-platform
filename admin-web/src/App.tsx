@@ -29,6 +29,7 @@ import NotFoundPage from "./pages/not-found/page.tsx";
 import OrderPage from "./pages/orders/[id]/page.tsx";
 import SettingsPage from "./pages/settings/page.tsx";
 import CommerceSettingsPage from "./pages/commerce-settings/page.tsx";
+import LoyaltySettingsPage from "./pages/loyalty-settings/page.tsx";
 
 function App() {
   const router = createBrowserRouter([
@@ -148,6 +149,7 @@ function App() {
           path: "commerce-settings",
           element: <CommerceSettingsPage />,
         },
+        { path: "loyalty-settings", element: <LoyaltySettingsPage /> },
       ],
     },
     {

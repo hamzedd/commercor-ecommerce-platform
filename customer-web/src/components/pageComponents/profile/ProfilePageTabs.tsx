@@ -4,6 +4,7 @@ import { Tabs, TabsProps } from "antd";
 import ProfilePageInfoTab from "@/src/components/pageComponents/profile/ProfilePageInfoTab";
 import ProfilePageAddressesTab from "@/src/components/pageComponents/profile/ProfilePageAddressesTab";
 import ProfilePageOrdersTab from "@/src/components/pageComponents/profile/ProfilePageOrdersTab";
+import ProfilePageRewardsTab from "@/src/components/pageComponents/profile/ProfilePageRewardsTab";
 import { useTranslations } from "next-intl";
 
 function ProfilePageTabs() {
@@ -25,6 +26,7 @@ function ProfilePageTabs() {
       label: t("addresses"),
       children: <ProfilePageAddressesTab />,
     },
+    { key: "4", label: "Rewards", children: <ProfilePageRewardsTab /> },
   ];
 
   return (

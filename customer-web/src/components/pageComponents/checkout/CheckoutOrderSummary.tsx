@@ -11,6 +11,8 @@ import { AddressType } from "@/src/utils/types/address.type";
 import { CheckoutQuoteType, CreateOrderItemType } from "@/src/utils/types/order.type";
 import { useStoreSettings } from "@/src/components/providers/StoreSettingsProvider";
 import formatCurrency from "@/src/utils/functions/formatCurrency";
+import { getRewardsService } from "@/src/service/apiServices/rewards.service";
+import { InputNumber } from "antd";
 
 interface Props {
   cart: CreateOrderItemType[];
@@ -27,23 +29,27 @@ function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
   const [quoteLoading, setQuoteLoading] = useState(false);
   const [quoteError, setQuoteError] = useState<string>();
   const [submitting, setSubmitting] = useState(false);
+  const [usePoints, setUsePoints] = useState(0);
+  const [useCashback, setUseCashback] = useState(0);
+  const [rewards, setRewards] = useState<{pointsBalance:number;cashbackBalance:number;pointsEnabled:boolean;cashbackEnabled:boolean}>();
+  useEffect(()=>{getRewardsService().then(setRewards).catch(()=>setRewards(undefined));},[]);
 
   useEffect(() => {
     if (!selectedAddress || cart.length === 0) { setQuote(undefined); setQuoteError(undefined); return; }
     const controller = new AbortController();
     const timer = window.setTimeout(() => {
       setQuoteLoading(true); setQuoteError(undefined);
-      getCheckoutQuoteService({ items: cart, addressId: selectedAddress })
+      getCheckoutQuoteService({ items: cart, addressId: selectedAddress, usePoints, useCashback })
         .then(setQuote)
         .catch((error) => { if (!controller.signal.aborted) { setQuote(undefined); setQuoteError(error?.response?.data?.message || t("quoteError")); } })
         .finally(() => { if (!controller.signal.aborted) setQuoteLoading(false); });
     }, 250);
     return () => { controller.abort(); window.clearTimeout(timer); };
-  }, [cart, selectedAddress, t]);
+  }, [cart, selectedAddress, usePoints, useCashback, t]);
 
   const handleCheckout = async () => {
     if (!quote) return;
-    try { setSubmitting(true); setQuoteError(undefined); const { paymentUrl } = await createOrderService({ items: cart, addressId: selectedAddress });
+    try { setSubmitting(true); setQuoteError(undefined); const { paymentUrl } = await createOrderService({ items: cart, addressId: selectedAddress, usePoints, useCashback });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       router.push(paymentUrl as any);
     } catch (error: unknown) { const requestError = error as { response?: { data?: { message?: string } } }; setQuoteError(requestError.response?.data?.message || t("checkoutError")); setSubmitting(false); }
@@ -70,6 +76,8 @@ function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
             {formatCurrency(quote?.subtotal ?? totalPrice, settings.currencyCode, lang)}
           </dd>
         </div>
+        {quote&&quote.pointsDiscount>0&&<div className="mt-3 flex justify-between text-sm text-emerald-700"><dt>Points discount</dt><dd>-{formatCurrency(quote.pointsDiscount,settings.currencyCode,lang)}</dd></div>}
+        {quote&&quote.cashbackUsed>0&&<div className="mt-3 flex justify-between text-sm text-emerald-700"><dt>Cashback used</dt><dd>-{formatCurrency(quote.cashbackUsed,settings.currencyCode,lang)}</dd></div>}
         <div className="mt-3 flex items-center justify-between gap-4"><dt className="text-sm text-stone-600">{t("shipping")}</dt><dd className="font-semibold text-stone-950">{quoteLoading ? t("recalculating") : quote ? formatCurrency(quote.shippingAmount, settings.currencyCode, lang) : "--"}</dd></div>
         <div className="mt-3 flex items-center justify-between gap-4"><dt className="text-sm text-stone-600">{t("tax")}</dt><dd className="font-semibold text-stone-950">{quoteLoading ? t("recalculating") : quote ? formatCurrency(quote.taxAmount, settings.currencyCode, lang) : "--"}</dd></div>
         <div className="mt-3 flex items-center justify-between gap-4 border-t border-stone-100 pt-3">
@@ -79,6 +87,7 @@ function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
           </dd>
         </div>
       </dl>
+      {rewards&&(rewards.pointsEnabled||rewards.cashbackEnabled)&&<div className="mt-5 space-y-3 rounded-xl bg-stone-50 p-4">{rewards.pointsEnabled&&rewards.pointsBalance>0&&<label className="block text-sm font-semibold">Use points <span className="font-normal text-stone-500">({rewards.pointsBalance.toLocaleString()} available)</span><InputNumber min={0} max={rewards.pointsBalance} precision={0} value={usePoints} onChange={v=>setUsePoints(Number(v||0))} className="mt-2 w-full"/></label>}{rewards.cashbackEnabled&&rewards.cashbackBalance>0&&<label className="block text-sm font-semibold">Use cashback <span className="font-normal text-stone-500">({formatCurrency(rewards.cashbackBalance,settings.currencyCode,lang)} available)</span><InputNumber min={0} max={rewards.cashbackBalance} precision={2} value={useCashback} onChange={v=>setUseCashback(Number(v||0))} className="mt-2 w-full"/></label>}</div>}
       {quoteError && <p role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 p-3 text-sm font-medium text-red-700">{quoteError}</p>}
 
       <div className="mt-6">

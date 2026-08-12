@@ -31,7 +31,11 @@ export class CommerceService {
       settings = settingsRepo.create({ ...(settings || {}), ...data });
       await settingsRepo.save(settings);
       const rulesRepo = manager.getRepository(CommerceCountryRuleEntity);
-      await rulesRepo.delete({});
+      await rulesRepo
+        .createQueryBuilder()
+        .delete()
+        .from(CommerceCountryRuleEntity)
+        .execute();
       if (data.countryRules.length) await rulesRepo.save(data.countryRules.map((rule) => rulesRepo.create({ ...rule, countryCode: rule.countryCode.toUpperCase() })));
     });
     return this.getSettings();

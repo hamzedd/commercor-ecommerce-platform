@@ -3,6 +3,8 @@ import { ProductType } from "@/src/utils/types/product.type";
 export type CreateOrderRequestType = {
   items: CreateOrderItemType[];
   addressId: string;
+  usePoints?: number;
+  useCashback?: number;
 };
 
 export type CreateOrderItemType = {
@@ -17,6 +19,10 @@ export type CheckoutQuoteType = {
   total: number;
   currencyCode: string;
   pricesIncludeTax: boolean;
+  pointsRedeemed: number;
+  pointsDiscount: number;
+  cashbackUsed: number;
+  discountedSubtotal: number;
 };
 
 export type OrderType = {

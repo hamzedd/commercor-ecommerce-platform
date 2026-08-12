@@ -1,0 +1,1 @@
+import api from '@/src/service/apis/api'; import type {RewardsSummary} from '@/src/utils/types/rewards.type'; export const getRewardsService=():Promise<RewardsSummary>=>api.get('/rewards').then(r=>r.data);

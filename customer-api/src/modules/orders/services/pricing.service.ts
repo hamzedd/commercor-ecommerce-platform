@@ -6,11 +6,14 @@ import { CommerceCountryRuleEntity } from '@/src/libs/models/entities/commerce/C
 import { CompanyDetailEntity } from '@/src/libs/models/entities/company/CompanyDetail.entity';
 import { CreateOrderItemDto } from '@/src/libs/models/dtos/orders/CreateOrderItem.dto';
 import { calculateAmounts } from './pricing-calculator';
+import { RewardsService } from '@/src/modules/rewards/rewards.service';
+import { calculateRedemption } from '@/src/modules/rewards/reward-calculator';
 
-export type PricingResult = { subtotal: number; shippingAmount: number; taxAmount: number; total: number; currencyCode: string; pricesIncludeTax: boolean; items: Array<{ product: ProductEntity; quantity: number; unitPrice: number }> };
+export type PricingResult = { subtotal: number; pointsRedeemed:number; pointsDiscount:number; cashbackUsed:number; discountedSubtotal:number; shippingAmount: number; taxAmount: number; total: number; currencyCode: string; pricesIncludeTax: boolean; items: Array<{ product: ProductEntity; quantity: number; unitPrice: number }> };
 @Injectable()
 export class PricingService {
-  async calculate(manager: EntityManager, requestedItems: CreateOrderItemDto[], country: string, lockProducts = false): Promise<PricingResult> {
+  constructor(private readonly rewards:RewardsService){}
+  async calculate(manager: EntityManager, requestedItems: CreateOrderItemDto[], country: string, customerId:string, usePoints=0, useCashback=0, lockProducts = false): Promise<PricingResult> {
     const quantities = new Map<string, number>();
     for (const item of requestedItems) quantities.set(item.productId, (quantities.get(item.productId) || 0) + item.quantity);
     const ids = [...quantities.keys()];
@@ -29,8 +32,10 @@ export class PricingService {
     const normalizedCountry = country.trim().toUpperCase();
     const settings = await manager.getRepository(CommerceSettingsEntity).findOne({ where: {} });
     const rule = normalizedCountry.length === 2 ? await manager.getRepository(CommerceCountryRuleEntity).findOneBy({ countryCode: normalizedCountry }) : null;
-    const amounts = calculateAmounts(subtotal, normalizedCountry, settings, rule);
+    const rewardSettings=await this.rewards.settings(manager); const account=await this.rewards.account(manager,customerId,lockProducts);
+    let redemption; try{redemption=calculateRedemption(subtotal,usePoints,useCashback,account.pointsBalance,Number(account.cashbackBalance),rewardSettings);}catch(e){throw new BadRequestException((e as Error).message);}
+    const amounts = calculateAmounts(subtotal, normalizedCountry, settings, rule, redemption.discountedSubtotal);
     const currency = await manager.getRepository(CompanyDetailEntity).findOneBy({ key: 'currency_code' });
-    return { ...amounts, currencyCode: currency?.value || 'USD', items };
+    return { ...amounts, ...redemption, currencyCode: currency?.value || 'USD', items };
   }
 }

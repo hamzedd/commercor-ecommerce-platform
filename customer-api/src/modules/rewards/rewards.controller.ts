@@ -1,0 +1,2 @@
+import { Controller, Get, Req, UseGuards } from '@nestjs/common'; import { AuthGuard } from '@/src/libs/guards/auth.guard'; import type { GuardedApiResponse } from '@/src/utils/types/api.type'; import { RewardsService } from './rewards.service';
+@Controller('rewards') @UseGuards(AuthGuard) export class RewardsController { constructor(private readonly service:RewardsService){} @Get() get(@Req() req:GuardedApiResponse){return this.service.summary(req.user.id);} }

@@ -13,6 +13,7 @@ import { PaymentEntity } from '@/src/libs/models/entities/payment/Payment.entity
 import { DOMAIN_URL } from '@/src/utils/environmentConstants';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PricingService } from './pricing.service';
+import { RewardsService } from '@/src/modules/rewards/rewards.service';
 
 @Injectable()
 export class OrdersService {
@@ -23,12 +24,13 @@ export class OrdersService {
     @InjectRepository(OrderItemEntity)
     private orderItemsRepository: Repository<OrderItemEntity>,
     private readonly pricingService: PricingService,
+    private readonly rewardsService: RewardsService,
   ) {}
 
   async quote(customerId: string, data: CreateOrderDto) {
     const address = await this.dataSource.manager.findOneBy(AddressEntity, { id: data.addressId, customerId });
     if (!address) throw new BadRequestException('Customer has no address');
-    const pricing = await this.pricingService.calculate(this.dataSource.manager, data.items, address.country);
+    const pricing = await this.pricingService.calculate(this.dataSource.manager, data.items, address.country, customerId, data.usePoints || 0, data.useCashback || 0);
     const { items: _items, ...quote } = pricing;
     return quote;
   }
@@ -51,7 +53,7 @@ export class OrdersService {
 
       if (!address) throw new BadRequestException('Customer has no address');
 
-      const pricing = await this.pricingService.calculate(manager, data.items, address.country, true);
+      const pricing = await this.pricingService.calculate(manager, data.items, address.country, customerId, data.usePoints || 0, data.useCashback || 0, true);
       const order = ordersRepo.create({
         customerId,
         addressId: address.id,
@@ -60,6 +62,9 @@ export class OrdersService {
         productAmount: pricing.subtotal,
         taxAmount: pricing.taxAmount,
         finalTotal: pricing.total,
+        pointsRedeemed: pricing.pointsRedeemed,
+        pointsDiscountAmount: pricing.pointsDiscount,
+        cashbackUsed: pricing.cashbackUsed,
       });
 
       const orderItems: OrderItemEntity[] = [];
@@ -91,6 +96,9 @@ export class OrdersService {
       order.payment = newPayment;
       const savedOrder = await ordersRepo.save(order);
 
+      await this.rewardsService.redeem(manager, customerId, savedOrder.id, newPayment.id, pricing.pointsRedeemed, pricing.pointsDiscount, pricing.cashbackUsed);
+      await this.rewardsService.grant(manager, customerId, savedOrder.id, newPayment.id, pricing.discountedSubtotal);
+
       await Promise.all(
         orderItems.map((item) =>
           orderItemsRepo.save({
@@ -105,6 +113,10 @@ export class OrdersService {
         subtotal: pricing.subtotal,
         shippingAmount: pricing.shippingAmount,
         taxAmount: pricing.taxAmount,
+        pointsRedeemed: pricing.pointsRedeemed,
+        pointsDiscount: pricing.pointsDiscount,
+        cashbackUsed: pricing.cashbackUsed,
+        discountedSubtotal: pricing.discountedSubtotal,
         total: pricing.total,
         currencyCode: pricing.currencyCode,
       };

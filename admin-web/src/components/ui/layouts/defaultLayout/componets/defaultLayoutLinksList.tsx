@@ -95,6 +95,7 @@ export default [
     path: "/admin/commerce-settings",
     roles: [UserRoleEnum.ADMIN],
   },
+  { key: "loyalty-settings", icon: <DollarOutlined />, label: "Loyalty & Cashback", path: "/admin/loyalty-settings", roles: [UserRoleEnum.ADMIN] },
   {
     key: "settings",
     icon: <SettingOutlined />,

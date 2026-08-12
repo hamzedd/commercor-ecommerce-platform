@@ -6,10 +6,12 @@ import { OrderEntity } from '@/src/libs/models/entities/order/Order.entity';
 import { CustomerEntity } from '@/src/libs/models/entities/customer/Customer.entity';
 import { OrderItemEntity } from '@/src/libs/models/entities/order/OrderItem.entity';
 import { PricingService } from './services/pricing.service';
+import { RewardsModule } from '@/src/modules/rewards/rewards.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([OrderEntity, CustomerEntity, OrderItemEntity]),
+    RewardsModule,
   ],
   controllers: [OrdersController],
   providers: [OrdersService, PricingService],
