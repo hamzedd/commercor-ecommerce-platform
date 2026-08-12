@@ -8,15 +8,36 @@ import { PaymentsService } from '@/src/modules/payments/services/payments.servic
 import { PaymentCompletionService } from './payment-completion.service';
 import { RewardsModule } from '@/src/modules/rewards/rewards.module';
 import { AuthGuard } from '@/src/libs/guards/auth.guard';
-import { OrderItemEntity } from '@/src/libs/models/entities/order/OrderItem.entity'; import { ProductEntity } from '@/src/libs/models/entities/product/Product.entity';
+import { OrderItemEntity } from '@/src/libs/models/entities/order/OrderItem.entity';
+import { ProductEntity } from '@/src/libs/models/entities/product/Product.entity';
+import { ManualDisabledPaymentProvider } from './providers/manual-disabled.provider';
+import { PaymentProviderRegistry } from './providers/payment-provider.registry';
+import { PaymentInitializationService } from './services/payment-initialization.service';
+import { PaymentExpirationService } from './services/payment-expiration.service';
+import { PaymentExpirationWorker } from './services/payment-expiration.worker';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([OrderEntity, OrderItemEntity, ProductEntity, CustomerEntity, PaymentEntity]),
+    TypeOrmModule.forFeature([
+      OrderEntity,
+      OrderItemEntity,
+      ProductEntity,
+      CustomerEntity,
+      PaymentEntity,
+    ]),
     RewardsModule,
   ],
   controllers: [PaymentsController],
-  providers: [PaymentsService, PaymentCompletionService, AuthGuard],
-  exports: [PaymentCompletionService],
+  providers: [
+    PaymentsService,
+    PaymentCompletionService,
+    PaymentInitializationService,
+    PaymentExpirationService,
+    PaymentExpirationWorker,
+    ManualDisabledPaymentProvider,
+    PaymentProviderRegistry,
+    AuthGuard,
+  ],
+  exports: [PaymentCompletionService, PaymentExpirationService],
 })
 export class PaymentsModule {}

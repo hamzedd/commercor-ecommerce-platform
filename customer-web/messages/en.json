@@ -94,6 +94,8 @@
   "paymentProcessedSuccessfully": "Your payment has been processed successfully.",
   "continue": "Continue",
   "paymentFailed": "Payment Failed",
+  "paymentExpired": "Payment Expired",
+  "paymentExpiredMessage": "This payment session expired. Return to the store to create a new order and payment.",
   "paymentCouldNotBeProcessed": "Unfortunately, your payment could not be processed.",
   "goBack": "Go Back",
   "tryAgain": "Try Again",

@@ -14,3 +14,20 @@ export const MINIO_ACCESS_KEY = process.env.MINIO_ACCESS_KEY;
 export const MINIO_SECRET_KEY = process.env.MINIO_SECRET_KEY;
 export const JWT_SECRET = process.env.JWT_SECRET;
 export const DOMAIN_URL = process.env.DOMAIN_URL;
+
+export const PAYMENT_PROVIDER = (
+  process.env.PAYMENT_PROVIDER || 'manual_disabled'
+)
+  .trim()
+  .toLowerCase();
+
+const pendingExpiryMinutes = Number.parseInt(
+  process.env.PAYMENT_PENDING_EXPIRY_MINUTES || '30',
+  10,
+);
+
+if (!Number.isInteger(pendingExpiryMinutes) || pendingExpiryMinutes <= 0) {
+  throw new Error('PAYMENT_PENDING_EXPIRY_MINUTES must be a positive integer');
+}
+
+export const PAYMENT_PENDING_EXPIRY_MINUTES = pendingExpiryMinutes;

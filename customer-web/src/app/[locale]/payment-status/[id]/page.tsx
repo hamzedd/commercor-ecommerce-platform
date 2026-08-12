@@ -18,7 +18,13 @@ function PaymentStatusPage() {
     return <PaymentStatusSuccess />;
   }
 
-  if (isError || data?.status === "failed" || data?.status === "cancelled") return <PaymentStatusFail />;
+  if (isError || data?.status === "failed" || data?.status === "cancelled") {
+    return (
+      <PaymentStatusFail
+        expired={data?.cancellationReason === "pending_payment_expired"}
+      />
+    );
+  }
 
   return <PaymentStatusLoading />;
 }

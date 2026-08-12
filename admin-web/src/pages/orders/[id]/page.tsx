@@ -111,7 +111,12 @@ function OrderPage() {
             </Descriptions.Item>
             <Descriptions.Item label="Total Amount">
               <Text strong>
-                {(orderData.finalTotal ?? orderData.productAmount + orderData.deliveryAmount + (orderData.taxAmount || 0)).toFixed(2)}
+                {(
+                  orderData.finalTotal ??
+                  orderData.productAmount +
+                    orderData.deliveryAmount +
+                    (orderData.taxAmount || 0)
+                ).toFixed(2)}
               </Text>
             </Descriptions.Item>
           </Descriptions>
@@ -168,7 +173,9 @@ function OrderPage() {
               {orderData.payment.totalAmount.toFixed(2)}
             </Descriptions.Item>
             <Descriptions.Item label="Paid Amount">
-              {orderData.payment.paidAmount == null ? "Not paid" : `${orderData.payment.paidAmount.toFixed(2)} ${orderData.payment.currencyCode || ""}`}
+              {orderData.payment.paidAmount == null
+                ? "Not paid"
+                : `${orderData.payment.paidAmount.toFixed(2)} ${orderData.payment.currencyCode || ""}`}
             </Descriptions.Item>
             <Descriptions.Item label="Refunded Amount">
               {orderData.payment.refundedAmount.toFixed(2)}
@@ -178,6 +185,12 @@ function OrderPage() {
             </Descriptions.Item>
             <Descriptions.Item label="Transaction Reference">
               {orderData.payment.externalTransactionId || "Not available"}
+            </Descriptions.Item>
+            <Descriptions.Item label="Expires At">
+              {orderData.payment.expiresAt || "Not applicable"}
+            </Descriptions.Item>
+            <Descriptions.Item label="Cancellation / Failure Reason">
+              {orderData.payment.cancellationReason || "Not available"}
             </Descriptions.Item>
             {orderData.payment.createdAt && (
               <Descriptions.Item label="Payment Date">

@@ -8,6 +8,8 @@ export type PaymentType = {
   provider: string | null;
   externalTransactionId: string | null;
   completedAt: string | null;
+  expiresAt: string | null;
+  cancellationReason: string | null;
   createdAt?: string;
   updatedAt?: string;
 };

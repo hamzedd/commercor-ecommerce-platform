@@ -94,6 +94,8 @@
   "paymentProcessedSuccessfully": "Tu pago ha sido procesado exitosamente.",
   "continue": "Continuar",
   "paymentFailed": "Pago fallido",
+  "paymentExpired": "Pago caducado",
+  "paymentExpiredMessage": "Esta sesión de pago caducó. Vuelve a la tienda para crear un nuevo pedido y pago.",
   "paymentCouldNotBeProcessed": "Desafortunadamente, tu pago no pudo ser procesado.",
   "goBack": "Volver",
   "tryAgain": "Intentar de nuevo",

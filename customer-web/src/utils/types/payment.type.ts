@@ -5,4 +5,7 @@ export type GetPaymentStatusResponseType = {
   paidAmount: number | null;
   currencyCode: string | null;
   refundedAmount: number;
+  provider: string | null;
+  expiresAt: string | null;
+  cancellationReason: string | null;
 };

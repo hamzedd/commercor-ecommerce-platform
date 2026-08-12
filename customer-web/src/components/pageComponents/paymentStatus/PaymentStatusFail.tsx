@@ -1,7 +1,7 @@
 import React from "react";
 import { useTranslations } from "next-intl";
 
-function PaymentStatusFail() {
+function PaymentStatusFail({ expired = false }: { expired?: boolean }) {
   const t = useTranslations();
 
   return (
@@ -23,9 +23,13 @@ function PaymentStatusFail() {
           </svg>
         </div>
         <h2 className="mb-2 text-2xl font-semibold text-gray-800">
-          {t("paymentFailed")}
+          {expired ? t("paymentExpired") : t("paymentFailed")}
         </h2>
-        <p className="mb-4 text-gray-600">{t("paymentCouldNotBeProcessed")}</p>
+        <p className="mb-4 text-gray-600">
+          {expired
+            ? t("paymentExpiredMessage")
+            : t("paymentCouldNotBeProcessed")}
+        </p>
         <div className="flex gap-3">
           <button className="flex-1 rounded-lg bg-gray-200 px-6 py-3 font-semibold text-gray-800 transition-colors hover:bg-gray-300">
             {t("goBack")}

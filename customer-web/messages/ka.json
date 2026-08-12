@@ -94,6 +94,8 @@
   "paymentProcessedSuccessfully": "თქვენი გადახდა წარმატებით დამუშავდა.",
   "continue": "გაგრძელება",
   "paymentFailed": "გადახდა ვერ მოხერხდა",
+  "paymentExpired": "გადახდის ვადა ამოიწურა",
+  "paymentExpiredMessage": "გადახდის სესიის ვადა ამოიწურა. ახალი შეკვეთისა და გადახდისთვის დაბრუნდით მაღაზიაში.",
   "paymentCouldNotBeProcessed": "სამწუხაროდ, თქვენი გადახდა ვერ დამუშავდა.",
   "goBack": "უკან დაბრუნება",
   "tryAgain": "თავიდან ცდა",

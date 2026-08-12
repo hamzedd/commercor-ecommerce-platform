@@ -15,6 +15,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { PricingService } from './pricing.service';
 import { RewardsService } from '@/src/modules/rewards/rewards.service';
 import { OrderStatus, PaymentStatus } from '@/src/utils/enums/PaymentEnums';
+import { pendingPaymentExpiresAt } from '@/src/modules/payments/services/payment-expiration.service';
 
 @Injectable()
 export class OrdersService {
@@ -29,9 +30,19 @@ export class OrdersService {
   ) {}
 
   async quote(customerId: string, data: CreateOrderDto) {
-    const address = await this.dataSource.manager.findOneBy(AddressEntity, { id: data.addressId, customerId });
+    const address = await this.dataSource.manager.findOneBy(AddressEntity, {
+      id: data.addressId,
+      customerId,
+    });
     if (!address) throw new BadRequestException('Customer has no address');
-    const pricing = await this.pricingService.calculate(this.dataSource.manager, data.items, address.country, customerId, data.usePoints || 0, data.useCashback || 0);
+    const pricing = await this.pricingService.calculate(
+      this.dataSource.manager,
+      data.items,
+      address.country,
+      customerId,
+      data.usePoints || 0,
+      data.useCashback || 0,
+    );
     const { items: _items, ...quote } = pricing;
     return quote;
   }
@@ -54,7 +65,15 @@ export class OrdersService {
 
       if (!address) throw new BadRequestException('Customer has no address');
 
-      const pricing = await this.pricingService.calculate(manager, data.items, address.country, customerId, data.usePoints || 0, data.useCashback || 0, true);
+      const pricing = await this.pricingService.calculate(
+        manager,
+        data.items,
+        address.country,
+        customerId,
+        data.usePoints || 0,
+        data.useCashback || 0,
+        true,
+      );
       const order = ordersRepo.create({
         customerId,
         addressId: address.id,
@@ -83,7 +102,6 @@ export class OrdersService {
             unitPrice: item.unitPrice,
           }),
         );
-
       }
 
       let newPayment = paymentsRepo.create({
@@ -95,6 +113,8 @@ export class OrdersService {
         provider: null,
         externalTransactionId: null,
         completedAt: null,
+        expiresAt: pendingPaymentExpiresAt(),
+        cancellationReason: null,
       });
 
       newPayment = await paymentsRepo.save(newPayment);
@@ -102,7 +122,15 @@ export class OrdersService {
       order.payment = newPayment;
       const savedOrder = await ordersRepo.save(order);
 
-      await this.rewardsService.redeem(manager, customerId, savedOrder.id, newPayment.id, pricing.pointsRedeemed, pricing.pointsDiscount, pricing.cashbackUsed);
+      await this.rewardsService.redeem(
+        manager,
+        customerId,
+        savedOrder.id,
+        newPayment.id,
+        pricing.pointsRedeemed,
+        pricing.pointsDiscount,
+        pricing.cashbackUsed,
+      );
 
       await Promise.all(
         orderItems.map((item) =>

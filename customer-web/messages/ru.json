@@ -94,6 +94,8 @@
   "paymentProcessedSuccessfully": "Ваш платеж успешно обработан.",
   "continue": "Продолжить",
   "paymentFailed": "Оплата не удалась",
+  "paymentExpired": "Срок оплаты истёк",
+  "paymentExpiredMessage": "Срок платёжной сессии истёк. Вернитесь в магазин, чтобы создать новый заказ и платёж.",
   "paymentCouldNotBeProcessed": "К сожалению, ваш платеж не был обработан.",
   "goBack": "Назад",
   "tryAgain": "Попробовать снова",

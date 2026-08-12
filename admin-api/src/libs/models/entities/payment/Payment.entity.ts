@@ -26,4 +26,10 @@ export class PaymentEntity extends BaseEntity {
 
   @Column({ type: 'timestamp', nullable: true })
   completedAt: Date | null;
+
+  @Column({ type: 'timestamp', nullable: true })
+  expiresAt: Date | null;
+
+  @Column({ type: 'varchar', nullable: true })
+  cancellationReason: string | null;
 }
