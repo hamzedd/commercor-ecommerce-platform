@@ -1,0 +1,1 @@
+import{Column,Entity,PrimaryGeneratedColumn}from'typeorm';@Entity('promotion_categories')export class PromotionCategoryEntity{@PrimaryGeneratedColumn('uuid')id:string;@Column('uuid')promotionId:string;@Column('uuid')categoryId:string}

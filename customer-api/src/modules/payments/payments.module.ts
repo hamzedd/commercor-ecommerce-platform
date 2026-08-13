@@ -28,6 +28,8 @@ import { ProductVariantEntity } from '@/src/libs/models/entities/product/Product
 import { NotificationsModule } from '@/src/modules/notifications/notifications.module';
 import { InvoicesModule } from '@/src/modules/invoices/invoices.module';
 import { CartModule } from '@/src/modules/cart/cart.module';
+import { PromotionEntity } from '@/src/libs/models/entities/promotion/Promotion.entity';
+import { PromotionUsageEntity } from '@/src/libs/models/entities/promotion/PromotionUsage.entity';
 
 @Module({
   imports: [
@@ -43,6 +45,8 @@ import { CartModule } from '@/src/modules/cart/cart.module';
       CouponEntity,
       CouponUsageEntity,
       ProductVariantEntity,
+      PromotionEntity,
+      PromotionUsageEntity,
     ]),
     RewardsModule,
     NotificationsModule,

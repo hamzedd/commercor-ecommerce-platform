@@ -29,6 +29,7 @@ import { ReviewsModule } from '@/src/modules/reviews/reviews.module';
 import { InvoicesModule } from '@/src/modules/invoices/invoices.module';
 import { InventoryModule } from '@/src/modules/inventory/inventory.module';
 import { AbandonedCartsModule } from '@/src/modules/abandonedCarts/abandoned-carts.module';
+import { PromotionsModule } from '@/src/modules/promotions/promotions.module';
 
 @Module({
   imports: [
@@ -66,6 +67,7 @@ import { AbandonedCartsModule } from '@/src/modules/abandonedCarts/abandoned-car
     InvoicesModule,
     InventoryModule,
     AbandonedCartsModule,
+    PromotionsModule,
   ],
   controllers: [],
   providers: [],

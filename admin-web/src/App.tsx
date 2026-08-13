@@ -35,6 +35,7 @@ import ReviewsPage from "./pages/reviews/page.tsx";
 import InvoicesPage from "./pages/invoices/page.tsx";
 import InventoryPage from "./pages/inventory/page.tsx";
 import AbandonedCartsPage from "./pages/abandoned-carts/page.tsx";
+import PromotionsPage from "./pages/promotions/page.tsx";
 
 function App() {
   const router = createBrowserRouter([
@@ -160,6 +161,7 @@ function App() {
         { path: "invoices", element: <InvoicesPage /> },
         { path: "inventory", element: <InventoryPage /> },
         { path: "abandoned-carts", element: <AbandonedCartsPage /> },
+        { path: "promotions", element: <PromotionsPage /> },
       ],
     },
     {

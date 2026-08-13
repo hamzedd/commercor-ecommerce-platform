@@ -44,6 +44,9 @@ export class OrderEntity extends BaseEntity {
   @Column({ type: 'varchar', nullable: true }) couponId: string | null;
   @Column({ type: 'varchar', nullable: true, length: 100 }) couponCode: string | null;
   @Column({ type: 'decimal', precision: 12, scale: 2, default: 0 }) couponDiscountAmount: number;
+  @Column({ type: 'decimal', precision: 12, scale: 2, default: 0 }) promotionDiscountAmount: number;
+  @Column({ type: 'decimal', precision: 12, scale: 2, default: 0 }) shippingDiscountAmount: number;
+  @Column({ type: 'jsonb', default: () => "'[]'::jsonb" }) promotionSnapshot: Array<{id:string;name:string;type:string;discountAmount:number;shippingDiscount:number}>;
 
   @Column()
   status: string;

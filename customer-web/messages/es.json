@@ -249,5 +249,17 @@
   "rewardsLoadError": "No se pudieron cargar las recompensas.",
   "loadingRewards": "Cargando recompensas",
   "pointsAbbreviation": "pts",
-  "available": "disponibles"
+  "available": "disponibles",
+  "promotion": "Promoción",
+  "automaticDiscount": "Descuento automático",
+  "freeShipping": "Envío gratuito",
+  "buyXGetY": "Compra X y obtén Y",
+  "promotionApplied": "Promoción aplicada",
+  "promotionCode": "Código promocional",
+  "invalidPromotionCode": "Código promocional no válido",
+  "promotionExpired": "Promoción caducada",
+  "minimumSpendNotReached": "No se alcanzó el gasto mínimo",
+  "promotionUnavailable": "Promoción no disponible",
+  "discount": "Descuento",
+  "shippingDiscount": "Descuento de envío"
 }

@@ -249,5 +249,17 @@
   "rewardsLoadError": "تعذر تحميل المكافآت.",
   "loadingRewards": "جارٍ تحميل المكافآت",
   "pointsAbbreviation": "نقطة",
-  "available": "متاح"
+  "available": "متاح",
+  "promotion": "عرض ترويجي",
+  "automaticDiscount": "خصم تلقائي",
+  "freeShipping": "شحن مجاني",
+  "buyXGetY": "اشترِ X واحصل على Y",
+  "promotionApplied": "تم تطبيق العرض",
+  "promotionCode": "رمز العرض",
+  "invalidPromotionCode": "رمز العرض غير صالح",
+  "promotionExpired": "انتهت صلاحية العرض",
+  "minimumSpendNotReached": "لم يتم بلوغ الحد الأدنى للإنفاق",
+  "promotionUnavailable": "العرض غير متاح",
+  "discount": "خصم",
+  "shippingDiscount": "خصم الشحن"
 }

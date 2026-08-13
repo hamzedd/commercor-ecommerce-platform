@@ -159,6 +159,8 @@ function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
           </div>
         )}
         {quote && quote.couponDiscount > 0 && <div className="mt-3 flex justify-between text-sm text-emerald-700"><dt>{t("couponDiscount")} ({quote.couponCode})</dt><dd>-{formatCurrency(quote.couponDiscount,settings.currencyCode,lang)}</dd></div>}
+        {quote?.promotions.map(p=><div key={p.id} className="mt-3 flex justify-between text-sm text-emerald-700"><dt>{p.name}</dt><dd>{p.discountAmount>0?`-${formatCurrency(p.discountAmount,settings.currencyCode,lang)}`:t('freeShipping')}</dd></div>)}
+        {quote&&quote.shippingDiscount>0&&<div className="mt-3 flex justify-between text-sm text-emerald-700"><dt>{t('shippingDiscount')}</dt><dd>-{formatCurrency(quote.shippingDiscount,settings.currencyCode,lang)}</dd></div>}
         {quote && quote.cashbackUsed > 0 && (
           <div className="mt-3 flex justify-between text-sm text-emerald-700">
             <dt>Cashback used</dt>

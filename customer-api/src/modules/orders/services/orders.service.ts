@@ -100,6 +100,9 @@ export class OrdersService {
         couponId: pricing.coupon?.id || null,
         couponCode: pricing.couponCode,
         couponDiscountAmount: pricing.couponDiscount,
+        promotionDiscountAmount: pricing.merchandiseDiscount,
+        shippingDiscountAmount: pricing.shippingDiscount,
+        promotionSnapshot: pricing.promotions,
       });
 
       const orderItems: OrderItemEntity[] = [];
@@ -186,6 +189,10 @@ export class OrdersService {
         discountedSubtotal: pricing.discountedSubtotal,
         couponCode: pricing.couponCode,
         couponDiscount: pricing.couponDiscount,
+        promotions: pricing.promotions,
+        merchandiseDiscount: pricing.merchandiseDiscount,
+        shippingDiscount: pricing.shippingDiscount,
+        totalPromotionDiscount: pricing.totalPromotionDiscount,
         total: pricing.total,
         currencyCode: pricing.currencyCode,
       };

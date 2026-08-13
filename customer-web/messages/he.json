@@ -249,5 +249,17 @@
   "rewardsLoadError": "לא ניתן לטעון את ההטבות.",
   "loadingRewards": "טוען הטבות",
   "pointsAbbreviation": "נק׳",
-  "available": "זָמִין"
+  "available": "זָמִין",
+  "promotion": "מבצע",
+  "automaticDiscount": "הנחה אוטומטית",
+  "freeShipping": "משלוח חינם",
+  "buyXGetY": "קנו X וקבלו Y",
+  "promotionApplied": "המבצע הוחל",
+  "promotionCode": "קוד מבצע",
+  "invalidPromotionCode": "קוד מבצע לא תקין",
+  "promotionExpired": "המבצע פג",
+  "minimumSpendNotReached": "סכום המינימום לא הושג",
+  "promotionUnavailable": "המבצע אינו זמין",
+  "discount": "הנחה",
+  "shippingDiscount": "הנחת משלוח"
 }

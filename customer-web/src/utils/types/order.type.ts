@@ -27,6 +27,10 @@ export type CheckoutQuoteType = {
   discountedSubtotal: number;
   couponCode: string | null;
   couponDiscount: number;
+  promotions: {id:string;name:string;type:string;discountAmount:number;shippingDiscount:number}[];
+  merchandiseDiscount:number;
+  shippingDiscount:number;
+  totalPromotionDiscount:number;
 };
 
 export type OrderType = {

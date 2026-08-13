@@ -15,6 +15,8 @@ import { InvoicesService } from '@/src/modules/invoices/invoices.service';
 import { InventoryService } from '@/src/modules/inventory/inventory.service';
 import { InventoryMovementType } from '@/src/libs/models/entities/inventory/InventoryMovement.entity';
 import { CartService } from '@/src/modules/cart/cart.service';
+import { PromotionEntity } from '@/src/libs/models/entities/promotion/Promotion.entity';
+import { PromotionUsageEntity } from '@/src/libs/models/entities/promotion/PromotionUsage.entity';
 
 @Injectable()
 export class PaymentCompletionService {
@@ -109,6 +111,7 @@ export class PaymentCompletionService {
           await manager.getRepository(CouponEntity).save(coupon);
         }
       }
+      for(const applied of order.promotionSnapshot||[]){if(await manager.getRepository(PromotionUsageEntity).existsBy({promotionId:applied.id,orderId:order.id}))continue;const promotion=await manager.getRepository(PromotionEntity).findOne({where:{id:applied.id},lock:{mode:'pessimistic_write'}});if(!promotion)throw new BadRequestException('Order promotion no longer exists');const used=await manager.getRepository(PromotionUsageEntity).countBy({promotionId:promotion.id});const customerUsed=await manager.getRepository(PromotionUsageEntity).countBy({promotionId:promotion.id,customerId:order.customerId});if(promotion.usageLimit!=null&&used>=promotion.usageLimit)throw new BadRequestException('Promotion usage limit has been reached');if(promotion.usagePerCustomer!=null&&customerUsed>=promotion.usagePerCustomer)throw new BadRequestException('Promotion customer usage limit has been reached');await manager.getRepository(PromotionUsageEntity).save({promotionId:promotion.id,customerId:order.customerId,orderId:order.id,discountAmount:Number(applied.discountAmount)+Number(applied.shippingDiscount)})}
       await this.rewards.grant(
         manager,
         order.customerId,
@@ -118,6 +121,7 @@ export class PaymentCompletionService {
           0,
           Number(order.productAmount) -
             Number(order.couponDiscountAmount) -
+            Number(order.promotionDiscountAmount) -
             Number(order.pointsDiscountAmount) -
             Number(order.cashbackUsed),
         ),

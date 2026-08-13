@@ -249,5 +249,17 @@
   "rewardsLoadError": "áƒ¯áƒ˜áƒšáƒ“áƒáƒ”áƒ‘áƒ˜áƒ¡ áƒ©áƒáƒ¢áƒ•áƒ˜áƒ áƒ—áƒ•áƒ áƒ•áƒ”áƒ  áƒ›áƒáƒ®áƒ”áƒ áƒ®áƒ“áƒ.",
   "loadingRewards": "áƒ¯áƒ˜áƒšáƒ“áƒáƒ”áƒ‘áƒ˜ áƒ˜áƒ¢áƒ•áƒ˜áƒ áƒ—áƒ”áƒ‘áƒ",
   "pointsAbbreviation": "áƒ¥áƒ£áƒšáƒ",
-  "available": "ხელმისაწვდომია"
+  "available": "ხელმისაწვდომია",
+  "promotion": "აქცია",
+  "automaticDiscount": "ავტომატური ფასდაკლება",
+  "freeShipping": "უფასო მიწოდება",
+  "buyXGetY": "იყიდეთ X და მიიღეთ Y",
+  "promotionApplied": "აქცია გამოყენებულია",
+  "promotionCode": "აქციის კოდი",
+  "invalidPromotionCode": "აქციის კოდი არასწორია",
+  "promotionExpired": "აქცია დასრულდა",
+  "minimumSpendNotReached": "მინიმალური თანხა არ არის მიღწეული",
+  "promotionUnavailable": "აქცია მიუწვდომელია",
+  "discount": "ფასდაკლება",
+  "shippingDiscount": "მიწოდების ფასდაკლება"
 }

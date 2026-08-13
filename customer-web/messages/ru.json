@@ -249,5 +249,17 @@
   "rewardsLoadError": "ÐÐµ ÑƒÐ´Ð°Ð»Ð¾ÑÑŒ Ð·Ð°Ð³Ñ€ÑƒÐ·Ð¸Ñ‚ÑŒ Ð½Ð°Ð³Ñ€Ð°Ð´Ñ‹.",
   "loadingRewards": "Ð—Ð°Ð³Ñ€ÑƒÐ·ÐºÐ° Ð½Ð°Ð³Ñ€Ð°Ð´",
   "pointsAbbreviation": "балл.",
-  "available": "4>ABC?=>"
+  "available": "4>ABC?=>",
+  "promotion": "Акция",
+  "automaticDiscount": "Автоматическая скидка",
+  "freeShipping": "Бесплатная доставка",
+  "buyXGetY": "Купите X и получите Y",
+  "promotionApplied": "Акция применена",
+  "promotionCode": "Промокод",
+  "invalidPromotionCode": "Неверный промокод",
+  "promotionExpired": "Срок акции истёк",
+  "minimumSpendNotReached": "Минимальная сумма не достигнута",
+  "promotionUnavailable": "Акция недоступна",
+  "discount": "Скидка",
+  "shippingDiscount": "Скидка на доставку"
 }

@@ -249,5 +249,17 @@
   "rewardsLoadError": "Unable to load rewards.",
   "loadingRewards": "Loading rewards",
   "pointsAbbreviation": "pts",
-  "available": "available"
+  "available": "available",
+  "promotion": "Promotion",
+  "automaticDiscount": "Automatic discount",
+  "freeShipping": "Free shipping",
+  "buyXGetY": "Buy X get Y",
+  "promotionApplied": "Promotion applied",
+  "promotionCode": "Promotion code",
+  "invalidPromotionCode": "Invalid promotion code",
+  "promotionExpired": "Promotion expired",
+  "minimumSpendNotReached": "Minimum spend not reached",
+  "promotionUnavailable": "Promotion unavailable",
+  "discount": "Discount",
+  "shippingDiscount": "Shipping discount"
 }

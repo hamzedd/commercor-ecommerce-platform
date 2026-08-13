@@ -15,8 +15,13 @@ import { OrderStatus } from '@/src/utils/enums/PaymentEnums';
 import { calculateCouponDiscount } from './coupon-calculator';
 import { ProductVariantEntity } from '@/src/libs/models/entities/product/ProductVariant.entity';
 import { effectiveVariantPrice } from './variant-pricing';
+import { PromotionEntity, PromotionStatus } from '@/src/libs/models/entities/promotion/Promotion.entity';
+import { PromotionProductEntity } from '@/src/libs/models/entities/promotion/PromotionProduct.entity';
+import { PromotionCategoryEntity } from '@/src/libs/models/entities/promotion/PromotionCategory.entity';
+import { PromotionUsageEntity } from '@/src/libs/models/entities/promotion/PromotionUsage.entity';
+import { calculatePromotions, PromotionRule } from './promotion-calculator';
 
-export type PricingResult = { subtotal: number; coupon:CouponEntity|null; couponCode:string|null; couponDiscount:number; pointsRedeemed:number; pointsDiscount:number; cashbackUsed:number; discountedSubtotal:number; shippingAmount: number; taxAmount: number; total: number; currencyCode: string; pricesIncludeTax: boolean; items: Array<{ product: ProductEntity; variant:ProductVariantEntity|null; variantDescription:string|null; quantity: number; unitPrice: number }> };
+export type PricingResult = { subtotal: number; coupon:CouponEntity|null; couponCode:string|null; couponDiscount:number; promotions:Array<{id:string;name:string;type:any;discountAmount:number;shippingDiscount:number}>;merchandiseDiscount:number;shippingDiscount:number;totalPromotionDiscount:number;pointsRedeemed:number;pointsDiscount:number;cashbackUsed:number;discountedSubtotal:number;shippingAmount: number; taxAmount: number; total: number; currencyCode: string; pricesIncludeTax: boolean; items: Array<{ product: ProductEntity; variant:ProductVariantEntity|null; variantDescription:string|null; quantity: number; unitPrice: number }> };
 @Injectable()
 export class PricingService {
   constructor(private readonly rewards:RewardsService){}
@@ -38,18 +43,22 @@ export class PricingService {
       items.push({product,variant,variantDescription:description,quantity,unitPrice:effectiveVariantPrice(Number(product.price),variant?.priceOverride)});
     }
     const subtotal = items.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
-    const coupon = await this.validateCoupon(manager, couponCode, subtotal, customerId, lockProducts);
+    const entered=couponCode?.trim().toUpperCase();const codePromotion=entered?await manager.getRepository(PromotionEntity).findOne({where:{code:entered},...(lockProducts?{lock:{mode:'pessimistic_write' as const}}:{})}):null;
+    const coupon = codePromotion?null:await this.validateCoupon(manager, couponCode, subtotal, customerId, lockProducts);
     const couponDiscount = coupon ? calculateCouponDiscount(subtotal,{type:coupon.type,value:Number(coupon.value),maximumDiscountAmount:coupon.maximumDiscountAmount==null?null:Number(coupon.maximumDiscountAmount)}) : 0;
-    const couponAdjustedSubtotal = Number((subtotal - couponDiscount).toFixed(2));
     const normalizedCountry = country.trim().toUpperCase();
     const settings = await manager.getRepository(CommerceSettingsEntity).findOne({ where: {} });
     const rule = normalizedCountry.length === 2 ? await manager.getRepository(CommerceCountryRuleEntity).findOneBy({ countryCode: normalizedCountry }) : null;
+    const baseAmounts=calculateAmounts(subtotal,normalizedCountry,settings,rule,subtotal);const eligible=await this.eligiblePromotions(manager,subtotal,customerId,codePromotion,lockProducts);const promotionResult=calculatePromotions(subtotal,items.map(i=>({productId:i.product.id,categoryId:i.product.categoryId,quantity:i.quantity,unitPrice:i.unitPrice})),eligible,baseAmounts.shippingAmount);
+    const couponAdjustedSubtotal = Number((promotionResult.discountedSubtotal - couponDiscount).toFixed(2));
     const rewardSettings=await this.rewards.settings(manager); const account=await this.rewards.account(manager,customerId,lockProducts);
     let redemption; try{redemption=calculateRedemption(couponAdjustedSubtotal,usePoints,useCashback,account.pointsBalance,Number(account.cashbackBalance),rewardSettings);}catch(e){throw new BadRequestException((e as Error).message);}
-    const amounts = calculateAmounts(subtotal, normalizedCountry, settings, rule, redemption.discountedSubtotal);
+    const amounts = calculateAmounts(subtotal, normalizedCountry, settings, rule, redemption.discountedSubtotal);amounts.shippingAmount=Number(Math.max(0,amounts.shippingAmount-promotionResult.shippingDiscount).toFixed(2));amounts.total=Number((redemption.discountedSubtotal+amounts.shippingAmount+(amounts.pricesIncludeTax?0:amounts.taxAmount)).toFixed(2));
     const currency = await manager.getRepository(CompanyDetailEntity).findOneBy({ key: 'currency_code' });
-    return { ...amounts, subtotal:Number(subtotal.toFixed(2)), coupon, couponCode:coupon?.code || null, couponDiscount, ...redemption, currencyCode: currency?.value || 'USD', items };
+    return { ...amounts, subtotal:Number(subtotal.toFixed(2)), coupon, couponCode:coupon?.code||codePromotion?.code||null, couponDiscount, ...promotionResult,discountedSubtotal:redemption.discountedSubtotal,...redemption, currencyCode: currency?.value || 'USD', items };
   }
+
+  private async eligiblePromotions(manager:EntityManager,subtotal:number,customerId:string,code:PromotionEntity|null,lock:boolean){const now=new Date();const all=await manager.getRepository(PromotionEntity).find({where:{status:PromotionStatus.ACTIVE},...(lock?{lock:{mode:'pessimistic_write' as const}}:{})});const candidates=all.filter(p=>(p.automatic||p.id===code?.id)&&(!p.startsAt||p.startsAt<=now)&&(!p.endsAt||p.endsAt>now)&&(p.minimumSubtotal==null||subtotal>=Number(p.minimumSubtotal)));if(code&&!candidates.some(p=>p.id===code.id))throw new BadRequestException(code.endsAt&&code.endsAt<=now?'Promotion has expired':'Promotion is unavailable');const result:PromotionRule[]=[];for(const p of candidates){const used=await manager.getRepository(PromotionUsageEntity).countBy({promotionId:p.id});const customerUsed=await manager.getRepository(PromotionUsageEntity).countBy({promotionId:p.id,customerId});const pending=await manager.getRepository(OrderEntity).createQueryBuilder('o').where('o.status=:status',{status:OrderStatus.PENDING}).andWhere(`o."promotionSnapshot" @> :snapshot`,{snapshot:JSON.stringify([{id:p.id}])}).getCount();if(p.usageLimit!=null&&used+pending>=p.usageLimit)continue;if(p.usagePerCustomer!=null&&customerUsed>=p.usagePerCustomer)continue;const[ps,cs]=await Promise.all([manager.getRepository(PromotionProductEntity).findBy({promotionId:p.id}),manager.getRepository(PromotionCategoryEntity).findBy({promotionId:p.id})]);result.push({...p,discountValue:Number(p.discountValue),maximumDiscount:p.maximumDiscount==null?null:Number(p.maximumDiscount),getDiscountPercent:p.getDiscountPercent==null?null:Number(p.getDiscountPercent),productIds:new Set(ps.map(x=>x.productId)),categoryIds:new Set(cs.map(x=>x.categoryId))})}if(code&&!result.some(p=>p.id===code.id))throw new BadRequestException('Promotion usage limit has been reached');return result}
 
   private async validateCoupon(manager:EntityManager, entered:string|undefined, subtotal:number, customerId:string, lock:boolean){
     const code=entered?.trim().toUpperCase(); if(!code)return null;
