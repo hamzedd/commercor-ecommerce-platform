@@ -26,6 +26,7 @@ import { CommerceModule } from '@/src/modules/commerce/commerce.module';
 import { RewardsModule } from '@/src/modules/rewards/rewards.module';
 import { CouponsModule } from '@/src/modules/coupons/coupons.module';
 import { ReviewsModule } from '@/src/modules/reviews/reviews.module';
+import { InvoicesModule } from '@/src/modules/invoices/invoices.module';
 
 @Module({
   imports: [
@@ -60,6 +61,7 @@ import { ReviewsModule } from '@/src/modules/reviews/reviews.module';
     RewardsModule,
     CouponsModule,
     ReviewsModule,
+    InvoicesModule,
   ],
   controllers: [],
   providers: [],

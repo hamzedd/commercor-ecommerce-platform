@@ -44,6 +44,7 @@ export type OrderType = {
   status: string;
   fulfillmentStatus:string;carrier:string|null;trackingNumber:string|null;trackingUrl:string|null;processingAt:string|null;shippedAt:string|null;deliveredAt:string|null;cancelledAt:string|null;statusHistory:{id:string;fromStatus:string|null;toStatus:string;note:string|null;createdAt:string}[];
   orderItems: OrderItemType[];
+  invoice?: { id: string; invoiceNumber: string; issuedAt: string } | null;
 };
 
 export type OrderItemType = {

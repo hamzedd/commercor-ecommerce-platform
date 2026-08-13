@@ -20,3 +20,9 @@ export async function getCheckoutQuoteService(
 export async function getOrdersService(): Promise<OrderType[]> {
   return api.get("/orders").then((res) => res.data);
 }
+
+export async function downloadInvoiceService(id: string): Promise<Blob> {
+  return api
+    .get(`/invoices/${id}/pdf`, { responseType: "blob" })
+    .then((res) => res.data);
+}

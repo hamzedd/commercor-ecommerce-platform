@@ -22,6 +22,7 @@ import { CompanyDetailsModule } from '@/src/modules/companyDetails/companyDetail
 import { RewardsModule } from '@/src/modules/rewards/rewards.module';
 import { WishlistModule } from '@/src/modules/wishlist/wishlist.module';
 import { NotificationsModule } from '@/src/modules/notifications/notifications.module';
+import { InvoicesModule } from '@/src/modules/invoices/invoices.module';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { NotificationsModule } from '@/src/modules/notifications/notifications.m
     RewardsModule,
     WishlistModule,
     NotificationsModule,
+    InvoicesModule,
   ],
   controllers: [],
   providers: [],

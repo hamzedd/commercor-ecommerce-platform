@@ -4,6 +4,7 @@ import ProfileOrderItem from "@/src/components/pageComponents/profile/ProfileOrd
 import { useTranslations } from "next-intl";
 import { useStoreSettings } from "@/src/components/providers/StoreSettingsProvider";
 import formatCurrency from "@/src/utils/functions/formatCurrency";
+import { downloadInvoiceService } from "@/src/service/apiServices/order.service";
 
 export default function ProfileOrderCard({
   order,
@@ -20,6 +21,16 @@ export default function ProfileOrderCard({
     month: "short",
     day: "numeric",
   });
+  const downloadInvoice = async () => {
+    if (!order.invoice) return;
+    const blob = await downloadInvoiceService(order.invoice.id);
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = `${order.invoice.invoiceNumber}.pdf`;
+    anchor.click();
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-md">
@@ -98,6 +109,19 @@ export default function ProfileOrderCard({
           </div>
         </div>
       </div>
+      {order.invoice && (
+        <div className="border-t border-gray-200 bg-white px-4 py-4 sm:px-6">
+          <p className="mb-2 text-sm font-semibold">
+            {t("invoice")}: {order.invoice.invoiceNumber}
+          </p>
+          <button
+            onClick={downloadInvoice}
+            className="rounded-md border border-blue-600 px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-50"
+          >
+            {t("downloadPdf")}
+          </button>
+        </div>
+      )}
       {(order?.status?.toLowerCase() === "completed" ||
         order?.status?.toLowerCase() === "pending") && (
         <div className="border-t border-gray-200 bg-white px-4 py-4 sm:px-6">

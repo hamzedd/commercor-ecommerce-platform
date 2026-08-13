@@ -11,6 +11,7 @@ import { CouponEntity } from '@/src/libs/models/entities/coupon/Coupon.entity';
 import { CouponUsageEntity } from '@/src/libs/models/entities/coupon/CouponUsage.entity';
 import { ProductVariantEntity } from '@/src/libs/models/entities/product/ProductVariant.entity';
 import { NotificationService } from '@/src/modules/notifications/notification.service';
+import { InvoicesService } from '@/src/modules/invoices/invoices.service';
 
 @Injectable()
 export class PaymentCompletionService {
@@ -18,6 +19,7 @@ export class PaymentCompletionService {
     private readonly dataSource: DataSource,
     private readonly rewards: RewardsService,
     private readonly notifications: NotificationService,
+    private readonly invoices: InvoicesService,
   ) {}
 
   async completeVerified(event: VerifiedPaymentEvent) {
@@ -125,6 +127,7 @@ export class PaymentCompletionService {
             Number(order.cashbackUsed),
         ),
       );
+      const invoice = await this.invoices.issue(manager, order, payment);
       await this.notifications.queue(
         manager,
         'payment_completed',
@@ -134,6 +137,8 @@ export class PaymentCompletionService {
           amount: event.amount,
           currencyCode: event.currencyCode,
           provider: event.provider,
+          invoiceNumber: invoice.invoiceNumber,
+          invoiceId: invoice.id,
         },
       );
       return { status: payment.status, idempotent: false };

@@ -22,9 +22,10 @@ export function renderNotification(type: string, p: any) {
     order_cancelled: 'Your order was cancelled.',
   };
   const body = messages[type] || 'There is an update to your order.';
-  const text = `${store}\nHello ${name},\n${body}\nOrder: ${order}${link ? `\n${link}` : ''}`;
+  const invoice = p.invoiceNumber ? `\nInvoice: ${esc(p.invoiceNumber)}` : '';
+  const text = `${store}\nHello ${name},\n${body}\nOrder: ${order}${invoice}${link ? `\n${link}` : ''}`;
   return {
     text,
-    html: `<div style="font-family:Arial;color:#1c1917"><h1>${store}</h1><p>Hello ${name},</p><p>${body}</p><p><strong>Order:</strong> ${order}</p>${link ? `<p><a href="${esc(link)}">View order</a></p>` : ''}${p.trackingUrl ? `<p><a href="${esc(p.trackingUrl)}">Track package</a></p>` : ''}</div>`,
+    html: `<div style="font-family:Arial;color:#1c1917"><h1>${store}</h1><p>Hello ${name},</p><p>${body}</p><p><strong>Order:</strong> ${order}</p>${p.invoiceNumber ? `<p><strong>Invoice:</strong> ${esc(p.invoiceNumber)}</p>` : ''}${link ? `<p><a href="${esc(link)}">View order</a></p>` : ''}${p.trackingUrl ? `<p><a href="${esc(p.trackingUrl)}">Track package</a></p>` : ''}</div>`,
   };
 }

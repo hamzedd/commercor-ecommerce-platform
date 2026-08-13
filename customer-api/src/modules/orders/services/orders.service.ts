@@ -19,6 +19,7 @@ import { pendingPaymentExpiresAt } from '@/src/modules/payments/services/payment
 import { ProductVariantEntity } from '@/src/libs/models/entities/product/ProductVariant.entity';
 import { OrderStatusHistoryEntity } from '@/src/libs/models/entities/order/OrderStatusHistory.entity';
 import { NotificationService } from '@/src/modules/notifications/notification.service';
+import { InvoiceEntity } from '@/src/libs/models/entities/invoice/Invoice.entity';
 
 @Injectable()
 export class OrdersService {
@@ -192,6 +193,10 @@ export class OrdersService {
     return await Promise.all(
       orders.map(async (order) => ({
         ...order,
+        invoice: await this.dataSource.manager.getRepository(InvoiceEntity).findOne({
+          where: { orderId: order.id },
+          select: { id: true, invoiceNumber: true, issuedAt: true },
+        }),
         statusHistory: (
           await this.dataSource.manager
             .getRepository(OrderStatusHistoryEntity)
