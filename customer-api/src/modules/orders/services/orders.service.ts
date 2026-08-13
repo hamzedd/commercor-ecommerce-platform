@@ -18,6 +18,7 @@ import { OrderStatus, PaymentStatus } from '@/src/utils/enums/PaymentEnums';
 import { pendingPaymentExpiresAt } from '@/src/modules/payments/services/payment-expiration.service';
 import { ProductVariantEntity } from '@/src/libs/models/entities/product/ProductVariant.entity';
 import { OrderStatusHistoryEntity } from '@/src/libs/models/entities/order/OrderStatusHistory.entity';
+import { NotificationService } from '@/src/modules/notifications/notification.service';
 
 @Injectable()
 export class OrdersService {
@@ -29,6 +30,7 @@ export class OrdersService {
     private orderItemsRepository: Repository<OrderItemEntity>,
     private readonly pricingService: PricingService,
     private readonly rewardsService: RewardsService,
+    private readonly notifications: NotificationService,
   ) {}
 
   async quote(customerId: string, data: CreateOrderDto) {
@@ -98,7 +100,13 @@ export class OrdersService {
 
       for (const item of pricing.items) {
         const product = item.product;
-        if(item.variant){item.variant.stock-=item.quantity;await manager.getRepository(ProductVariantEntity).save(item.variant);}else{product.stock -= item.quantity;await productsRepo.save(product);}
+        if (item.variant) {
+          item.variant.stock -= item.quantity;
+          await manager.getRepository(ProductVariantEntity).save(item.variant);
+        } else {
+          product.stock -= item.quantity;
+          await productsRepo.save(product);
+        }
 
         orderItems.push(
           orderItemsRepo.create({
@@ -150,6 +158,13 @@ export class OrdersService {
           }),
         ),
       );
+      await this.notifications.queue(
+        manager,
+        'order_created',
+        `order_created:${savedOrder.id}`,
+        savedOrder,
+        { amount: pricing.total, currencyCode: pricing.currencyCode },
+      );
 
       return {
         paymentId: newPayment.id,
@@ -177,7 +192,27 @@ export class OrdersService {
     return await Promise.all(
       orders.map(async (order) => ({
         ...order,
-        statusHistory:(await this.dataSource.manager.getRepository(OrderStatusHistoryEntity).find({where:{orderId:order.id},select:{id:true,fromStatus:true,toStatus:true,note:true,created_at:true},order:{created_at:'ASC'}})).map(h=>({id:h.id,fromStatus:h.fromStatus,toStatus:h.toStatus,note:h.note,createdAt:h.created_at})),
+        statusHistory: (
+          await this.dataSource.manager
+            .getRepository(OrderStatusHistoryEntity)
+            .find({
+              where: { orderId: order.id },
+              select: {
+                id: true,
+                fromStatus: true,
+                toStatus: true,
+                note: true,
+                created_at: true,
+              },
+              order: { created_at: 'ASC' },
+            })
+        ).map((h) => ({
+          id: h.id,
+          fromStatus: h.fromStatus,
+          toStatus: h.toStatus,
+          note: h.note,
+          createdAt: h.created_at,
+        })),
         orderItems: await this.orderItemsRepository.find({
           where: {
             orderId: order.id,

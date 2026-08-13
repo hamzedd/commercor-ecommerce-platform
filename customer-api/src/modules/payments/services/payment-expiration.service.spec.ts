@@ -111,6 +111,7 @@ describe('PaymentExpirationService', () => {
     const service = new PaymentExpirationService(
       dataSource as any,
       rewards as any,
+      { queue: jest.fn() } as any,
     );
 
     await expect(service.expirePendingPayments(now)).resolves.toBe(1);

@@ -8,6 +8,7 @@ import { OrderStatus, PaymentStatus } from '@/src/utils/enums/PaymentEnums';
 import { RewardsService } from '@/src/modules/rewards/rewards.service';
 import { PAYMENT_PENDING_EXPIRY_MINUTES } from '@/src/utils/environmentConstants';
 import { ProductVariantEntity } from '@/src/libs/models/entities/product/ProductVariant.entity';
+import { NotificationService } from '@/src/modules/notifications/notification.service';
 
 export const PAYMENT_EXPIRATION_REASON = 'pending_payment_expired';
 
@@ -31,6 +32,7 @@ export class PaymentExpirationService {
   constructor(
     private readonly dataSource: DataSource,
     private readonly rewards: RewardsService,
+    private readonly notifications: NotificationService,
   ) {}
 
   async expirePendingPayments(
@@ -77,7 +79,8 @@ export class PaymentExpirationService {
     payment.status = PaymentStatus.CANCELLED;
     payment.cancellationReason = PAYMENT_EXPIRATION_REASON;
     order.status = OrderStatus.CANCELLED;
-    order.fulfillmentStatus = 'cancelled'; order.cancelledAt = now;
+    order.fulfillmentStatus = 'cancelled';
+    order.cancelledAt = now;
 
     await this.rewards.restoreRedemption(
       manager,
@@ -93,7 +96,19 @@ export class PaymentExpirationService {
       .getRepository(OrderItemEntity)
       .findBy({ orderId: order.id });
     for (const item of items) {
-      if(item.variantId){const variant=await manager.getRepository(ProductVariantEntity).findOne({where:{id:item.variantId},lock:{mode:'pessimistic_write'}});if(variant){variant.stock+=item.quantity;await manager.getRepository(ProductVariantEntity).save(variant);}continue;}
+      if (item.variantId) {
+        const variant = await manager
+          .getRepository(ProductVariantEntity)
+          .findOne({
+            where: { id: item.variantId },
+            lock: { mode: 'pessimistic_write' },
+          });
+        if (variant) {
+          variant.stock += item.quantity;
+          await manager.getRepository(ProductVariantEntity).save(variant);
+        }
+        continue;
+      }
       const product = await manager.getRepository(ProductEntity).findOne({
         where: { id: item.productId },
         lock: { mode: 'pessimistic_write' },
@@ -106,6 +121,13 @@ export class PaymentExpirationService {
 
     await manager.getRepository(PaymentEntity).save(payment);
     await manager.getRepository(OrderEntity).save(order);
+    await this.notifications.queue(
+      manager,
+      'order_cancelled',
+      `payment_expired:${payment.id}`,
+      order,
+      { reason: 'payment_expired' },
+    );
     return true;
   }
 }

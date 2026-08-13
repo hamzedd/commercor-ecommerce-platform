@@ -56,7 +56,9 @@ export class PaymentInitializationService {
       };
     });
 
-    const result = await this.providers.getConfiguredProvider().createPayment(input);
+    const result = await this.providers
+      .getConfiguredProvider()
+      .createPayment(input);
     await this.dataSource.transaction(async (manager) => {
       const payment = await manager.getRepository(PaymentEntity).findOne({
         where: { id: paymentId },
@@ -65,8 +67,13 @@ export class PaymentInitializationService {
       if (!payment || payment.status !== PaymentStatus.PENDING) {
         throw new BadRequestException('Payment is no longer pending');
       }
-      if (payment.providerPaymentId && payment.providerPaymentId !== result.providerPaymentId) {
-        throw new BadRequestException('Payment already has another provider reference');
+      if (
+        payment.providerPaymentId &&
+        payment.providerPaymentId !== result.providerPaymentId
+      ) {
+        throw new BadRequestException(
+          'Payment already has another provider reference',
+        );
       }
       payment.provider = result.provider;
       payment.providerPaymentId = result.providerPaymentId;

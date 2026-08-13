@@ -17,24 +17,43 @@ export class PayPalPaymentService {
   async capture(paymentId: string, customerId: string, paypalOrderId: string) {
     const payment = await this.dataSource.transaction(async (manager) => {
       const current = await manager.getRepository(PaymentEntity).findOne({
-        where: { id: paymentId }, lock: { mode: 'pessimistic_write' },
+        where: { id: paymentId },
+        lock: { mode: 'pessimistic_write' },
       });
       if (!current) throw new BadRequestException('Payment does not exist');
-      const order = await manager.getRepository(OrderEntity).findOneBy({ paymentId, customerId });
+      const order = await manager
+        .getRepository(OrderEntity)
+        .findOneBy({ paymentId, customerId });
       if (!order) throw new BadRequestException('Payment does not exist');
-      if (current.provider !== 'paypal' || current.providerPaymentId !== paypalOrderId) {
-        throw new BadRequestException('PayPal order reference does not match this payment');
+      if (
+        current.provider !== 'paypal' ||
+        current.providerPaymentId !== paypalOrderId
+      ) {
+        throw new BadRequestException(
+          'PayPal order reference does not match this payment',
+        );
       }
-      if (![PaymentStatus.PENDING, PaymentStatus.COMPLETED].includes(current.status as PaymentStatus)) {
-        throw new BadRequestException('Payment cannot be captured in its current state');
+      if (
+        ![PaymentStatus.PENDING, PaymentStatus.COMPLETED].includes(
+          current.status as PaymentStatus,
+        )
+      ) {
+        throw new BadRequestException(
+          'Payment cannot be captured in its current state',
+        );
       }
       return current;
     });
 
-    const event = payment.status === PaymentStatus.COMPLETED
-      ? await this.paypal.retrieveOrder(paypalOrderId)
-      : await this.paypal.captureOrder(paypalOrderId, `payment:${paymentId}:capture`);
-    if (event.paymentId !== paymentId) throw new BadRequestException('PayPal payment reference mismatch');
+    const event =
+      payment.status === PaymentStatus.COMPLETED
+        ? await this.paypal.retrieveOrder(paypalOrderId)
+        : await this.paypal.captureOrder(
+            paypalOrderId,
+            `payment:${paymentId}:capture`,
+          );
+    if (event.paymentId !== paymentId)
+      throw new BadRequestException('PayPal payment reference mismatch');
     return this.completion.completeVerified({ ...event, provider: 'paypal' });
   }
 }

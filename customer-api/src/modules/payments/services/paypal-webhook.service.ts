@@ -1,7 +1,10 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PaymentCompletionService } from '../payment-completion.service';
 import { PayPalPaymentProvider } from '../providers/paypal.provider';
-import { NormalizedPaymentEventType, VerifyWebhookRequest } from '../providers/payment-provider';
+import {
+  NormalizedPaymentEventType,
+  VerifyWebhookRequest,
+} from '../providers/payment-provider';
 import { PaymentStatus } from '@/src/utils/enums/PaymentEnums';
 import { DataSource } from 'typeorm';
 import { PaymentEntity } from '@/src/libs/models/entities/payment/Payment.entity';
@@ -31,10 +34,20 @@ export class PayPalWebhookService {
       });
     }
     if (event.type === NormalizedPaymentEventType.REFUND_COMPLETED) {
-      if (!event.relatedTransactionId || !event.refundAmount) throw new BadRequestException('PayPal refund reference is missing');
-      const payment = await this.dataSource.getRepository(PaymentEntity).findOneBy({ externalTransactionId: event.relatedTransactionId });
-      if (!payment) throw new BadRequestException('Refund capture does not match a payment');
-      return this.refunds.record(payment.id, event.externalTransactionId, event.refundAmount);
+      if (!event.relatedTransactionId || !event.refundAmount)
+        throw new BadRequestException('PayPal refund reference is missing');
+      const payment = await this.dataSource
+        .getRepository(PaymentEntity)
+        .findOneBy({ externalTransactionId: event.relatedTransactionId });
+      if (!payment)
+        throw new BadRequestException(
+          'Refund capture does not match a payment',
+        );
+      return this.refunds.record(
+        payment.id,
+        event.externalTransactionId,
+        event.refundAmount,
+      );
     }
     throw new BadRequestException('Unsupported PayPal webhook event');
   }

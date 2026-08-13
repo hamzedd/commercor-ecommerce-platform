@@ -21,6 +21,7 @@ import { PaymentsModule } from '@/src/modules/payments/payments.module';
 import { CompanyDetailsModule } from '@/src/modules/companyDetails/companyDetails.module';
 import { RewardsModule } from '@/src/modules/rewards/rewards.module';
 import { WishlistModule } from '@/src/modules/wishlist/wishlist.module';
+import { NotificationsModule } from '@/src/modules/notifications/notifications.module';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { WishlistModule } from '@/src/modules/wishlist/wishlist.module';
     CompanyDetailsModule,
     RewardsModule,
     WishlistModule,
+    NotificationsModule,
   ],
   controllers: [],
   providers: [],

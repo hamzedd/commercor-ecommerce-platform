@@ -14,6 +14,26 @@ export const MINIO_ACCESS_KEY = process.env.MINIO_ACCESS_KEY;
 export const MINIO_SECRET_KEY = process.env.MINIO_SECRET_KEY;
 export const JWT_SECRET = process.env.JWT_SECRET;
 export const DOMAIN_URL = process.env.DOMAIN_URL;
+export const EMAIL_PROVIDER = (process.env.EMAIL_PROVIDER || 'disabled')
+  .trim()
+  .toLowerCase();
+if (!['disabled', 'smtp'].includes(EMAIL_PROVIDER))
+  throw new Error('EMAIL_PROVIDER must be disabled or smtp');
+export const SMTP_HOST = process.env.SMTP_HOST || '';
+export const SMTP_PORT = Number(process.env.SMTP_PORT || 587);
+export const SMTP_SECURE =
+  (process.env.SMTP_SECURE || 'false').toLowerCase() === 'true';
+export const SMTP_USER = process.env.SMTP_USER || '';
+export const SMTP_PASSWORD = process.env.SMTP_PASSWORD || '';
+export const SMTP_FROM_EMAIL =
+  process.env.SMTP_FROM_EMAIL || 'no-reply@localhost';
+export const SMTP_FROM_NAME = process.env.SMTP_FROM_NAME || 'Commercor';
+export const EMAIL_MAX_ATTEMPTS = Math.max(
+  1,
+  Number(process.env.EMAIL_MAX_ATTEMPTS || 5),
+);
+if (EMAIL_PROVIDER === 'smtp' && !SMTP_HOST)
+  throw new Error('SMTP_HOST is required when EMAIL_PROVIDER=smtp');
 
 export const PAYMENT_PROVIDER = (
   process.env.PAYMENT_PROVIDER || 'manual_disabled'
