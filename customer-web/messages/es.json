@@ -178,5 +178,5 @@
   "removeCoupon": "Quitar cupón",
   "couponDiscount": "Descuento del cupón",
   "couponValidatedAtCheckout": "Tu cupón se validará de forma segura al finalizar la compra.",
-  "selectVariant": "Selecciona opciones"
+  "selectVariant": "Selecciona opciones", "reviews":"Reseñas", "writeReview":"Escribir una reseña", "verifiedPurchase":"Compra verificada", "pendingApproval":"Tu reseña está pendiente de aprobación.", "submitReview":"Enviar reseña", "editReview":"Editar reseña", "deleteReview":"Eliminar reseña", "noReviewsYet":"Aún no hay reseñas", "reviewTitle":"Título de la reseña (opcional)", "reviewComment":"Comparte tu experiencia", "reviewDeleted":"Reseña eliminada", "reviewStatus":"Estado", "myReviews":"Mis reseñas"
 }

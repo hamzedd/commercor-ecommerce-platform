@@ -178,5 +178,5 @@
   "removeCoupon": "კუპონის წაშლა",
   "couponDiscount": "კუპონის ფასდაკლება",
   "couponValidatedAtCheckout": "კუპონი უსაფრთხოდ შემოწმდება შეკვეთის გაფორმებისას.",
-  "selectVariant": "აირჩიეთ ვარიანტი"
+  "selectVariant": "აირჩიეთ ვარიანტი", "reviews":"შეფასებები", "writeReview":"შეფასების დაწერა", "verifiedPurchase":"დადასტურებული შენაძენი", "pendingApproval":"თქვენი შეფასება დამტკიცებას ელოდება.", "submitReview":"შეფასების გაგზავნა", "editReview":"შეფასების რედაქტირება", "deleteReview":"შეფასების წაშლა", "noReviewsYet":"შეფასებები ჯერ არ არის", "reviewTitle":"სათაური (არასავალდებულო)", "reviewComment":"გაგვიზიარეთ გამოცდილება", "reviewDeleted":"შეფასება წაიშალა", "reviewStatus":"სტატუსი", "myReviews":"ჩემი შეფასებები"
 }

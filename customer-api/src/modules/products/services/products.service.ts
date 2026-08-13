@@ -8,6 +8,10 @@ import { getProductsPaginateConfig } from '@/src/utils/paginateConfigs/productPa
 import { SearchProductsDto } from '@/src/libs/models/dtos/products/SearchProducts.dto';
 import { ProductFilterOptionValueEntity } from '@/src/libs/models/entities/productFilter/ProductFilterOptionValue.entity';
 import { ProductFilterOptionEntity } from '@/src/libs/models/entities/productFilter/ProductFilterOption.entity';
+import {
+  ProductReviewEntity,
+  ReviewStatus,
+} from '@/src/libs/models/entities/review/ProductReview.entity';
 
 @Injectable()
 export class ProductsService {
@@ -77,7 +81,9 @@ export class ProductsService {
         }
       }
     }
-    return paginate(query, qb, getProductsPaginateConfig);
+    const result = await paginate(query, qb, getProductsPaginateConfig);
+    await this.attachRatings(result.data);
+    return result;
   }
 
   async getProductById(id: ProductEntity['id']): Promise<ProductEntity | null> {
@@ -91,6 +97,7 @@ export class ProductsService {
         variants: { values: { optionValue: { option: true } } },
       },
     });
+    await this.attachRatings(product ? [product] : []);
     return this.withVariants(product) as ProductEntity | null;
   }
 
@@ -109,7 +116,39 @@ export class ProductsService {
         variants: { values: { optionValue: { option: true } } },
       },
     });
+    await this.attachRatings(product ? [product] : []);
     return this.withVariants(product) as ProductEntity | null;
   }
-  private withVariants(product:ProductEntity|null){if(!product)return null;const variants=(product.variants||[]).filter(v=>v.enabled).map(v=>{const options=v.values.map(a=>({optionId:a.optionValue.optionId,optionName:a.optionValue.option.name,valueId:a.optionValue.id,value:a.optionValue.value})).sort((a,b)=>a.optionName.localeCompare(b.optionName));return{id:v.id,sku:v.sku,effectivePrice:Number(v.priceOverride??product.price),stock:v.stock,enabled:v.enabled,image:v.image,options,description:options.map(o=>o.value).join(' / ')}});return{...product,variants};}
+  private async attachRatings(products: ProductEntity[]) {
+    if (!products.length) return;
+    const rows = await this.productRepository.manager.getRepository(ProductReviewEntity).createQueryBuilder('review').select('review.productId', 'productId').addSelect('COUNT(*)', 'count').addSelect('COALESCE(AVG(review.rating),0)', 'average').where('review.productId IN (:...ids)', { ids: products.map((product) => product.id) }).andWhere('review.status = :status', { status: ReviewStatus.APPROVED }).andWhere('review.deleted_at IS NULL').groupBy('review.productId').getRawMany();
+    const ratings = new Map(rows.map((row) => [row.productId, row]));
+    for (const product of products) { const rating = ratings.get(product.id); Object.assign(product, { averageRating: rating ? Number(Number(rating.average).toFixed(1)) : 0, reviewCount: rating ? Number(rating.count) : 0 }); }
+  }
+  private withVariants(product: ProductEntity | null) {
+    if (!product) return null;
+    const variants = (product.variants || [])
+      .filter((v) => v.enabled)
+      .map((v) => {
+        const options = v.values
+          .map((a) => ({
+            optionId: a.optionValue.optionId,
+            optionName: a.optionValue.option.name,
+            valueId: a.optionValue.id,
+            value: a.optionValue.value,
+          }))
+          .sort((a, b) => a.optionName.localeCompare(b.optionName));
+        return {
+          id: v.id,
+          sku: v.sku,
+          effectivePrice: Number(v.priceOverride ?? product.price),
+          stock: v.stock,
+          enabled: v.enabled,
+          image: v.image,
+          options,
+          description: options.map((o) => o.value).join(' / '),
+        };
+      });
+    return { ...product, variants };
+  }
 }

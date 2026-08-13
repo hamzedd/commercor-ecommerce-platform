@@ -33,7 +33,10 @@ export type ProductType = {
   stock?: number;
   images: ProductImageType[];
   variants?: ProductVariantType[];
+  averageRating?: number;
+  reviewCount?: number;
 };
+export type ProductReview={id:string;rating:number;title:string|null;comment:string;verifiedPurchase:boolean;createdAt:string;reviewerName:string;status?:'pending'|'approved'|'rejected';productId?:string;product?:ProductType};
 export type ProductVariantOptionSelection={optionId:string;optionName:string;valueId:string;value:string};
 export type ProductVariantType={id:string;sku:string|null;effectivePrice:number;stock:number;enabled:boolean;image:string|null;options:ProductVariantOptionSelection[];description:string};
 

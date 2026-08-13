@@ -75,6 +75,7 @@ function ProductCard({ product, lang, className, titleClassName }: Props) {
         >
           {productTranslation?.description}
         </p>
+        {(product.reviewCount||0)>0&&<p className="mb-2 text-sm font-semibold text-amber-700">★ {product.averageRating?.toFixed(1)} <span className="font-normal text-stone-500">({product.reviewCount})</span></p>}
 
         {/* Price */}
         <div className="flex items-center justify-between border-t pt-3">

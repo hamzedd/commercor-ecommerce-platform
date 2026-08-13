@@ -178,5 +178,5 @@
   "removeCoupon": "Удалить купон",
   "couponDiscount": "Скидка по купону",
   "couponValidatedAtCheckout": "Купон будет безопасно проверен при оформлении заказа.",
-  "selectVariant": "Выберите параметры"
+  "selectVariant": "Выберите параметры", "reviews":"Отзывы", "writeReview":"Написать отзыв", "verifiedPurchase":"Подтверждённая покупка", "pendingApproval":"Ваш отзыв ожидает одобрения.", "submitReview":"Отправить отзыв", "editReview":"Редактировать отзыв", "deleteReview":"Удалить отзыв", "noReviewsYet":"Отзывов пока нет", "reviewTitle":"Заголовок отзыва (необязательно)", "reviewComment":"Поделитесь впечатлениями", "reviewDeleted":"Отзыв удалён", "reviewStatus":"Статус", "myReviews":"Мои отзывы"
 }

@@ -6,6 +6,7 @@ import ProductPageSimilarProducts from "@/src/components/pageComponents/product/
 import ProductImagesPreview from "@/src/components/pageComponents/product/productImagesPreview/ProductImagesPreview";
 import ProductPurchaseBox from "@/src/components/pageComponents/product/productPurchaseBox/ProductPurchaseBox";
 import { fetchProduct } from "@/src/service/apiServices/product.service";
+import ProductReviews from "@/src/components/pageComponents/product/ProductReviews";
 
 interface Props {
   params: Promise<{ locale: string; slug: string }>;
@@ -51,6 +52,7 @@ async function Page(props: Props) {
         <div className="lg:col-span-2">
           <ProductDescription productTranslation={productTranslation} />
         </div>
+        <div className="lg:col-span-2"><ProductReviews productId={product.id}/></div>
       </div>
 
       <ProductPageSimilarProducts product={product} lang={locale} />

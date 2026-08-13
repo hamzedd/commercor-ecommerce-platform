@@ -5,6 +5,7 @@ import ProfilePageInfoTab from "@/src/components/pageComponents/profile/ProfileP
 import ProfilePageAddressesTab from "@/src/components/pageComponents/profile/ProfilePageAddressesTab";
 import ProfilePageOrdersTab from "@/src/components/pageComponents/profile/ProfilePageOrdersTab";
 import ProfilePageRewardsTab from "@/src/components/pageComponents/profile/ProfilePageRewardsTab";
+import ProfilePageReviewsTab from "@/src/components/pageComponents/profile/ProfilePageReviewsTab";
 import { useTranslations } from "next-intl";
 
 function ProfilePageTabs() {
@@ -27,6 +28,7 @@ function ProfilePageTabs() {
       children: <ProfilePageAddressesTab />,
     },
     { key: "4", label: "Rewards", children: <ProfilePageRewardsTab /> },
+    { key: "5", label: t("myReviews"), children: <ProfilePageReviewsTab /> },
   ];
 
   return (

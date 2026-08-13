@@ -1,0 +1,1 @@
+import{IsInt,IsNotEmpty,IsOptional,IsString,MaxLength,Min,Max}from'class-validator';import{Type}from'class-transformer';export class ReviewDto{@Type(()=>Number)@IsInt()@Min(1)@Max(5)rating:number;@IsOptional()@IsString()@MaxLength(200)title?:string|null;@IsString()@IsNotEmpty()@MaxLength(5000)comment:string;}

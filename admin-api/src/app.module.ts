@@ -25,6 +25,7 @@ import { DashboardModule } from '@/src/modules/dashboard/dashboard.module';
 import { CommerceModule } from '@/src/modules/commerce/commerce.module';
 import { RewardsModule } from '@/src/modules/rewards/rewards.module';
 import { CouponsModule } from '@/src/modules/coupons/coupons.module';
+import { ReviewsModule } from '@/src/modules/reviews/reviews.module';
 
 @Module({
   imports: [
@@ -58,6 +59,7 @@ import { CouponsModule } from '@/src/modules/coupons/coupons.module';
     CommerceModule,
     RewardsModule,
     CouponsModule,
+    ReviewsModule,
   ],
   controllers: [],
   providers: [],

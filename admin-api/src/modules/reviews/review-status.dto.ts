@@ -1,0 +1,1 @@
+import{IsIn}from'class-validator';import{ReviewStatus}from'@/src/libs/models/entities/review/ProductReview.entity';export class ReviewStatusDto{@IsIn([ReviewStatus.APPROVED,ReviewStatus.REJECTED])status:ReviewStatus.APPROVED|ReviewStatus.REJECTED;}

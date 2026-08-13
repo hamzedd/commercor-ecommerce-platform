@@ -1,0 +1,1 @@
+export type ReviewStatus='pending'|'approved'|'rejected';export type AdminReview={id:string;rating:number;title:string|null;comment:string;status:ReviewStatus;verifiedPurchase:boolean;created_at:string;customer:{firstName:string;lastName:string;email:string};product:{translations:{name:string}[]}};

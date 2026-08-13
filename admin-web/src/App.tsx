@@ -31,6 +31,7 @@ import SettingsPage from "./pages/settings/page.tsx";
 import CommerceSettingsPage from "./pages/commerce-settings/page.tsx";
 import LoyaltySettingsPage from "./pages/loyalty-settings/page.tsx";
 import CouponsPage from "./pages/coupons/page.tsx";
+import ReviewsPage from "./pages/reviews/page.tsx";
 
 function App() {
   const router = createBrowserRouter([
@@ -152,6 +153,7 @@ function App() {
         },
         { path: "loyalty-settings", element: <LoyaltySettingsPage /> },
         { path: "coupons", element: <CouponsPage /> },
+        { path: "reviews", element: <ReviewsPage /> },
       ],
     },
     {

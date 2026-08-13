@@ -1,0 +1,1 @@
+import api from'../apiInstances/adminApi.ts';import type{AdminReview,ReviewStatus}from'../../utils/types/reviewTypes.ts';export const getReviews=(status?:ReviewStatus):Promise<AdminReview[]>=>api.get('/reviews',{params:{status}}).then(r=>r.data);export const setReviewStatus=(id:string,status:'approved'|'rejected')=>api.put(`/reviews/${id}/status`,{status}).then(r=>r.data);
