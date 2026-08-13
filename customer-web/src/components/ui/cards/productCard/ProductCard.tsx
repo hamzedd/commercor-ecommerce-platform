@@ -10,6 +10,7 @@ import { Link } from "@/src/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { useStoreSettings } from "@/src/components/providers/StoreSettingsProvider";
 import formatCurrency from "@/src/utils/functions/formatCurrency";
+import WishlistButton from "@/src/components/ui/WishlistButton";
 
 interface Props {
   product: ProductType;
@@ -36,6 +37,7 @@ function ProductCard({ product, lang, className, titleClassName }: Props) {
       key={product.id}
       className={`group relative flex w-full flex-col overflow-hidden rounded-xl bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${className}`}
     >
+      <WishlistButton productId={product.id} className="absolute top-3 right-3 z-20" />
       {/* Image Container */}
       <div className="relative aspect-square overflow-hidden bg-gray-50">
         {product?.images?.[0] && (

@@ -20,6 +20,7 @@ import { AddressesModule } from './modules/addresses/addresses.module';
 import { PaymentsModule } from '@/src/modules/payments/payments.module';
 import { CompanyDetailsModule } from '@/src/modules/companyDetails/companyDetails.module';
 import { RewardsModule } from '@/src/modules/rewards/rewards.module';
+import { WishlistModule } from '@/src/modules/wishlist/wishlist.module';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { RewardsModule } from '@/src/modules/rewards/rewards.module';
     PaymentsModule,
     CompanyDetailsModule,
     RewardsModule,
+    WishlistModule,
   ],
   controllers: [],
   providers: [],

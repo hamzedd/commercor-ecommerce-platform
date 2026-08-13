@@ -178,5 +178,6 @@
   "removeCoupon": "Remove coupon",
   "couponDiscount": "Coupon discount",
   "couponValidatedAtCheckout": "Your coupon will be validated securely at checkout.",
+  "wishlist":"Wishlist", "addToWishlist":"Add to wishlist", "removeFromWishlist":"Remove from wishlist", "addedToWishlist":"Added to wishlist", "removedFromWishlist":"Removed from wishlist", "wishlistEmpty":"Your wishlist is empty", "selectOptions":"Select options", "unavailable":"Unavailable",
   "selectVariant": "Select options", "reviews":"Reviews", "writeReview":"Write a review", "verifiedPurchase":"Verified purchase", "pendingApproval":"Your review is pending approval.", "submitReview":"Submit review", "editReview":"Edit review", "deleteReview":"Delete review", "noReviewsYet":"No reviews yet", "reviewTitle":"Review title (optional)", "reviewComment":"Share your experience", "reviewDeleted":"Review deleted", "reviewStatus":"Status", "myReviews":"My Reviews"
 }

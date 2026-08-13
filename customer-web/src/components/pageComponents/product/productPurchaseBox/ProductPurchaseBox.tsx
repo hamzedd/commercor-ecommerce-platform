@@ -16,6 +16,7 @@ import { CreateOrderItemType } from "@/src/utils/types/order.type";
 import { ProductType } from "@/src/utils/types/product.type";
 import { useStoreSettings } from "@/src/components/providers/StoreSettingsProvider";
 import formatCurrency from "@/src/utils/functions/formatCurrency";
+import WishlistButton from "@/src/components/ui/WishlistButton";
 
 interface Props {
   product: ProductType;
@@ -63,6 +64,7 @@ function ProductPurchaseBox({ product }: Props) {
 
   return (
     <aside className="w-full rounded-2xl border border-stone-200 bg-white p-5 shadow-sm sm:p-6 lg:sticky lg:top-28">
+      <div className="mb-3 flex justify-end"><WishlistButton productId={product.id}/></div>
       <div className="border-b border-stone-200 pb-5">
         <p className="text-xs font-bold tracking-[0.16em] text-amber-700 uppercase">
           {t("price")}

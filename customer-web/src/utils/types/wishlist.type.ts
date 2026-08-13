@@ -1,0 +1,1 @@
+import type{ProductType}from'./product.type';export type WishlistStatusItem={id:string;productId:string;variantId:string|null};export type WishlistItem=WishlistStatusItem&{createdAt:string;available:boolean;requiresOptionSelection:boolean;variantDescription:string|null;effectivePrice:number;product:ProductType};
