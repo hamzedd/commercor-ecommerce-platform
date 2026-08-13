@@ -41,16 +41,16 @@ export class OrderEntity extends BaseEntity {
   @Column({ type: 'integer', default: 0 }) pointsRedeemed: number;
   @Column({ type: 'decimal', precision: 12, scale: 2, default: 0 }) pointsDiscountAmount: number;
   @Column({ type: 'decimal', precision: 12, scale: 2, default: 0 }) cashbackUsed: number;
-  @Column({ nullable: true }) couponId: string | null;
-  @Column({ nullable: true, length: 100 }) couponCode: string | null;
+  @Column({ type: 'varchar', nullable: true }) couponId: string | null;
+  @Column({ type: 'varchar', nullable: true, length: 100 }) couponCode: string | null;
   @Column({ type: 'decimal', precision: 12, scale: 2, default: 0 }) couponDiscountAmount: number;
 
   @Column()
   status: string;
   @Column({ length: 20, default: 'pending' }) fulfillmentStatus: string;
-  @Column({ nullable: true, length: 200 }) carrier: string | null;
-  @Column({ nullable: true, length: 200 }) trackingNumber: string | null;
-  @Column({ nullable: true, length: 2000 }) trackingUrl: string | null;
+  @Column({ type: 'varchar', nullable: true, length: 200 }) carrier: string | null;
+  @Column({ type: 'varchar', nullable: true, length: 200 }) trackingNumber: string | null;
+  @Column({ type: 'varchar', nullable: true, length: 2000 }) trackingUrl: string | null;
   @Column({ type: 'timestamp', nullable: true }) processingAt: Date | null;
   @Column({ type: 'timestamp', nullable: true }) shippedAt: Date | null;
   @Column({ type: 'timestamp', nullable: true }) deliveredAt: Date | null;

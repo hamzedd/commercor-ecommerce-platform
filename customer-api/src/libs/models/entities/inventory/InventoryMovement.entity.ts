@@ -15,13 +15,13 @@ export enum InventoryMovementType {
 @Index('IDX_inventory_product_created', ['productId', 'created_at'])
 export class InventoryMovementEntity extends BaseEntity {
   @Column() productId: string;
-  @Column({ nullable: true }) variantId: string | null;
+  @Column({ type: 'varchar', nullable: true }) variantId: string | null;
   @Column({ length: 40 }) type: InventoryMovementType;
   @Column({ type: 'integer' }) quantityDelta: number;
   @Column({ type: 'integer' }) quantityBefore: number;
   @Column({ type: 'integer' }) quantityAfter: number;
   @Column({ type: 'text', nullable: true }) reason: string | null;
-  @Column({ nullable: true }) orderId: string | null;
-  @Column({ nullable: true }) adminUserId: string | null;
-  @Column({ nullable: true, length: 300 }) referenceKey: string | null;
+  @Column({ type: 'varchar', nullable: true }) orderId: string | null;
+  @Column({ type: 'varchar', nullable: true }) adminUserId: string | null;
+  @Column({ type: 'varchar', nullable: true, length: 300 }) referenceKey: string | null;
 }

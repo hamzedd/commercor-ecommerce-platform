@@ -11,8 +11,8 @@ export enum OutboxStatus {
 export class NotificationOutboxEntity extends BaseEntity {
   @Column({ length: 200 }) type: string;
   @Column({ length: 300 }) deduplicationKey: string;
-  @Column({ nullable: true }) customerId: string | null;
-  @Column({ nullable: true }) orderId: string | null;
+  @Column({ type: 'varchar', nullable: true }) customerId: string | null;
+  @Column({ type: 'varchar', nullable: true }) orderId: string | null;
   @Column({ length: 320 }) recipientEmail: string;
   @Column({ length: 300 }) subject: string;
   @Column({ type: 'jsonb' }) payload: Record<string, unknown>;

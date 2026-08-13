@@ -24,7 +24,7 @@ export class OrderItemEntity extends BaseEntity {
 
   @Column({ type: 'decimal', precision: 12, scale: 2 })
   unitPrice: number;
-  @Column({ nullable: true }) variantId: string | null;
-  @Column({ nullable: true, length: 100 }) variantSku: string | null;
-  @Column({ nullable: true, length: 1000 }) variantDescription: string | null;
+  @Column({ type: 'varchar', nullable: true }) variantId: string | null;
+  @Column({ type: 'varchar', nullable: true, length: 100 }) variantSku: string | null;
+  @Column({ type: 'varchar', nullable: true, length: 1000 }) variantDescription: string | null;
 }

@@ -25,13 +25,13 @@ export class ProductVariantEntity extends BaseEntity {
   @ManyToOne(() => ProductEntity, (p) => p.variants, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'productId' })
   product: ProductEntity;
-  @Column({ nullable: true, length: 100 }) sku: string | null;
+  @Column({ type: 'varchar', nullable: true, length: 100 }) sku: string | null;
   @Column({ type: 'decimal', precision: 12, scale: 2, nullable: true })
   priceOverride: number | null;
   @Column({ type: 'integer', default: 0 }) stock: number;
   @Column({ type: 'integer', nullable: true }) lowStockThreshold: number | null;
   @Column({ default: true }) enabled: boolean;
-  @Column({ nullable: true }) image: string | null;
+  @Column({ type: 'varchar', nullable: true }) image: string | null;
   @Column({ length: 1000 }) combinationKey: string;
   @OneToMany(() => ProductVariantValueEntity, (v) => v.variant, {
     cascade: true,
