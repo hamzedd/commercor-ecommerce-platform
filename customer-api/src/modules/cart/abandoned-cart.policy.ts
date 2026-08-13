@@ -1,0 +1,3 @@
+import { CartStatus } from '@/src/libs/models/entities/cart/Cart.entity';
+export type AbandonmentCandidate = { status: CartStatus; lastActivityAt: Date; checkoutOrderId: string | null; itemCount: number; recoveryEmailSentAt: Date | null };
+export function isAbandonmentEligible(cart: AbandonmentCandidate, now: Date, thresholdMinutes: number, cooldownHours: number) { return cart.status === CartStatus.ACTIVE && !cart.checkoutOrderId && cart.itemCount > 0 && cart.lastActivityAt.getTime() <= now.getTime() - thresholdMinutes * 60_000 && (!cart.recoveryEmailSentAt || cart.recoveryEmailSentAt.getTime() <= now.getTime() - cooldownHours * 3_600_000); }

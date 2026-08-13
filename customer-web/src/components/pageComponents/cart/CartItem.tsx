@@ -8,8 +8,7 @@ import { Dispatch, SetStateAction, useEffect } from "react";
 import { Link } from "@/src/i18n/navigation";
 import { useProductQuery } from "@/src/service/react-query/product/query/useProductQuery";
 import getImageSrcByBucketAndFileNames from "@/src/utils/functions/getImageSrcByBucketAndFileNames";
-import { notifyCartUpdated } from "@/src/utils/cart/cartStorage";
-import { CreateOrderItemType } from "@/src/utils/types/order.type";
+import { removeCartItem, setCartItemQuantity } from "@/src/utils/cart/cartStorage";
 import { ProductType } from "@/src/utils/types/product.type";
 import { useStoreSettings } from "@/src/components/providers/StoreSettingsProvider";
 import formatCurrency from "@/src/utils/functions/formatCurrency";
@@ -42,28 +41,12 @@ function CartItem({
     if (price) setProductPrices((previous) => ({ ...previous, [`${data!.id}:${variantId||''}`]: String(price) }));
   }, [data, variantId, setProductPrices]);
 
-  const updateCart = (updatedCart: CreateOrderItemType[]) => {
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
-    notifyCartUpdated();
-    onCartUpdate();
+  const handleQuantityChange = async (newQuantity: number) => {
+    await setCartItemQuantity(productId,variantId,newQuantity); onCartUpdate();
   };
 
-  const handleQuantityChange = (newQuantity: number) => {
-    const cart: CreateOrderItemType[] = JSON.parse(
-      localStorage.getItem("cart") || "[]",
-    );
-    const itemIndex = cart.findIndex((item) => item.productId === productId&&(item.variantId||null)===(variantId||null));
-    if (itemIndex < 0) return;
-    if (newQuantity <= 0) cart.splice(itemIndex, 1);
-    else cart[itemIndex].quantity = newQuantity;
-    updateCart(cart);
-  };
-
-  const handleRemove = () => {
-    const cart: CreateOrderItemType[] = JSON.parse(
-      localStorage.getItem("cart") || "[]",
-    );
-    updateCart(cart.filter((item) => !(item.productId===productId&&(item.variantId||null)===(variantId||null))));
+  const handleRemove = async () => {
+    await removeCartItem(productId,variantId); onCartUpdate();
   };
 
   if (isLoading) {

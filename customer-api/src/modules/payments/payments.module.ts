@@ -27,6 +27,7 @@ import { CouponUsageEntity } from '@/src/libs/models/entities/coupon/CouponUsage
 import { ProductVariantEntity } from '@/src/libs/models/entities/product/ProductVariant.entity';
 import { NotificationsModule } from '@/src/modules/notifications/notifications.module';
 import { InvoicesModule } from '@/src/modules/invoices/invoices.module';
+import { CartModule } from '@/src/modules/cart/cart.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { InvoicesModule } from '@/src/modules/invoices/invoices.module';
     RewardsModule,
     NotificationsModule,
     InvoicesModule,
+    CartModule,
   ],
   controllers: [PaymentsController],
   providers: [

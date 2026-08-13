@@ -227,5 +227,11 @@
   "invalidResetLink": "Enlace inv?lido o caducado",
   "backToLogin": "Volver al inicio de sesi?n",
   "resetGenericMessage": "Si existe una cuenta para este correo, se ha enviado un enlace.",
-  "passwordsDoNotMatch": "Las contrase?as no coinciden"
+  "passwordsDoNotMatch": "Las contrase?as no coinciden",
+  "yourCartIsWaiting": "Tu carrito te espera",
+  "returnToCart": "Volver al carrito",
+  "savedCart": "Carrito guardado",
+  "cartRestored": "Carrito restaurado",
+  "someItemsUnavailable": "Algunos articulos ya no estan disponibles",
+  "signInToRestoreCart": "Inicia sesion para restaurar tu carrito"
 }

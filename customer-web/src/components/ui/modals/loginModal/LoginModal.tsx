@@ -7,6 +7,7 @@ import { customerLoginService } from "@/src/service/apiServices/auth.service";
 import { CustomerLoginRequestType } from "@/src/utils/types/customer.type";
 import { useCurrentUserQuery } from "@/src/service/react-query/user/query/useCurrentUserQuery";
 import { useModalStore } from "@/src/components/providers/modalStoreProvider";
+import { syncGuestCartToServer } from '@/src/utils/cart/cartStorage';
 
 interface Props {
   handleOpenRegisterModal?: () => void;
@@ -24,6 +25,7 @@ function LoginModal({ handleOpenRegisterModal }: Props) {
       const res = await customerLoginService(values);
       if (res?.accessToken) {
         window.localStorage.setItem("accessToken", res.accessToken);
+        await syncGuestCartToServer();
         await new Promise((resolve) => setTimeout(resolve, 1000));
         toggleLogin();
         form.resetFields();

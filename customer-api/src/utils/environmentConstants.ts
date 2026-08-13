@@ -33,6 +33,8 @@ export const EMAIL_MAX_ATTEMPTS = Math.max(
   Number(process.env.EMAIL_MAX_ATTEMPTS || 5),
 );
 export const PASSWORD_RESET_EXPIRY_MINUTES = Math.max(1, Number(process.env.PASSWORD_RESET_EXPIRY_MINUTES || 30));
+export const ABANDONED_CART_MINUTES = Math.max(1, Number(process.env.ABANDONED_CART_MINUTES || 60));
+export const ABANDONED_CART_EMAIL_COOLDOWN_HOURS = Math.max(1, Number(process.env.ABANDONED_CART_EMAIL_COOLDOWN_HOURS || 24));
 if (EMAIL_PROVIDER === 'smtp' && !SMTP_HOST)
   throw new Error('SMTP_HOST is required when EMAIL_PROVIDER=smtp');
 

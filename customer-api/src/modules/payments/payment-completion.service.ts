@@ -14,6 +14,7 @@ import { NotificationService } from '@/src/modules/notifications/notification.se
 import { InvoicesService } from '@/src/modules/invoices/invoices.service';
 import { InventoryService } from '@/src/modules/inventory/inventory.service';
 import { InventoryMovementType } from '@/src/libs/models/entities/inventory/InventoryMovement.entity';
+import { CartService } from '@/src/modules/cart/cart.service';
 
 @Injectable()
 export class PaymentCompletionService {
@@ -23,6 +24,7 @@ export class PaymentCompletionService {
     private readonly notifications: NotificationService,
     private readonly invoices: InvoicesService,
     private readonly inventory: InventoryService,
+    private readonly carts: CartService,
   ) {}
 
   async completeVerified(event: VerifiedPaymentEvent) {
@@ -134,6 +136,7 @@ export class PaymentCompletionService {
           invoiceId: invoice.id,
         },
       );
+      await this.carts.convert(manager, order.customerId, order.id);
       return { status: payment.status, idempotent: false };
     });
   }
@@ -206,6 +209,7 @@ export class PaymentCompletionService {
         order,
         {},
       );
+      await this.carts.releaseCheckout(manager, order.customerId, order.id);
       return { status: payment.status, idempotent: false };
     });
   }

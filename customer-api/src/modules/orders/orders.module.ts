@@ -13,12 +13,14 @@ import { ProductVariantEntity } from '@/src/libs/models/entities/product/Product
 import { OrderStatusHistoryEntity } from '@/src/libs/models/entities/order/OrderStatusHistory.entity';
 import { NotificationsModule } from '@/src/modules/notifications/notifications.module';
 import { InvoiceEntity } from '@/src/libs/models/entities/invoice/Invoice.entity';
+import { CartModule } from '@/src/modules/cart/cart.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([OrderEntity, CustomerEntity, OrderItemEntity, CouponEntity, CouponUsageEntity, ProductVariantEntity,OrderStatusHistoryEntity, InvoiceEntity]),
     RewardsModule,
     NotificationsModule,
+    CartModule,
   ],
   controllers: [OrdersController],
   providers: [OrdersService, PricingService],

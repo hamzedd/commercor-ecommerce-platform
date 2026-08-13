@@ -7,7 +7,7 @@ import { useCallback, useEffect, useState } from "react";
 import CartItem from "@/src/components/pageComponents/cart/CartItem";
 import CartOrderSummary from "@/src/components/pageComponents/cart/CartOrderSummary";
 import { Link } from "@/src/i18n/navigation";
-import { CART_UPDATED_EVENT, getCart } from "@/src/utils/cart/cartStorage";
+import { CART_UPDATED_EVENT, getCart, syncGuestCartToServer } from "@/src/utils/cart/cartStorage";
 import { CreateOrderItemType } from "@/src/utils/types/order.type";
 import { ProductType } from "@/src/utils/types/product.type";
 
@@ -22,6 +22,7 @@ function CartPage() {
   const refreshCart = useCallback(() => setCart(getCart()), []);
 
   useEffect(() => {
+    if (window.localStorage.getItem('accessToken')) void syncGuestCartToServer();
     const initialRead = window.setTimeout(refreshCart, 0);
     window.addEventListener(CART_UPDATED_EVENT, refreshCart);
     window.addEventListener("storage", refreshCart);

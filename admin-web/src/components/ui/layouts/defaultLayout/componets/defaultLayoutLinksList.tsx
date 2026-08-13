@@ -100,6 +100,7 @@ export default [
   { key: "reviews", icon: <UploadOutlined />, label: "Reviews", path: "/admin/reviews", roles: [UserRoleEnum.ADMIN] },
   { key: "invoices", icon: <DollarOutlined />, label: "Invoices", path: "/admin/invoices", roles: [UserRoleEnum.ADMIN] },
   { key: "inventory", icon: <UploadOutlined />, label: "Inventory", path: "/admin/inventory", roles: [UserRoleEnum.ADMIN] },
+  { key: "abandoned-carts", icon: <UploadOutlined />, label: "Abandoned Carts", path: "/admin/abandoned-carts", roles: [UserRoleEnum.ADMIN] },
   {
     key: "settings",
     icon: <SettingOutlined />,

@@ -11,8 +11,7 @@ import { useState } from "react";
 import { useModalStore } from "@/src/components/providers/modalStoreProvider";
 import { useRouter } from "@/src/i18n/navigation";
 import { useCurrentUserQuery } from "@/src/service/react-query/user/query/useCurrentUserQuery";
-import { notifyCartUpdated } from "@/src/utils/cart/cartStorage";
-import { CreateOrderItemType } from "@/src/utils/types/order.type";
+import { addCartItem } from "@/src/utils/cart/cartStorage";
 import { ProductType } from "@/src/utils/types/product.type";
 import { useStoreSettings } from "@/src/components/providers/StoreSettingsProvider";
 import formatCurrency from "@/src/utils/functions/formatCurrency";
@@ -34,27 +33,17 @@ function ProductPurchaseBox({ product }: Props) {
   for(const v of variants)for(const o of v.options){const group=optionGroups.find(g=>g.name===o.optionName);group?.values.set(o.valueId,o.value)}
   const selectedVariant=variants.find(v=>v.options.every(o=>selected[o.optionId]===o.valueId)); const effectiveStock=selectedVariant?.stock??(variants.length?0:product.stock||0); const effectivePrice=selectedVariant?.effectivePrice??(product.price||0);
 
-  const handleAddInCard = () => {
+  const handleAddInCard = async () => {
     if (!user) {
       toggleLogin();
       return;
     }
     if(variants.length&&!selectedVariant)return;
-    const cart: CreateOrderItemType[] = JSON.parse(
-      localStorage.getItem("cart") || "[]",
-    );
-    const indexOfProduct = cart.findIndex(
-      (value) => value.productId === product.id && (value.variantId||null)===(selectedVariant?.id||null),
-    );
-    if (indexOfProduct >= 0)
-      cart[indexOfProduct].quantity = cart[indexOfProduct].quantity + quantity;
-    else cart.push({ productId: product.id, variantId:selectedVariant?.id||null, quantity });
-    localStorage.setItem("cart", JSON.stringify(cart));
-    notifyCartUpdated();
+    await addCartItem({ productId: product.id, variantId:selectedVariant?.id||null, quantity });
   };
 
-  const handlePurchase = () => {
-    handleAddInCard();
+  const handlePurchase = async () => {
+    await handleAddInCard();
     if (user) router.push("/checkout");
   };
 

@@ -24,6 +24,7 @@ import { WishlistModule } from '@/src/modules/wishlist/wishlist.module';
 import { NotificationsModule } from '@/src/modules/notifications/notifications.module';
 import { InvoicesModule } from '@/src/modules/invoices/invoices.module';
 import { InventoryModule } from '@/src/modules/inventory/inventory.module';
+import { CartModule } from '@/src/modules/cart/cart.module';
 
 @Module({
   imports: [
@@ -56,6 +57,7 @@ import { InventoryModule } from '@/src/modules/inventory/inventory.module';
     NotificationsModule,
     InvoicesModule,
     InventoryModule,
+    CartModule,
   ],
   controllers: [],
   providers: [],

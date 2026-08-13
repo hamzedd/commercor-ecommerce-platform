@@ -227,5 +227,11 @@
   "invalidResetLink": "Invalid or expired reset link",
   "backToLogin": "Back to login",
   "resetGenericMessage": "If an account exists for this email, a password reset link has been sent.",
-  "passwordsDoNotMatch": "Passwords do not match"
+  "passwordsDoNotMatch": "Passwords do not match",
+  "yourCartIsWaiting": "Your cart is waiting",
+  "returnToCart": "Return to cart",
+  "savedCart": "Saved cart",
+  "cartRestored": "Cart restored",
+  "someItemsUnavailable": "Some items are no longer available",
+  "signInToRestoreCart": "Sign in to restore your cart"
 }

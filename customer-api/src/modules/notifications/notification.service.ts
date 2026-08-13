@@ -85,6 +85,7 @@ export class NotificationService {
           refund_completed: 'Refund completed',
           order_cancelled: 'Order cancelled',
           password_reset: 'Reset your password',
+          abandoned_cart: 'Your cart is waiting',
         } as Record<string, string>
       )[t] || 'Order update'
     );

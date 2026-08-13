@@ -28,6 +28,7 @@ import { CouponsModule } from '@/src/modules/coupons/coupons.module';
 import { ReviewsModule } from '@/src/modules/reviews/reviews.module';
 import { InvoicesModule } from '@/src/modules/invoices/invoices.module';
 import { InventoryModule } from '@/src/modules/inventory/inventory.module';
+import { AbandonedCartsModule } from '@/src/modules/abandonedCarts/abandoned-carts.module';
 
 @Module({
   imports: [
@@ -64,6 +65,7 @@ import { InventoryModule } from '@/src/modules/inventory/inventory.module';
     ReviewsModule,
     InvoicesModule,
     InventoryModule,
+    AbandonedCartsModule,
   ],
   controllers: [],
   providers: [],

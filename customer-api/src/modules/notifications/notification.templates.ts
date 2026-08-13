@@ -19,6 +19,10 @@ export function renderNotification(type: string, p: any) {
       html: `<div style="font-family:Arial;color:#1c1917"><h1>${store}</h1><p>Hello ${name},</p><p>We received a request to reset your password.</p><p><a href="${resetLink}">Reset your password</a></p><p>This link expires in ${minutes} minutes.</p><p>If you didn't request this, you can ignore this email.</p></div>`,
     };
   }
+  if (type === 'abandoned_cart') {
+    const cartLink = esc(p.cartUrl);
+    return { text: `${store}\nHello ${name},\nYour cart is waiting. Return to cart: ${p.cartUrl}`, html: `<div style="font-family:Arial;color:#1c1917"><h1>${store}</h1><p>Hello ${name},</p><p>Your cart is waiting${p.itemCount ? ` with ${esc(p.itemCount)} item(s)` : ''}.</p><p><a href="${cartLink}">Return to cart</a></p></div>` };
+  }
   const messages: Record<string, string> = {
     order_created: 'Your order was created and payment is pending.',
     payment_completed: `Payment of ${esc(p.amount)} was completed.`,

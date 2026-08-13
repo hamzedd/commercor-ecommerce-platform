@@ -22,6 +22,7 @@ import { NotificationService } from '@/src/modules/notifications/notification.se
 import { InvoiceEntity } from '@/src/libs/models/entities/invoice/Invoice.entity';
 import { InventoryService } from '@/src/modules/inventory/inventory.service';
 import { InventoryMovementType } from '@/src/libs/models/entities/inventory/InventoryMovement.entity';
+import { CartService } from '@/src/modules/cart/cart.service';
 
 @Injectable()
 export class OrdersService {
@@ -35,6 +36,7 @@ export class OrdersService {
     private readonly rewardsService: RewardsService,
     private readonly notifications: NotificationService,
     private readonly inventory: InventoryService,
+    private readonly carts: CartService,
   ) {}
 
   async quote(customerId: string, data: CreateOrderDto) {
@@ -170,6 +172,7 @@ export class OrdersService {
         savedOrder,
         { amount: pricing.total, currencyCode: pricing.currencyCode },
       );
+      await this.carts.linkCheckout(manager, customerId, savedOrder.id);
 
       return {
         paymentId: newPayment.id,
