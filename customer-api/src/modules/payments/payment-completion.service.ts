@@ -53,6 +53,7 @@ export class PaymentCompletionService {
       if (!order) throw new BadRequestException('Payment has no order');
       payment.status = event.status; payment.provider = event.provider; payment.externalTransactionId = event.externalTransactionId;
       order.status = event.status === PaymentStatus.FAILED ? OrderStatus.FAILED : OrderStatus.CANCELLED;
+      order.fulfillmentStatus = 'cancelled'; order.cancelledAt = new Date();
       await this.rewards.restoreRedemption(manager, order.customerId, order.id, payment.id, order.pointsRedeemed, Number(order.cashbackUsed), 'Redeemed rewards restored after failed payment');
       for (const item of await manager.getRepository(OrderItemEntity).findBy({ orderId: order.id })) {
         if(item.variantId){const variant=await manager.getRepository(ProductVariantEntity).findOne({where:{id:item.variantId},lock:{mode:'pessimistic_write'}});if(variant){variant.stock+=item.quantity;await manager.getRepository(ProductVariantEntity).save(variant);}continue;}

@@ -31,6 +31,8 @@ export default function ProfileOrderStatusBadge({
       text: "text-green-800",
       labelKey: "statusDelivered",
     },
+    delivered: { bg:"bg-green-100",text:"text-green-800",labelKey:"statusDelivered" },
+    refunded: { bg:"bg-stone-200",text:"text-stone-800",labelKey:"refunded" },
     cancelled: {
       bg: "bg-red-100",
       text: "text-red-800",

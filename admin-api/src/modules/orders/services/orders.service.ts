@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { OrderEntity } from '@/src/libs/models/entities/order/Order.entity';
 import { OrderDto } from '@/src/libs/models/dtos/orders/Order.dto';
 import { OrderItemEntity } from '@/src/libs/models/entities/order/OrderItem.entity';
+import { OrderStatusHistoryEntity } from '@/src/libs/models/entities/order/OrderStatusHistory.entity'; import { validNextFulfillmentStatuses } from '../fulfillment-state';
 
 @Injectable()
 export class OrdersService {
@@ -27,7 +28,7 @@ export class OrdersService {
 
   async getOrderById(
     id: string,
-  ): Promise<OrderEntity & { orderItems: OrderItemEntity[] }> {
+  ): Promise<OrderEntity & { orderItems: OrderItemEntity[]; statusHistory: OrderStatusHistoryEntity[]; validNextFulfillmentStatuses: string[] }> {
     const order = await this.orderRepository.findOneOrFail({
       where: { id },
       relations: {
@@ -36,8 +37,10 @@ export class OrdersService {
         payment: true,
       },
     });
-    return {
+    const statusHistory=await this.orderRepository.manager.getRepository(OrderStatusHistoryEntity).find({where:{orderId:id},order:{created_at:'ASC'}});return {
       ...order,
+      statusHistory,
+      validNextFulfillmentStatuses:validNextFulfillmentStatuses((order.fulfillmentStatus||'pending') as any),
       orderItems: await this.orderItemsRepository.find({
         where: { orderId: order.id },
         relations: {

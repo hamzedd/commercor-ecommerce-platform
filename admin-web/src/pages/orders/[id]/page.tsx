@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router";
-import { Card, Descriptions, Table, Tag, Space, Typography } from "antd";
+import { Button, Card, Descriptions, Form, Input, Select, Table, Tag, Space, Timeline, Typography, message } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import type {
   OrderItemType,
@@ -8,6 +8,7 @@ import type {
 import { useEffect, useState } from "react";
 import { getOrderService } from "../../../service/apiServices/orderServices.ts";
 import type { ProductType } from "../../../utils/types/productTypes.ts";
+import { updateFulfillment } from "../../../service/apiServices/orderServices.ts";
 
 const { Title, Text } = Typography;
 
@@ -16,6 +17,7 @@ function OrderPage() {
 
   const [orderData, setOrderData] = useState<OrderType>();
   const [loading, setLoading] = useState(false);
+  const [form]=Form.useForm();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -202,6 +204,7 @@ function OrderPage() {
             )}
           </Descriptions>
         </Card>
+        <Card title="Fulfillment" bordered={false}><Descriptions column={{xs:1,sm:2}}><Descriptions.Item label="Status"><Tag>{orderData.fulfillmentStatus?.toUpperCase()}</Tag></Descriptions.Item><Descriptions.Item label="Carrier">{orderData.carrier||'Not assigned'}</Descriptions.Item><Descriptions.Item label="Tracking number">{orderData.trackingNumber||'Not assigned'}</Descriptions.Item><Descriptions.Item label="Tracking URL">{orderData.trackingUrl?<a href={orderData.trackingUrl} target="_blank" rel="noreferrer">Open tracking</a>:'Not assigned'}</Descriptions.Item><Descriptions.Item label="Processing at">{orderData.processingAt||'-'}</Descriptions.Item><Descriptions.Item label="Shipped at">{orderData.shippedAt||'-'}</Descriptions.Item><Descriptions.Item label="Delivered at">{orderData.deliveredAt||'-'}</Descriptions.Item></Descriptions><Timeline className="mt-5" items={(orderData.statusHistory||[]).map(h=>({children:<><b>{h.toStatus}</b> — {new Date(h.created_at).toLocaleString()}{h.note&&<p>{h.note}</p>}</>}))}/>{orderData.validNextFulfillmentStatuses?.length>0&&<Form form={form} layout="vertical" onFinish={async v=>{const updated=await updateFulfillment(String(id),v);setOrderData(prev=>prev?{...prev,...updated}:updated);message.success('Fulfillment updated')}} initialValues={{carrier:orderData.carrier,trackingNumber:orderData.trackingNumber,trackingUrl:orderData.trackingUrl}}><Form.Item name="fulfillmentStatus" label="Next status" rules={[{required:true}]}><Select options={orderData.validNextFulfillmentStatuses.map(v=>({value:v,label:v}))}/></Form.Item><Form.Item name="carrier" label="Carrier"><Input/></Form.Item><Form.Item name="trackingNumber" label="Tracking number"><Input/></Form.Item><Form.Item name="trackingUrl" label="Tracking URL" rules={[{type:'url'}]}><Input/></Form.Item><Form.Item name="note" label="Customer-visible note"><Input.TextArea maxLength={1000}/></Form.Item><Button htmlType="submit" type="primary">Update fulfillment</Button></Form>}</Card>
 
         {/* Order Items */}
         <Card title="Order Items" bordered={false}>

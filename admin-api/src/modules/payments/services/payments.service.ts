@@ -70,7 +70,7 @@ export class PaymentsService {
           await refundRepo.save(refundRepo.create({paymentId:id,provider:event.provider,externalRefundId:event.externalRefundId,amount:event.amount,completedAt:new Date()}));
           if (full) {
             const order = await manager.getRepository(OrderEntity).findOne({where:{ paymentId: payment.id },lock:{mode:'pessimistic_write'}});
-            if(order)order.status=OrderStatus.REFUNDED;
+            if(order){order.status=OrderStatus.REFUNDED;order.fulfillmentStatus='refunded';}
             if (order) await this.reverseFullRefund(manager, order, payment);
             if(order)await manager.getRepository(OrderEntity).save(order);
           }

@@ -7,6 +7,7 @@ export async function getOrdersService (): Promise<OrderType[]> {
     response => response.data
   );
 }
+export const updateFulfillment=(id:string,data:{fulfillmentStatus:string;carrier?:string;trackingNumber?:string;trackingUrl?:string;note?:string}):Promise<OrderType>=>adminApi.put(`/orders/${id}/fulfillment`,data).then(r=>r.data);
 
 export async function getOrderService(id: string): Promise<OrderType> {
   return adminApi.get(`/orders/${id}`).then((response) => response.data);
@@ -20,6 +21,5 @@ export async function updateOrderService(
   .put(`/orders/${id}`, data)
   .then((response) => response.data);
 }
-
 
 

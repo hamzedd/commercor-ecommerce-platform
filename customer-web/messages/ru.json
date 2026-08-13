@@ -176,6 +176,7 @@
   "couponCode": "Код купона",
   "applyCoupon": "Применить",
   "removeCoupon": "Удалить купон",
+  "orderTracking":"Отслеживание заказа", "processing":"Обрабатывается", "shipped":"Отправлен", "delivered":"Доставлен", "cancelled":"Отменён", "refunded":"Возвращён", "carrier":"Перевозчик", "trackingNumber":"Номер отслеживания", "trackPackage":"Отследить посылку", "orderConfirmed":"Заказ подтверждён",
   "couponDiscount": "Скидка по купону",
   "couponValidatedAtCheckout": "Купон будет безопасно проверен при оформлении заказа.",
   "wishlist":"Избранное", "addToWishlist":"Добавить в избранное", "removeFromWishlist":"Удалить из избранного", "addedToWishlist":"Добавлено в избранное", "removedFromWishlist":"Удалено из избранного", "wishlistEmpty":"Ваш список избранного пуст", "selectOptions":"Выбрать параметры", "unavailable":"Недоступно",

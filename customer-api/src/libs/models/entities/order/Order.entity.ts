@@ -47,4 +47,12 @@ export class OrderEntity extends BaseEntity {
 
   @Column()
   status: string;
+  @Column({ length: 20, default: 'pending' }) fulfillmentStatus: string;
+  @Column({ nullable: true, length: 200 }) carrier: string | null;
+  @Column({ nullable: true, length: 200 }) trackingNumber: string | null;
+  @Column({ nullable: true, length: 2000 }) trackingUrl: string | null;
+  @Column({ type: 'timestamp', nullable: true }) processingAt: Date | null;
+  @Column({ type: 'timestamp', nullable: true }) shippedAt: Date | null;
+  @Column({ type: 'timestamp', nullable: true }) deliveredAt: Date | null;
+  @Column({ type: 'timestamp', nullable: true }) cancelledAt: Date | null;
 }

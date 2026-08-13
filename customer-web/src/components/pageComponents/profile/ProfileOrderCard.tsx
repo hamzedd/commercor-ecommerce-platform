@@ -53,11 +53,12 @@ export default function ProfileOrderCard({
             </div>
           </div>
           <div className="self-start sm:self-auto">
-            <ProfileOrderStatusBadge status={order?.status} />
+            <ProfileOrderStatusBadge status={order?.fulfillmentStatus||order?.status} />
           </div>
         </div>
       </div>
       <div className="px-4 py-4 sm:px-6">
+        <div className="mb-5 rounded-xl bg-stone-50 p-4"><h3 className="font-bold">{t("orderTracking")}</h3>{['pending','processing','shipped','delivered'].map((status,index)=>{const current=order.fulfillmentStatus||'pending',states=['pending','processing','shipped','delivered'],active=states.indexOf(current)>=index&&!['cancelled','refunded'].includes(current);const time=status==='processing'?order.processingAt:status==='shipped'?order.shippedAt:status==='delivered'?order.deliveredAt:order.created_at;return <div key={status} className="mt-3 flex gap-3"><span className={`mt-1 h-3 w-3 rounded-full ${active?'bg-emerald-500':'bg-stone-300'}`}/><div><b>{t(status==='pending'?'orderConfirmed':status)}</b>{time&&<p className="text-xs text-stone-500">{new Date(time).toLocaleString()}</p>}</div></div>})}{['cancelled','refunded'].includes(order.fulfillmentStatus)&&<p className="mt-3 font-bold text-red-700">{t(order.fulfillmentStatus)}</p>}{order.trackingNumber&&<div className="mt-4 text-sm"><p>{t('carrier')}: {order.carrier||'-'}</p><p>{t('trackingNumber')}: {order.trackingNumber}</p>{order.trackingUrl&&<a href={order.trackingUrl} target="_blank" rel="noopener noreferrer" className="mt-2 inline-block font-bold text-blue-700">{t('trackPackage')}</a>}</div>}{order.statusHistory?.filter(h=>h.note).map(h=><p key={h.id} className="mt-2 text-sm text-stone-600">{h.note}</p>)}</div>
         <h3 className="mb-3 text-sm font-semibold text-gray-800 sm:text-base">
           {t("orderItems")}
         </h3>

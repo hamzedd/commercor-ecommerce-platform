@@ -10,10 +10,11 @@ import { RewardsModule } from '@/src/modules/rewards/rewards.module';
 import { CouponEntity } from '@/src/libs/models/entities/coupon/Coupon.entity';
 import { CouponUsageEntity } from '@/src/libs/models/entities/coupon/CouponUsage.entity';
 import { ProductVariantEntity } from '@/src/libs/models/entities/product/ProductVariant.entity';
+import { OrderStatusHistoryEntity } from '@/src/libs/models/entities/order/OrderStatusHistory.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([OrderEntity, CustomerEntity, OrderItemEntity, CouponEntity, CouponUsageEntity, ProductVariantEntity]),
+    TypeOrmModule.forFeature([OrderEntity, CustomerEntity, OrderItemEntity, CouponEntity, CouponUsageEntity, ProductVariantEntity,OrderStatusHistoryEntity]),
     RewardsModule,
   ],
   controllers: [OrdersController],

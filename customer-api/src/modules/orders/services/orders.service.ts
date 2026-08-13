@@ -17,6 +17,7 @@ import { RewardsService } from '@/src/modules/rewards/rewards.service';
 import { OrderStatus, PaymentStatus } from '@/src/utils/enums/PaymentEnums';
 import { pendingPaymentExpiresAt } from '@/src/modules/payments/services/payment-expiration.service';
 import { ProductVariantEntity } from '@/src/libs/models/entities/product/ProductVariant.entity';
+import { OrderStatusHistoryEntity } from '@/src/libs/models/entities/order/OrderStatusHistory.entity';
 
 @Injectable()
 export class OrdersService {
@@ -176,6 +177,7 @@ export class OrdersService {
     return await Promise.all(
       orders.map(async (order) => ({
         ...order,
+        statusHistory:(await this.dataSource.manager.getRepository(OrderStatusHistoryEntity).find({where:{orderId:order.id},select:{id:true,fromStatus:true,toStatus:true,note:true,created_at:true},order:{created_at:'ASC'}})).map(h=>({id:h.id,fromStatus:h.fromStatus,toStatus:h.toStatus,note:h.note,createdAt:h.created_at})),
         orderItems: await this.orderItemsRepository.find({
           where: {
             orderId: order.id,

@@ -32,6 +32,7 @@ export class VerifiedRefundService {
         const order = await manager.getRepository(OrderEntity).findOne({ where: { paymentId }, lock: { mode: 'pessimistic_write' } });
         if (order) {
           order.status = OrderStatus.REFUNDED;
+          order.fulfillmentStatus = 'refunded';
           const accounts = manager.getRepository(CustomerRewardAccountEntity);
           const ledger = manager.getRepository(RewardTransactionEntity);
           const account = await accounts.findOne({ where: { customerId: order.customerId }, lock: { mode: 'pessimistic_write' } });

@@ -29,4 +29,5 @@ export type OrderType = {
   orderItems: OrderItemType[];
   payment: PaymentType;
   created_at?: string;
+  fulfillmentStatus:string;carrier:string|null;trackingNumber:string|null;trackingUrl:string|null;processingAt:string|null;shippedAt:string|null;deliveredAt:string|null;cancelledAt:string|null;validNextFulfillmentStatuses:string[];statusHistory:{id:string;fromStatus:string|null;toStatus:string;note:string|null;created_at:string}[];
 };

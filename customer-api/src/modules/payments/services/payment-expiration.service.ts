@@ -77,6 +77,7 @@ export class PaymentExpirationService {
     payment.status = PaymentStatus.CANCELLED;
     payment.cancellationReason = PAYMENT_EXPIRATION_REASON;
     order.status = OrderStatus.CANCELLED;
+    order.fulfillmentStatus = 'cancelled'; order.cancelledAt = now;
 
     await this.rewards.restoreRedemption(
       manager,

@@ -176,6 +176,7 @@
   "couponCode": "Código de cupón",
   "applyCoupon": "Aplicar",
   "removeCoupon": "Quitar cupón",
+  "orderTracking":"Seguimiento del pedido", "processing":"Procesando", "shipped":"Enviado", "delivered":"Entregado", "cancelled":"Cancelado", "refunded":"Reembolsado", "carrier":"Transportista", "trackingNumber":"Número de seguimiento", "trackPackage":"Rastrear paquete", "orderConfirmed":"Pedido confirmado",
   "couponDiscount": "Descuento del cupón",
   "couponValidatedAtCheckout": "Tu cupón se validará de forma segura al finalizar la compra.",
   "wishlist":"Lista de deseos", "addToWishlist":"Añadir a favoritos", "removeFromWishlist":"Quitar de favoritos", "addedToWishlist":"Añadido a favoritos", "removedFromWishlist":"Eliminado de favoritos", "wishlistEmpty":"Tu lista de deseos está vacía", "selectOptions":"Seleccionar opciones", "unavailable":"No disponible",
