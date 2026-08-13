@@ -1,0 +1,1 @@
+export type Metric={current:number;previous:number;difference:number;percentageChange:number|null};export type Analytics={range:{start:string;end:string;bucket:string};kpis:Record<string,Metric>;revenue:any[];orders:any;customers:any;products:any;promotions:any;loyalty:any;carts:any;reviews:any;payments:any;inventory:any};

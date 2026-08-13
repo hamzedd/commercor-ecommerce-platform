@@ -1,0 +1,1 @@
+import api from'../apiInstances/adminApi';import type{Analytics}from'../../utils/types/analyticsTypes';export const getAnalytics=(params:Record<string,string|undefined>):Promise<Analytics>=>api.get('/analytics/overview',{params}).then(r=>r.data);

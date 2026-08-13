@@ -37,6 +37,7 @@ import InventoryPage from "./pages/inventory/page.tsx";
 import AbandonedCartsPage from "./pages/abandoned-carts/page.tsx";
 import CustomerCrmPage from "./pages/customers/[id]/page.tsx";
 import PromotionsPage from "./pages/promotions/page.tsx";
+import AnalyticsPage from "./pages/analytics/page.tsx";
 
 function App() {
   const router = createBrowserRouter([
@@ -164,6 +165,7 @@ function App() {
         { path: "inventory", element: <InventoryPage /> },
         { path: "abandoned-carts", element: <AbandonedCartsPage /> },
         { path: "promotions", element: <PromotionsPage /> },
+        { path: "analytics", element: <AnalyticsPage /> },
       ],
     },
     {

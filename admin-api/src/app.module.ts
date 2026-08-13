@@ -30,6 +30,7 @@ import { InvoicesModule } from '@/src/modules/invoices/invoices.module';
 import { InventoryModule } from '@/src/modules/inventory/inventory.module';
 import { AbandonedCartsModule } from '@/src/modules/abandonedCarts/abandoned-carts.module';
 import { PromotionsModule } from '@/src/modules/promotions/promotions.module';
+import { AnalyticsModule } from '@/src/modules/analytics/analytics.module';
 
 @Module({
   imports: [
@@ -68,6 +69,7 @@ import { PromotionsModule } from '@/src/modules/promotions/promotions.module';
     InventoryModule,
     AbandonedCartsModule,
     PromotionsModule,
+    AnalyticsModule,
   ],
   controllers: [],
   providers: [],

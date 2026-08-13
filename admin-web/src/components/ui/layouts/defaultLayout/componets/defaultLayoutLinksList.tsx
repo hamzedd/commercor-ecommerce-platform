@@ -16,6 +16,7 @@ export default [
     path: "/admin",
     roles: [UserRoleEnum.ADMIN],
   },
+  { key: "analytics", icon: <DashboardOutlined />, label: "Analytics", path: "/admin/analytics", roles: [UserRoleEnum.ADMIN] },
   {
     key: "customers",
     icon: <UserOutlined />,
