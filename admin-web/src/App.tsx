@@ -35,6 +35,7 @@ import ReviewsPage from "./pages/reviews/page.tsx";
 import InvoicesPage from "./pages/invoices/page.tsx";
 import InventoryPage from "./pages/inventory/page.tsx";
 import AbandonedCartsPage from "./pages/abandoned-carts/page.tsx";
+import CustomerCrmPage from "./pages/customers/[id]/page.tsx";
 import PromotionsPage from "./pages/promotions/page.tsx";
 
 function App() {
@@ -71,6 +72,7 @@ function App() {
           path: "customers",
           element: <CustomersPage />,
         },
+        { path: "customers/:id", element: <CustomerCrmPage /> },
         {
           path: "customers/add",
           element: <AddCustomersPage />,

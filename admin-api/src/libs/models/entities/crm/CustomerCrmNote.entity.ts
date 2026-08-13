@@ -1,0 +1,1 @@
+import{Column,Entity,Index}from'typeorm';import{BaseEntity}from'../BaseEntity';@Entity('customer_crm_notes')@Index(['customerId','created_at'])export class CustomerCrmNoteEntity extends BaseEntity{@Column('uuid')customerId:string;@Column('uuid')adminUserId:string;@Column({type:'text'})note:string}

@@ -1,0 +1,1 @@
+import{Column,CreateDateColumn,Entity,PrimaryGeneratedColumn,Unique}from'typeorm';@Entity('customer_tag_assignments')@Unique(['customerId','tagId'])export class CustomerTagAssignmentEntity{@PrimaryGeneratedColumn('uuid')id:string;@Column('uuid')customerId:string;@Column('uuid')tagId:string;@CreateDateColumn()createdAt:Date}

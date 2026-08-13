@@ -1,0 +1,1 @@
+import{Column,Entity,Index}from'typeorm';import{BaseEntity}from'../BaseEntity';@Entity('customer_tags')@Index(['normalizedName'],{unique:true,where:'"deleted_at" IS NULL'})export class CustomerTagEntity extends BaseEntity{@Column({length:100})name:string;@Column({length:100})normalizedName:string}
