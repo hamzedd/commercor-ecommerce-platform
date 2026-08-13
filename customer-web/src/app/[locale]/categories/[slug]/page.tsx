@@ -3,6 +3,7 @@ import { fetchCategoryBySlug } from "@/src/service/apiServices/category.service"
 import { fetchProductFiltersByCategoryId } from "@/src/service/apiServices/productFilters.service";
 import { fetchProducts } from "@/src/service/apiServices/product.service";
 import CategoryPage from "@/src/components/pageComponents/category/CategoryPage";
+import { selectTranslation } from "@/src/utils/i18n/selectTranslation";
 
 interface Props {
   params: Promise<{
@@ -16,10 +17,7 @@ export async function generateMetadata(props: Props) {
 
   const category = await fetchCategoryBySlug(slug);
 
-  const categoryTranslation =
-    category.translations.find(
-      (translation) => translation.lang.toLowerCase() === locale.toLowerCase(),
-    ) || category.translations[0];
+  const categoryTranslation = selectTranslation(category.translations, locale);
 
   return {
     title: categoryTranslation?.metaTitle,

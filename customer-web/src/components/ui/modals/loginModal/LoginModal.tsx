@@ -8,11 +8,13 @@ import { CustomerLoginRequestType } from "@/src/utils/types/customer.type";
 import { useCurrentUserQuery } from "@/src/service/react-query/user/query/useCurrentUserQuery";
 import { useModalStore } from "@/src/components/providers/modalStoreProvider";
 import { syncGuestCartToServer } from '@/src/utils/cart/cartStorage';
+import { useTranslations } from 'next-intl';
 
 interface Props {
   handleOpenRegisterModal?: () => void;
 }
 function LoginModal({ handleOpenRegisterModal }: Props) {
+  const t=useTranslations();
   const toggleLogin = useModalStore((state) => state.toggleLogin);
   const loginModal = useModalStore((state) => state.loginModal);
   const { refetch } = useCurrentUserQuery();
@@ -38,7 +40,7 @@ function LoginModal({ handleOpenRegisterModal }: Props) {
 
   return (
     <DefaultModal
-      title={"Login"}
+      title={t("login")}
       onClose={() => toggleLogin()}
       show={loginModal}
     >
@@ -50,7 +52,7 @@ function LoginModal({ handleOpenRegisterModal }: Props) {
       />
       <div className="flex w-full items-center justify-center gap-5">
         <div className={"h-[1px] w-full grow bg-gray-500/20"}></div>
-        <p className={"font-semibold uppercase"}>OR</p>
+        <p className={"font-semibold uppercase"}>{t("or")}</p>
         <div className={"h-[1px] w-full grow bg-gray-500/20"}></div>
       </div>
       <button
@@ -60,7 +62,7 @@ function LoginModal({ handleOpenRegisterModal }: Props) {
         }
         onClick={handleOpenRegisterModal}
       >
-        Register
+        {t("register")}
       </button>
     </DefaultModal>
   );

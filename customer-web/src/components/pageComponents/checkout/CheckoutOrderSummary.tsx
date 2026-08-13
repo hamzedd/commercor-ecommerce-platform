@@ -211,7 +211,7 @@ function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
             <label className="block text-sm font-semibold">
               Use points{" "}
               <span className="font-normal text-stone-500">
-                ({rewards.pointsBalance.toLocaleString()} available)
+                ({rewards.pointsBalance.toLocaleString(lang)} {t("available")})
               </span>
               <InputNumber
                 min={0}

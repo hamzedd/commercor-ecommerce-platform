@@ -1,8 +1,10 @@
 import { Link } from "@/src/i18n/navigation";
 import React from "react";
 import { StoreSettingsType } from "@/src/utils/types/storeSettings.type";
+import { useTranslations } from "next-intl";
 
 function DefaultFooter({ settings }: { settings: StoreSettingsType }) {
+  const t = useTranslations();
   const socials = [
     ["Facebook", settings.facebookUrl],
     ["Instagram", settings.instagramUrl],
@@ -41,17 +43,17 @@ function DefaultFooter({ settings }: { settings: StoreSettingsType }) {
         </div>
         <div className="flex flex-col gap-3 md:gap-5">
           <Link href={"/"} className="hover:underline">
-            Home
+            {t("home")}
           </Link>
           <Link href={"/"} className="hover:underline">
-            About Us
+            {t("aboutUs")}
           </Link>
           <Link href={"/"} className="hover:underline">
-            Contact Us
+            {t("contactUs")}
           </Link>
         </div>
         {socials.length > 0 && (
-          <nav aria-label="Social media" className="flex flex-col gap-3">
+          <nav aria-label={t("socialMedia")} className="flex flex-col gap-3">
             {socials.map(([label, url]) => (
               <a
                 key={label}

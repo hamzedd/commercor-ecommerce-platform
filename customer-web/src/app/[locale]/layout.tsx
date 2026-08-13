@@ -72,6 +72,7 @@ export default async function RootLayout({
   return (
     <html
       lang={locale}
+      dir={locale === "ar" || locale === "he" ? "rtl" : "ltr"}
       style={
         {
           "--store-primary": settings.primaryColor,

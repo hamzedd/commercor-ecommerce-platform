@@ -4,6 +4,7 @@ import { CategoryType } from "@/src/utils/types/category.type";
 import { LocaleType } from "@/src/i18n/config";
 import { Link } from "@/src/i18n/navigation";
 import getImageSrcByBucketAndFileNames from "@/src/utils/functions/getImageSrcByBucketAndFileNames";
+import { selectTranslation } from "@/src/utils/i18n/selectTranslation";
 
 interface Props {
   categories: CategoryType[];
@@ -34,10 +35,7 @@ function CategoriesList({ categories, lang }: Props) {
       ) : (
         <div className="grid w-full grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5 lg:grid-cols-5">
           {categories.map((category) => {
-            const translation =
-              category.translations?.find(
-                (item) => item.lang.toLowerCase() === lang.toLowerCase(),
-              ) || category.translations?.[0];
+            const translation = selectTranslation(category.translations, lang)!;
             const imageSrc = category.image
               ? getImageSrcByBucketAndFileNames({
                   bucketName: "categories",

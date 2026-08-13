@@ -1,7 +1,7 @@
 "use client";
 
 import { LockOutlined } from "@ant-design/icons";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
 import { Link } from "@/src/i18n/navigation";
@@ -17,6 +17,7 @@ interface Props {
 
 function CartOrderSummary({ cart, productPrices }: Props) {
   const t = useTranslations();
+  const locale = useLocale();
   const settings = useStoreSettings();
   const [couponCode,setCouponCode]=useState("");
   useEffect(()=>setCouponCode(window.sessionStorage.getItem("commercor-coupon")||""),[]);
@@ -39,7 +40,7 @@ function CartOrderSummary({ cart, productPrices }: Props) {
         <div className="flex items-center justify-between gap-4">
           <dt className="text-sm text-stone-600">{t("subtotal")}</dt>
           <dd className="text-xl font-bold text-stone-950">
-            {formatCurrency(subtotal, settings.currencyCode)}
+            {formatCurrency(subtotal, settings.currencyCode, locale)}
           </dd>
         </div>
       </dl>

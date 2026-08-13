@@ -12,6 +12,7 @@ import { removeCartItem, setCartItemQuantity } from "@/src/utils/cart/cartStorag
 import { ProductType } from "@/src/utils/types/product.type";
 import { useStoreSettings } from "@/src/components/providers/StoreSettingsProvider";
 import formatCurrency from "@/src/utils/functions/formatCurrency";
+import { selectTranslation } from "@/src/utils/i18n/selectTranslation";
 
 interface Props {
   productId: ProductType["id"];
@@ -72,10 +73,7 @@ function CartItem({
       </div>
     );
 
-  const translation =
-    data.translations.find(
-      (item) => item.lang.toLowerCase() === lang.toLowerCase(),
-    ) || data.translations[0];
+  const translation = selectTranslation(data.translations, lang)!;
   const variant=data.variants?.find(v=>v.id===variantId); const primaryImageName=variant?.image||data.images?.[0]?.name;
   const unitPrice = Number(variant?.effectivePrice??data.price??0);
   const totalPrice = unitPrice * quantity;

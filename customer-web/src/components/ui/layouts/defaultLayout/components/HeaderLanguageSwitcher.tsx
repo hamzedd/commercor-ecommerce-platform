@@ -7,6 +7,8 @@ import { GlobalOutlined } from "@ant-design/icons";
 import { useState, useRef, useEffect } from "react";
 
 const languages = [
+  { code: "ar", name: "العربية", flag: "🇸🇦" },
+  { code: "he", name: "עברית", flag: "🇮🇱" },
   { code: "en", name: "English", flag: "🇬🇧" },
   { code: "ka", name: "ქართული", flag: "🇬🇪" },
   { code: "ru", name: "Русский", flag: "🇷🇺" },
@@ -89,7 +91,7 @@ export default function HeaderLanguageSwitcher() {
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute top-full right-0 z-50 mt-2 w-48 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg">
+        <div className="absolute top-full end-0 z-50 mt-2 w-48 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg">
           {languages.map((lang) => (
             <Link
               key={lang.code}
@@ -111,7 +113,7 @@ export default function HeaderLanguageSwitcher() {
               <span>{lang.name}</span>
               {locale === lang.code && (
                 <svg
-                  className="ml-auto h-4 w-4 text-black"
+                  className="ms-auto h-4 w-4 text-black"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >

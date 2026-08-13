@@ -28,7 +28,7 @@ function ProfilePageTabs() {
       label: t("addresses"),
       children: <ProfilePageAddressesTab />,
     },
-    { key: "4", label: "Rewards", children: <ProfilePageRewardsTab /> },
+    { key: "4", label: t("rewards"), children: <ProfilePageRewardsTab /> },
     { key: "5", label: t("myReviews"), children: <ProfilePageReviewsTab /> },
     { key: "6", label: t("wishlist"), children: <ProfilePageWishlistTab /> },
   ];

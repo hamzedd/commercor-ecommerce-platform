@@ -1,32 +1,29 @@
 import React from "react";
 import { Button, Form, FormProps } from "antd";
 import TextInput from "@/src/components/ui/inputs/TextInput";
+import { useTranslations } from "next-intl";
 
 function RegisterForm(props: FormProps) {
+  const t=useTranslations();
   return (
     <Form layout={"vertical"} {...props}>
       <TextInput
-        formProps={{ name: "firstName", label: "First Name" }}
-        inputProps={{ placeholder: "Enter your First Name" }}
+        formProps={{ name: "firstName", label: t("firstName") }} inputProps={{ placeholder: t("enterFirstName") }}
       />
       <TextInput
-        formProps={{ name: "lastName", label: "Last Name" }}
-        inputProps={{ placeholder: "Enter your Last Name" }}
+        formProps={{ name: "lastName", label: t("lastName") }} inputProps={{ placeholder: t("enterLastName") }}
       />
       <TextInput
-        formProps={{ name: "username", label: "Username" }}
-        inputProps={{ placeholder: "Enter your username" }}
+        formProps={{ name: "username", label: t("username") }} inputProps={{ placeholder: t("enterUsername") }}
       />
       <TextInput
-        formProps={{ name: "email", label: "Email" }}
-        inputProps={{ placeholder: "Enter your email", type: "email" }}
+        formProps={{ name: "email", label: t("email") }} inputProps={{ placeholder: t("enterEmail"), type: "email" }}
       />
       <TextInput
-        formProps={{ name: "password", label: "Password" }}
-        inputProps={{ placeholder: "Enter your password", type: "password" }}
+        formProps={{ name: "password", label: t("password") }} inputProps={{ placeholder: t("enterPassword"), type: "password" }}
       />
       <Form.Item>
-        <Button htmlType={"submit"}>Register</Button>
+        <Button htmlType={"submit"}>{t("register")}</Button>
       </Form.Item>
     </Form>
   );

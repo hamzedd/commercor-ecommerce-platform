@@ -16,7 +16,7 @@ export default function ProfileOrderCard({
   const t = useTranslations();
   const settings = useStoreSettings();
   const totalAmount = order.finalTotal ?? order.productAmount + order.deliveryAmount + (order.taxAmount || 0);
-  const orderDate = new Date(order.created_at).toLocaleDateString("en-US", {
+  const orderDate = new Date(order.created_at).toLocaleDateString(locale, {
     year: "numeric",
     month: "short",
     day: "numeric",

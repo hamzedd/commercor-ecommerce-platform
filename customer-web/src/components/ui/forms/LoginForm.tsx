@@ -9,15 +9,15 @@ function LoginForm(props: FormProps) {
   return (
     <Form layout={"vertical"} {...props}>
       <TextInput
-        formProps={{ name: "username", label: "Username" }}
-        inputProps={{ placeholder: "Enter your username" }}
+        formProps={{ name: "username", label: t("username") }}
+        inputProps={{ placeholder: t("enterUsername") }}
       />
       <TextInput
-        formProps={{ name: "password", label: "Password" }}
-        inputProps={{ placeholder: "Enter your password", type: "password" }}
+        formProps={{ name: "password", label: t("password") }}
+        inputProps={{ placeholder: t("enterPassword"), type: "password" }}
       />
       <Form.Item>
-        <Button htmlType={"submit"}>Login</Button>
+        <Button htmlType={"submit"}>{t("login")}</Button>
       </Form.Item>
       <Link href="/forgot-password" className="text-blue-700 hover:underline">{t('forgotPassword')}</Link>
     </Form>

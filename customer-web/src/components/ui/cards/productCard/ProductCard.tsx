@@ -11,6 +11,7 @@ import { useTranslations } from "next-intl";
 import { useStoreSettings } from "@/src/components/providers/StoreSettingsProvider";
 import formatCurrency from "@/src/utils/functions/formatCurrency";
 import WishlistButton from "@/src/components/ui/WishlistButton";
+import { selectTranslation } from "@/src/utils/i18n/selectTranslation";
 
 interface Props {
   product: ProductType;
@@ -23,10 +24,7 @@ function ProductCard({ product, lang, className, titleClassName }: Props) {
   const t = useTranslations();
   const settings = useStoreSettings();
 
-  const productTranslation: ProductTranslationType =
-    product?.translations?.find(
-      (t) => t.lang.toString().toLowerCase() === lang.toLowerCase(),
-    ) || product?.translations?.[0];
+  const productTranslation: ProductTranslationType = selectTranslation(product?.translations, lang)!;
 
   return (
     <Link

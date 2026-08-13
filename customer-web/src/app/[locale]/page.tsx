@@ -11,6 +11,7 @@ import { fetchProducts } from "@/src/service/apiServices/product.service";
 import getImageSrcByBucketAndFileNames from "@/src/utils/functions/getImageSrcByBucketAndFileNames";
 import { getStoreSettingsService } from "@/src/service/apiServices/storeSettings.service";
 import formatCurrency from "@/src/utils/functions/formatCurrency";
+import { selectTranslation } from "@/src/utils/i18n/selectTranslation";
 
 interface Props {
   params: Promise<{ locale: string }>;
@@ -23,10 +24,7 @@ export default async function Home({ params }: Props) {
   const productsResponse = await fetchProducts({});
   const settings = await getStoreSettingsService();
   const featuredProduct = productsResponse?.data?.[0];
-  const featuredTranslation =
-    featuredProduct?.translations?.find(
-      (translation) => translation.lang.toLowerCase() === locale.toLowerCase(),
-    ) || featuredProduct?.translations?.[0];
+  const featuredTranslation = selectTranslation(featuredProduct?.translations, locale);
   const featuredImage = featuredProduct?.images?.[0]?.name
     ? getImageSrcByBucketAndFileNames({
         bucketName: "products",

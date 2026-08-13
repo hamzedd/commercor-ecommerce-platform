@@ -11,6 +11,7 @@ import { PaginatedResponseType } from "@/src/utils/types/api.type";
 import { CategoryType } from "@/src/utils/types/category.type";
 import { ProductType } from "@/src/utils/types/product.type";
 import { ProductFilterWithOptionsType } from "@/src/utils/types/productFilter.type";
+import { selectTranslation } from "@/src/utils/i18n/selectTranslation";
 
 interface Props {
   products: PaginatedResponseType<ProductType>;
@@ -50,10 +51,7 @@ function CategoryPage({ products, category, productFilters }: Props) {
     };
   }, [showFilters]);
 
-  const categoryTranslated =
-    category.translations.find(
-      (translation) => translation?.lang.toLowerCase() === locale.toLowerCase(),
-    ) || category.translations[0];
+  const categoryTranslated = selectTranslation(category.translations, locale)!;
   const currentProducts = data || products;
   const activeFiltersCount = productFilterValues.length;
 
@@ -144,7 +142,7 @@ function CategoryPage({ products, category, productFilters }: Props) {
             <CategoryPageProductsList
               products={currentProducts}
               isLoading={isFetching}
-              locale={locale}
+              locale={locale as import('@/src/i18n/config').LocaleType}
             />
 
             {currentProducts.meta.totalPages > 1 && (

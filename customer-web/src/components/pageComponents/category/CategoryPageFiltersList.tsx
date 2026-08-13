@@ -46,7 +46,7 @@ export default function CategoryPageFiltersList({
             <CategoryPageFiltersListItem
               key={filter.id}
               productFilter={filter}
-              locale={locale}
+              locale={locale as import('@/src/i18n/config').LocaleType}
               productFilterValues={productFilterValues}
               setProductFilterValues={setProductFilterValues}
               isLast={index === productFilters.length - 1}

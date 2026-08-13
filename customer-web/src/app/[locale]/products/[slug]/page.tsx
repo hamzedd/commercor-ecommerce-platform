@@ -7,6 +7,8 @@ import ProductImagesPreview from "@/src/components/pageComponents/product/produc
 import ProductPurchaseBox from "@/src/components/pageComponents/product/productPurchaseBox/ProductPurchaseBox";
 import { fetchProduct } from "@/src/service/apiServices/product.service";
 import ProductReviews from "@/src/components/pageComponents/product/ProductReviews";
+import type { LocaleType } from '@/src/i18n/config';
+import { selectTranslation } from '@/src/utils/i18n/selectTranslation';
 
 interface Props {
   params: Promise<{ locale: string; slug: string }>;
@@ -16,10 +18,7 @@ export async function generateMetadata(props: Props) {
   const t = await getTranslations();
   const { locale, slug } = await props.params;
   const product = await fetchProduct(slug);
-  const productTranslation =
-    product.translations.find(
-      (translation) => translation.lang.toLowerCase() === locale.toLowerCase(),
-    ) || product.translations[0];
+  const productTranslation = selectTranslation(product.translations, locale)!;
 
   return {
     title: productTranslation?.metaTitle || t("product"),
@@ -31,10 +30,7 @@ export async function generateMetadata(props: Props) {
 async function Page(props: Props) {
   const { locale, slug } = await props.params;
   const product = await fetchProduct(slug);
-  const productTranslation =
-    product.translations.find(
-      (translation) => translation.lang.toLowerCase() === locale.toLowerCase(),
-    ) || product.translations[0];
+  const productTranslation = selectTranslation(product.translations, locale)!;
 
   return (
     <main className="min-h-screen bg-stone-50 pb-16 text-stone-950">
@@ -55,7 +51,7 @@ async function Page(props: Props) {
         <div className="lg:col-span-2"><ProductReviews productId={product.id}/></div>
       </div>
 
-      <ProductPageSimilarProducts product={product} lang={locale} />
+      <ProductPageSimilarProducts product={product} lang={locale as LocaleType} />
     </main>
   );
 }

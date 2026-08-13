@@ -6,7 +6,7 @@ import {
   ShoppingCartOutlined,
   ThunderboltOutlined,
 } from "@ant-design/icons";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { useModalStore } from "@/src/components/providers/modalStoreProvider";
 import { useRouter } from "@/src/i18n/navigation";
@@ -23,6 +23,7 @@ interface Props {
 
 function ProductPurchaseBox({ product }: Props) {
   const t = useTranslations();
+  const locale = useLocale();
   const settings = useStoreSettings();
   const { data: user } = useCurrentUserQuery();
   const router = useRouter();
@@ -59,7 +60,7 @@ function ProductPurchaseBox({ product }: Props) {
           {t("price")}
         </p>
         <p className="mt-1 text-3xl font-bold tracking-tight text-stone-950 sm:text-4xl">
-          {formatCurrency(effectivePrice, settings.currencyCode)}
+          {formatCurrency(effectivePrice, settings.currencyCode, locale)}
         </p>
         {(product.stock !== undefined||variants.length>0) && (
           <div className="mt-3 flex items-center gap-2 text-sm">

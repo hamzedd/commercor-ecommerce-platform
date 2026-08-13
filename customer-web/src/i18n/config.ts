@@ -1,4 +1,4 @@
-export const locales = ["en", "ka", "es", "ru"];
+export const locales = ["en", "ka", "es", "ru", "ar", "he"] as const;
 export type LocaleType = (typeof locales)[number];
 export const defaultLocale = "en";
 
@@ -11,6 +11,7 @@ export const pathnames = {
   "/checkout": "/checkout",
   "/forgot-password": "/forgot-password",
   "/reset-password": "/reset-password",
+  "/payment-status/[id]": "/payment-status/[id]",
 };
 
 export const localePrefix = "always";

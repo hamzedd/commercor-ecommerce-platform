@@ -233,5 +233,21 @@
   "savedCart": "Carrito guardado",
   "cartRestored": "Carrito restaurado",
   "someItemsUnavailable": "Algunos articulos ya no estan disponibles",
-  "signInToRestoreCart": "Inicia sesion para restaurar tu carrito"
+  "signInToRestoreCart": "Inicia sesion para restaurar tu carrito",
+  "password": "Contraseña",
+  "enterPassword": "Introduce tu contraseña",
+  "register": "Registrarse",
+  "or": "O",
+  "aboutUs": "Sobre nosotros",
+  "contactUs": "Contacto",
+  "socialMedia": "Redes sociales",
+  "rewards": "Recompensas",
+  "loyaltyPoints": "Puntos de fidelidad",
+  "cashback": "Reembolso",
+  "recentRewardActivity": "Actividad reciente de recompensas",
+  "noRewardActivity": "Aún no hay actividad de recompensas.",
+  "rewardsLoadError": "No se pudieron cargar las recompensas.",
+  "loadingRewards": "Cargando recompensas",
+  "pointsAbbreviation": "pts",
+  "available": "disponibles"
 }
