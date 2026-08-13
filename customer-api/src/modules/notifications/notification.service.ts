@@ -9,6 +9,32 @@ import { OrderEntity } from '@/src/libs/models/entities/order/Order.entity';
 import { DOMAIN_URL } from '@/src/utils/environmentConstants';
 @Injectable()
 export class NotificationService {
+  async queueCustomer(
+    manager: EntityManager,
+    customer: CustomerEntity,
+    type: string,
+    dedupe: string,
+    payload: Record<string, unknown>,
+  ) {
+    const repo = manager.getRepository(NotificationOutboxEntity);
+    if (await repo.existsBy({ deduplicationKey: dedupe })) return;
+    await repo.save(
+      repo.create({
+        type,
+        deduplicationKey: dedupe,
+        customerId: customer.id,
+        orderId: null,
+        recipientEmail: customer.email,
+        subject: this.subject(type),
+        payload: { customerName: customer.firstName, ...payload },
+        status: OutboxStatus.PENDING,
+        attempts: 0,
+        lastError: null,
+        nextAttemptAt: null,
+        sentAt: null,
+      }),
+    );
+  }
   async queue(
     manager: EntityManager,
     type: string,
@@ -58,6 +84,7 @@ export class NotificationService {
           order_delivered: 'Order delivered',
           refund_completed: 'Refund completed',
           order_cancelled: 'Order cancelled',
+          password_reset: 'Reset your password',
         } as Record<string, string>
       )[t] || 'Order update'
     );

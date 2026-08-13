@@ -215,5 +215,17 @@
   "viewInvoice": "View invoice",
   "downloadPdf": "Download PDF",
   "issued": "Issued",
-  "paid": "Paid"
+  "paid": "Paid",
+  "forgotPassword": "Forgot password?",
+  "resetPassword": "Reset password",
+  "emailAddress": "Email address",
+  "sendResetLink": "Send reset link",
+  "checkYourEmail": "Check your email",
+  "newPassword": "New password",
+  "confirmPassword": "Confirm password",
+  "passwordResetSuccessful": "Password reset successful",
+  "invalidResetLink": "Invalid or expired reset link",
+  "backToLogin": "Back to login",
+  "resetGenericMessage": "If an account exists for this email, a password reset link has been sent.",
+  "passwordsDoNotMatch": "Passwords do not match"
 }

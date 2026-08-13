@@ -215,5 +215,17 @@
   "viewInvoice": "Ver factura",
   "downloadPdf": "Descargar PDF",
   "issued": "Emitida",
-  "paid": "Pagada"
+  "paid": "Pagada",
+  "forgotPassword": "?Olvidaste tu contrase?a?",
+  "resetPassword": "Restablecer contrase?a",
+  "emailAddress": "Correo electr?nico",
+  "sendResetLink": "Enviar enlace",
+  "checkYourEmail": "Revisa tu correo",
+  "newPassword": "Nueva contrase?a",
+  "confirmPassword": "Confirmar contrase?a",
+  "passwordResetSuccessful": "Contrase?a restablecida",
+  "invalidResetLink": "Enlace inv?lido o caducado",
+  "backToLogin": "Volver al inicio de sesi?n",
+  "resetGenericMessage": "Si existe una cuenta para este correo, se ha enviado un enlace.",
+  "passwordsDoNotMatch": "Las contrase?as no coinciden"
 }

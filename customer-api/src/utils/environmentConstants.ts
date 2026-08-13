@@ -32,6 +32,7 @@ export const EMAIL_MAX_ATTEMPTS = Math.max(
   1,
   Number(process.env.EMAIL_MAX_ATTEMPTS || 5),
 );
+export const PASSWORD_RESET_EXPIRY_MINUTES = Math.max(1, Number(process.env.PASSWORD_RESET_EXPIRY_MINUTES || 30));
 if (EMAIL_PROVIDER === 'smtp' && !SMTP_HOST)
   throw new Error('SMTP_HOST is required when EMAIL_PROVIDER=smtp');
 

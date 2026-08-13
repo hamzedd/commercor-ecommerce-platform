@@ -9,6 +9,8 @@ export const pathnames = {
   "/products/[slug]": "/products/[slug]",
   "/cart": "/cart",
   "/checkout": "/checkout",
+  "/forgot-password": "/forgot-password",
+  "/reset-password": "/reset-password",
 };
 
 export const localePrefix = "as-needed";

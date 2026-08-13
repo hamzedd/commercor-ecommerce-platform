@@ -11,6 +11,14 @@ export function renderNotification(type: string, p: any) {
     order = esc(p.orderReference),
     store = esc(p.storeName || 'Commercor'),
     link = String(p.orderUrl || '');
+  if (type === 'password_reset') {
+    const resetLink = esc(p.resetUrl);
+    const minutes = esc(p.expiryMinutes);
+    return {
+      text: `${store}\nHello ${name},\nReset your password: ${p.resetUrl}\nThis link expires in ${minutes} minutes. If you didn't request this, you can ignore this email.`,
+      html: `<div style="font-family:Arial;color:#1c1917"><h1>${store}</h1><p>Hello ${name},</p><p>We received a request to reset your password.</p><p><a href="${resetLink}">Reset your password</a></p><p>This link expires in ${minutes} minutes.</p><p>If you didn't request this, you can ignore this email.</p></div>`,
+    };
+  }
   const messages: Record<string, string> = {
     order_created: 'Your order was created and payment is pending.',
     payment_completed: `Payment of ${esc(p.amount)} was completed.`,

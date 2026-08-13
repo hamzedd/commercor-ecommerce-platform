@@ -1,8 +1,4 @@
-import {
-  createEmailSender,
-  EmailConfiguration,
-  Mail,
-} from './email.provider';
+import { createEmailSender, EmailConfiguration, Mail } from './email.provider';
 
 const mail: Mail = {
   to: 'customer@example.com',

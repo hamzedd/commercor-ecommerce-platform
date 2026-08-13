@@ -5,10 +5,13 @@ import { CustomerEntity } from '@/src/libs/models/entities/customer/Customer.ent
 import { AuthController } from './controllers/auth.controller';
 import { AuthService } from './services/auth.service';
 import { JWT_SECRET } from '@/src/utils/environmentConstants';
+import { PasswordResetTokenEntity } from '@/src/libs/models/entities/customer/PasswordResetToken.entity';
+import { NotificationsModule } from '@/src/modules/notifications/notifications.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([CustomerEntity]),
+    TypeOrmModule.forFeature([CustomerEntity, PasswordResetTokenEntity]),
+    NotificationsModule,
     JwtModule.register({
       global: true,
       secret: JWT_SECRET,
