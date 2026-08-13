@@ -17,6 +17,7 @@ import formatCurrency from "@/src/utils/functions/formatCurrency";
 interface Props {
   productId: ProductType["id"];
   quantity: number;
+  variantId?: string | null;
   lang: string;
   onCartUpdate?: () => void;
   setProductPrices: Dispatch<
@@ -27,6 +28,7 @@ interface Props {
 function CheckoutPageProduct({
   productId,
   quantity = 1,
+  variantId,
   lang = "en",
   onCartUpdate,
   setProductPrices,
@@ -42,16 +44,17 @@ function CheckoutPageProduct({
   };
 
   useEffect(() => {
-    if (data?.price) {
-      setProductPrices((previous) => ({ ...previous, [data.id]: data.price }));
+    const variant=data?.variants?.find(v=>v.id===variantId); const price=variant?.effectivePrice??data?.price;
+    if (price) {
+      setProductPrices((previous) => ({ ...previous, [`${data!.id}:${variantId||''}`]: String(price) }));
     }
-  }, [data?.id, data?.price, setProductPrices]);
+  }, [data, variantId, setProductPrices]);
 
   const handleQuantityChange = (newQuantity: number) => {
     const cart: CreateOrderItemType[] = JSON.parse(
       localStorage.getItem("cart") || "[]",
     );
-    const itemIndex = cart.findIndex((item) => item.productId === productId);
+    const itemIndex = cart.findIndex((item) => item.productId === productId&&(item.variantId||null)===(variantId||null));
     if (itemIndex >= 0) {
       if (newQuantity <= 0) cart.splice(itemIndex, 1);
       else cart[itemIndex].quantity = newQuantity;
@@ -63,7 +66,7 @@ function CheckoutPageProduct({
     const cart: CreateOrderItemType[] = JSON.parse(
       localStorage.getItem("cart") || "[]",
     );
-    updateCart(cart.filter((item) => item.productId !== productId));
+    updateCart(cart.filter((item) => !(item.productId===productId&&(item.variantId||null)===(variantId||null))));
   };
 
   if (isLoading) {
@@ -97,8 +100,8 @@ function CheckoutPageProduct({
     data.translations.find(
       (item) => item.lang.toLowerCase() === lang.toLowerCase(),
     ) || data.translations[0];
-  const primaryImage = data.images?.[0];
-  const price = Number.parseFloat(data.price || "0");
+  const variant=data.variants?.find(v=>v.id===variantId); const primaryImageName=variant?.image||data.images?.[0]?.name;
+  const price = Number(variant?.effectivePrice??data.price??0);
   const totalPrice = price * quantity;
 
   return (
@@ -111,11 +114,11 @@ function CheckoutPageProduct({
           }}
           className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-stone-100 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:outline-none sm:h-32 sm:w-32"
         >
-          {primaryImage ? (
+          {primaryImageName ? (
             <Image
               src={getImageSrcByBucketAndFileNames({
                 bucketName: "products",
-                fileName: primaryImage.name,
+                fileName: primaryImageName,
               })}
               alt={translation?.name || t("product")}
               fill
@@ -144,6 +147,7 @@ function CheckoutPageProduct({
               <p className="mt-1 text-xs text-stone-500 sm:text-sm">
                 {formatCurrency(price, settings.currencyCode, lang)} {t("each")}
               </p>
+              {variant&&<p className="mt-1 text-xs font-medium text-amber-700">{variant.description}</p>}
               {data.stock !== undefined && (
                 <p className="mt-1 text-xs text-stone-500">
                   {data.stock} {t("inStock")}
@@ -176,7 +180,7 @@ function CheckoutPageProduct({
                 <button
                   type="button"
                   aria-label={t("increaseQuantity")}
-                  disabled={data.stock !== undefined && quantity >= data.stock}
+                  disabled={quantity >= (variant?.stock??data.stock??0)}
                   onClick={() => handleQuantityChange(quantity + 1)}
                   className="flex h-11 w-11 items-center justify-center transition-colors hover:bg-stone-100 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none focus-visible:ring-inset disabled:cursor-not-allowed disabled:opacity-40"
                 >

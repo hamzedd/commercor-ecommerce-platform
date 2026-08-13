@@ -24,6 +24,7 @@ import { RewardTransactionEntity } from '@/src/libs/models/entities/reward/Rewar
 import { VerifiedRefundService } from './services/verified-refund.service';
 import { CouponEntity } from '@/src/libs/models/entities/coupon/Coupon.entity';
 import { CouponUsageEntity } from '@/src/libs/models/entities/coupon/CouponUsage.entity';
+import { ProductVariantEntity } from '@/src/libs/models/entities/product/ProductVariant.entity';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { CouponUsageEntity } from '@/src/libs/models/entities/coupon/CouponUsage
       RewardTransactionEntity,
       CouponEntity,
       CouponUsageEntity,
+      ProductVariantEntity,
     ]),
     RewardsModule,
   ],

@@ -32,7 +32,10 @@ export type ProductType = {
   price?: string;
   stock?: number;
   images: ProductImageType[];
+  variants?: ProductVariantType[];
 };
+export type ProductVariantOptionSelection={optionId:string;optionName:string;valueId:string;value:string};
+export type ProductVariantType={id:string;sku:string|null;effectivePrice:number;stock:number;enabled:boolean;image:string|null;options:ProductVariantOptionSelection[];description:string};
 
 export type GetProductsRequestType = {
   productFilterValues?: string[];

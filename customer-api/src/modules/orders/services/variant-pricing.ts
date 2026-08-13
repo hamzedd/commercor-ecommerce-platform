@@ -1,0 +1,1 @@
+export function effectiveVariantPrice(basePrice:number,override:number|null|undefined){return Number(override??basePrice)}export function cartLineKey(productId:string,variantId?:string|null){return `${productId}:${variantId||''}`}

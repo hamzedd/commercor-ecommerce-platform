@@ -9,10 +9,11 @@ import { PricingService } from './services/pricing.service';
 import { RewardsModule } from '@/src/modules/rewards/rewards.module';
 import { CouponEntity } from '@/src/libs/models/entities/coupon/Coupon.entity';
 import { CouponUsageEntity } from '@/src/libs/models/entities/coupon/CouponUsage.entity';
+import { ProductVariantEntity } from '@/src/libs/models/entities/product/ProductVariant.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([OrderEntity, CustomerEntity, OrderItemEntity, CouponEntity, CouponUsageEntity]),
+    TypeOrmModule.forFeature([OrderEntity, CustomerEntity, OrderItemEntity, CouponEntity, CouponUsageEntity, ProductVariantEntity]),
     RewardsModule,
   ],
   controllers: [OrdersController],

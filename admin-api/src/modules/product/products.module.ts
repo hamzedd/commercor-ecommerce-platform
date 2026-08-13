@@ -7,6 +7,7 @@ import { ProductFilterOptionValueEntity } from '@/src/libs/models/entities/produ
 import { CategoryEntity } from '@/src/libs/models/entities/category/Category.entity';
 import { BrandEntity } from '@/src/libs/models/entities/brand/Brand.entity';
 import { ProductTranslationEntity } from '@/src/libs/models/entities/product/ProductTranslation.entity';
+import { ProductVariantsService } from './services/product-variants.service';
 
 @Module({
   imports: [
@@ -19,6 +20,6 @@ import { ProductTranslationEntity } from '@/src/libs/models/entities/product/Pro
     ]),
   ],
   controllers: [ProductsController],
-  providers: [ProductsService],
+  providers: [ProductsService, ProductVariantsService],
 })
 export class ProductsModule {}

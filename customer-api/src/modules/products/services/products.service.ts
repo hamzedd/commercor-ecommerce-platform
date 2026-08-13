@@ -81,19 +81,21 @@ export class ProductsService {
   }
 
   async getProductById(id: ProductEntity['id']): Promise<ProductEntity | null> {
-    return await this.productRepository.findOne({
+    const product = await this.productRepository.findOne({
       where: { id },
       relations: {
         translations: true,
         images: true,
         brand: true,
         category: true,
+        variants: { values: { optionValue: { option: true } } },
       },
     });
+    return this.withVariants(product) as ProductEntity | null;
   }
 
   async getProductBySlug(slug: string): Promise<ProductEntity | null> {
-    return this.productRepository.findOne({
+    const product = await this.productRepository.findOne({
       where: {
         translations: {
           slug,
@@ -104,7 +106,10 @@ export class ProductsService {
         images: true,
         brand: true,
         category: true,
+        variants: { values: { optionValue: { option: true } } },
       },
     });
+    return this.withVariants(product) as ProductEntity | null;
   }
+  private withVariants(product:ProductEntity|null){if(!product)return null;const variants=(product.variants||[]).filter(v=>v.enabled).map(v=>{const options=v.values.map(a=>({optionId:a.optionValue.optionId,optionName:a.optionValue.option.name,valueId:a.optionValue.id,value:a.optionValue.value})).sort((a,b)=>a.optionName.localeCompare(b.optionName));return{id:v.id,sku:v.sku,effectivePrice:Number(v.priceOverride??product.price),stock:v.stock,enabled:v.enabled,image:v.image,options,description:options.map(o=>o.value).join(' / ')}});return{...product,variants};}
 }

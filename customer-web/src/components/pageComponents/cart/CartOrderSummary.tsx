@@ -22,7 +22,7 @@ function CartOrderSummary({ cart, productPrices }: Props) {
   useEffect(()=>setCouponCode(window.sessionStorage.getItem("commercor-coupon")||""),[]);
   const subtotal = cart.reduce(
     (total, item) =>
-      total + Number(productPrices[item.productId] || 0) * item.quantity,
+      total + Number(productPrices[`${item.productId}:${item.variantId||''}`] || 0) * item.quantity,
     0,
   );
 

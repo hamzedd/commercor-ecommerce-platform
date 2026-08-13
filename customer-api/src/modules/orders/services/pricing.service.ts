@@ -13,26 +13,30 @@ import { CouponUsageEntity } from '@/src/libs/models/entities/coupon/CouponUsage
 import { OrderEntity } from '@/src/libs/models/entities/order/Order.entity';
 import { OrderStatus } from '@/src/utils/enums/PaymentEnums';
 import { calculateCouponDiscount } from './coupon-calculator';
+import { ProductVariantEntity } from '@/src/libs/models/entities/product/ProductVariant.entity';
+import { effectiveVariantPrice } from './variant-pricing';
 
-export type PricingResult = { subtotal: number; coupon:CouponEntity|null; couponCode:string|null; couponDiscount:number; pointsRedeemed:number; pointsDiscount:number; cashbackUsed:number; discountedSubtotal:number; shippingAmount: number; taxAmount: number; total: number; currencyCode: string; pricesIncludeTax: boolean; items: Array<{ product: ProductEntity; quantity: number; unitPrice: number }> };
+export type PricingResult = { subtotal: number; coupon:CouponEntity|null; couponCode:string|null; couponDiscount:number; pointsRedeemed:number; pointsDiscount:number; cashbackUsed:number; discountedSubtotal:number; shippingAmount: number; taxAmount: number; total: number; currencyCode: string; pricesIncludeTax: boolean; items: Array<{ product: ProductEntity; variant:ProductVariantEntity|null; variantDescription:string|null; quantity: number; unitPrice: number }> };
 @Injectable()
 export class PricingService {
   constructor(private readonly rewards:RewardsService){}
   async calculate(manager: EntityManager, requestedItems: CreateOrderItemDto[], country: string, customerId:string, usePoints=0, useCashback=0, couponCode?:string, lockProducts = false): Promise<PricingResult> {
-    const quantities = new Map<string, number>();
-    for (const item of requestedItems) quantities.set(item.productId, (quantities.get(item.productId) || 0) + item.quantity);
-    const ids = [...quantities.keys()];
+    const quantities = new Map<string, {productId:string;variantId?:string;quantity:number}>();
+    for (const item of requestedItems){const key=`${item.productId}:${item.variantId||''}`;const old=quantities.get(key);quantities.set(key,{productId:item.productId,variantId:item.variantId,quantity:(old?.quantity||0)+item.quantity});}
+    const ids = [...new Set([...quantities.values()].map(v=>v.productId))];
     const products = await manager.getRepository(ProductEntity).find({ where: { id: In(ids) }, ...(lockProducts ? { lock: { mode: 'pessimistic_write' as const } } : {}) });
     if (products.length !== ids.length) {
       const found = new Set(products.map((product) => product.id));
       throw new NotFoundException(`Product not found: ${ids.find((id) => !found.has(id))}`);
     }
-    const items = products.map((product) => {
-      const quantity = quantities.get(product.id)!;
+    const byId=new Map(products.map(p=>[p.id,p])); const items=[] as PricingResult['items'];
+    for(const requested of quantities.values()) {
+      const product=byId.get(requested.productId)!; const quantity=requested.quantity;
       if (!Number.isInteger(quantity) || quantity < 1) throw new BadRequestException(`Invalid quantity for product ${product.id}`);
-      if (product.stock < quantity) throw new BadRequestException(`Not enough stock for product ${product.id}`);
-      return { product, quantity, unitPrice: Number(product.price) };
-    });
+      const variantCount=await manager.getRepository(ProductVariantEntity).countBy({productId:product.id}); let variant:ProductVariantEntity|null=null;let description:string|null=null;
+      if(variantCount){if(!requested.variantId)throw new BadRequestException(`Variant is required for product ${product.id}`);variant=await manager.getRepository(ProductVariantEntity).findOne({where:{id:requested.variantId,productId:product.id},relations:{values:{optionValue:{option:true}}},...(lockProducts?{lock:{mode:'pessimistic_write' as const}}:{})});if(!variant)throw new BadRequestException('Invalid variant for product');if(!variant.enabled)throw new BadRequestException('Selected variant is disabled');if(variant.stock<quantity)throw new BadRequestException('Selected variant is out of stock');description=variant.values.sort((a,b)=>a.optionValue.option.position-b.optionValue.option.position).map(v=>v.optionValue.value).join(' / ');}else{if(requested.variantId)throw new BadRequestException('Product does not have variants');if(product.stock<quantity)throw new BadRequestException(`Not enough stock for product ${product.id}`);}
+      items.push({product,variant,variantDescription:description,quantity,unitPrice:effectiveVariantPrice(Number(product.price),variant?.priceOverride)});
+    }
     const subtotal = items.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
     const coupon = await this.validateCoupon(manager, couponCode, subtotal, customerId, lockProducts);
     const couponDiscount = coupon ? calculateCouponDiscount(subtotal,{type:coupon.type,value:Number(coupon.value),maximumDiscountAmount:coupon.maximumDiscountAmount==null?null:Number(coupon.maximumDiscountAmount)}) : 0;

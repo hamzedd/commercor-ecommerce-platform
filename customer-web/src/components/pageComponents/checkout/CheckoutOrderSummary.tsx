@@ -121,7 +121,7 @@ function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
   };
 
   const totalPrice = cart.reduce((total, item) => {
-    const price = productPrices[item.productId];
+    const price = productPrices[`${item.productId}:${item.variantId||''}`];
     return price ? total + +price * item.quantity : total;
   }, 0);
 

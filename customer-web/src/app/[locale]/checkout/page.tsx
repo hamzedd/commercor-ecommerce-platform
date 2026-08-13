@@ -147,10 +147,11 @@ function Page({ params }: Props) {
               <div className="space-y-3 sm:space-y-4">
                 {cart.map((item) => (
                   <CheckoutPageProduct
-                    key={item.productId}
+                    key={`${item.productId}:${item.variantId||''}`}
                     productId={item.productId}
                     lang={locale}
                     quantity={item.quantity}
+                    variantId={item.variantId}
                     onCartUpdate={handleCartUpdate}
                     setProductPrices={setProductPrices}
                   />

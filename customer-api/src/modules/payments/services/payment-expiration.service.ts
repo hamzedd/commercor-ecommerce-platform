@@ -7,6 +7,7 @@ import { ProductEntity } from '@/src/libs/models/entities/product/Product.entity
 import { OrderStatus, PaymentStatus } from '@/src/utils/enums/PaymentEnums';
 import { RewardsService } from '@/src/modules/rewards/rewards.service';
 import { PAYMENT_PENDING_EXPIRY_MINUTES } from '@/src/utils/environmentConstants';
+import { ProductVariantEntity } from '@/src/libs/models/entities/product/ProductVariant.entity';
 
 export const PAYMENT_EXPIRATION_REASON = 'pending_payment_expired';
 
@@ -91,6 +92,7 @@ export class PaymentExpirationService {
       .getRepository(OrderItemEntity)
       .findBy({ orderId: order.id });
     for (const item of items) {
+      if(item.variantId){const variant=await manager.getRepository(ProductVariantEntity).findOne({where:{id:item.variantId},lock:{mode:'pessimistic_write'}});if(variant){variant.stock+=item.quantity;await manager.getRepository(ProductVariantEntity).save(variant);}continue;}
       const product = await manager.getRepository(ProductEntity).findOne({
         where: { id: item.productId },
         lock: { mode: 'pessimistic_write' },

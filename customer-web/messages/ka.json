@@ -177,5 +177,6 @@
   "applyCoupon": "გამოყენება",
   "removeCoupon": "კუპონის წაშლა",
   "couponDiscount": "კუპონის ფასდაკლება",
-  "couponValidatedAtCheckout": "კუპონი უსაფრთხოდ შემოწმდება შეკვეთის გაფორმებისას."
+  "couponValidatedAtCheckout": "კუპონი უსაფრთხოდ შემოწმდება შეკვეთის გაფორმებისას.",
+  "selectVariant": "აირჩიეთ ვარიანტი"
 }

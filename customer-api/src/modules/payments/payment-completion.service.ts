@@ -9,6 +9,7 @@ import { assertCompletion, VerifiedPaymentEvent } from './payment-state';
 import { RewardsService } from '@/src/modules/rewards/rewards.service';
 import { CouponEntity } from '@/src/libs/models/entities/coupon/Coupon.entity';
 import { CouponUsageEntity } from '@/src/libs/models/entities/coupon/CouponUsage.entity';
+import { ProductVariantEntity } from '@/src/libs/models/entities/product/ProductVariant.entity';
 
 @Injectable()
 export class PaymentCompletionService {
@@ -54,6 +55,7 @@ export class PaymentCompletionService {
       order.status = event.status === PaymentStatus.FAILED ? OrderStatus.FAILED : OrderStatus.CANCELLED;
       await this.rewards.restoreRedemption(manager, order.customerId, order.id, payment.id, order.pointsRedeemed, Number(order.cashbackUsed), 'Redeemed rewards restored after failed payment');
       for (const item of await manager.getRepository(OrderItemEntity).findBy({ orderId: order.id })) {
+        if(item.variantId){const variant=await manager.getRepository(ProductVariantEntity).findOne({where:{id:item.variantId},lock:{mode:'pessimistic_write'}});if(variant){variant.stock+=item.quantity;await manager.getRepository(ProductVariantEntity).save(variant);}continue;}
         const product = await manager.getRepository(ProductEntity).findOne({ where: { id: item.productId }, lock: { mode: 'pessimistic_write' } });
         if (product) { product.stock += item.quantity; await manager.getRepository(ProductEntity).save(product); }
       }

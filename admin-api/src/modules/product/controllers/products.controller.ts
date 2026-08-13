@@ -14,10 +14,17 @@ import { ProductsService } from '@/src/modules/product/services/products.service
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ImagesValidationPipe } from '@/src/libs/pipes/images-validation.pipe';
+import { ProductVariantsService } from '../services/product-variants.service';
+import { VariantDto, VariantOptionDto } from '../dtos/variant.dto';
 
 @Controller('products')
 export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+  constructor(private readonly productsService: ProductsService, private readonly variants: ProductVariantsService) {}
+  @Get(':id/variants') getVariants(@Param('id') id:string){return this.variants.list(id)}
+  @Post(':id/variant-options') addVariantOption(@Param('id')id:string,@Body()data:VariantOptionDto){return this.variants.addOption(id,data)}
+  @Post(':id/variants') createVariant(@Param('id')id:string,@Body()data:VariantDto){return this.variants.create(id,data)}
+  @Put(':id/variants/:variantId') updateVariant(@Param('id')id:string,@Param('variantId')variantId:string,@Body()data:VariantDto){return this.variants.update(id,variantId,data)}
+  @Delete(':id/variants/:variantId') deleteVariant(@Param('id')id:string,@Param('variantId')variantId:string){return this.variants.remove(id,variantId)}
 
   @ApiConsumes('multipart/form-data')
   @ApiBody({

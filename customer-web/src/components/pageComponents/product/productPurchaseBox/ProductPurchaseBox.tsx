@@ -28,21 +28,26 @@ function ProductPurchaseBox({ product }: Props) {
   const router = useRouter();
   const toggleLogin = useModalStore((state) => state.toggleLogin);
   const [quantity, setQuantity] = useState(1);
+  const [selected,setSelected]=useState<Record<string,string>>({});
+  const variants=product.variants||[]; const optionGroups=Array.from(new Map(variants.flatMap(v=>v.options).map(o=>[o.optionId,{name:o.optionName,values:new Map<string,string>()}])).values());
+  for(const v of variants)for(const o of v.options){const group=optionGroups.find(g=>g.name===o.optionName);group?.values.set(o.valueId,o.value)}
+  const selectedVariant=variants.find(v=>v.options.every(o=>selected[o.optionId]===o.valueId)); const effectiveStock=selectedVariant?.stock??(variants.length?0:product.stock||0); const effectivePrice=selectedVariant?.effectivePrice??(product.price||0);
 
   const handleAddInCard = () => {
     if (!user) {
       toggleLogin();
       return;
     }
+    if(variants.length&&!selectedVariant)return;
     const cart: CreateOrderItemType[] = JSON.parse(
       localStorage.getItem("cart") || "[]",
     );
     const indexOfProduct = cart.findIndex(
-      (value) => value.productId === product.id,
+      (value) => value.productId === product.id && (value.variantId||null)===(selectedVariant?.id||null),
     );
     if (indexOfProduct >= 0)
       cart[indexOfProduct].quantity = cart[indexOfProduct].quantity + quantity;
-    else cart.push({ productId: product.id, quantity });
+    else cart.push({ productId: product.id, variantId:selectedVariant?.id||null, quantity });
     localStorage.setItem("cart", JSON.stringify(cart));
     notifyCartUpdated();
   };
@@ -63,24 +68,24 @@ function ProductPurchaseBox({ product }: Props) {
           {t("price")}
         </p>
         <p className="mt-1 text-3xl font-bold tracking-tight text-stone-950 sm:text-4xl">
-          {formatCurrency(product.price || 0, settings.currencyCode)}
+          {formatCurrency(effectivePrice, settings.currencyCode)}
         </p>
-        {product.stock !== undefined && (
+        {(product.stock !== undefined||variants.length>0) && (
           <div className="mt-3 flex items-center gap-2 text-sm">
             <span
               aria-hidden
-              className={`h-2.5 w-2.5 rounded-full ${product.stock > 0 ? "bg-emerald-500" : "bg-red-500"}`}
+              className={`h-2.5 w-2.5 rounded-full ${effectiveStock > 0 ? "bg-emerald-500" : "bg-red-500"}`}
             />
             <span
-              className={`font-semibold ${product.stock > 0 ? "text-emerald-700" : "text-red-700"}`}
+              className={`font-semibold ${effectiveStock > 0 ? "text-emerald-700" : "text-red-700"}`}
             >
-              {product.stock > 0
-                ? `${product.stock} ${t("inStock")}`
-                : t("outOfStock")}
+              {effectiveStock > 0 ? `${effectiveStock} ${t("inStock")}` : variants.length&&!selectedVariant?t("selectVariant"):t("outOfStock")}
             </span>
           </div>
         )}
       </div>
+
+      {variants.length>0&&<div className="space-y-4 border-b border-stone-200 py-5">{optionGroups.map(group=><div key={group.name}><p className="mb-2 text-sm font-semibold">{group.name}</p><div className="flex flex-wrap gap-2">{Array.from(group.values).map(([valueId,label])=>{const possible=variants.some(v=>v.stock>0&&v.enabled&&v.options.some(o=>o.valueId===valueId)&&v.options.every(o=>o.optionName===group.name||!selected[o.optionId]||selected[o.optionId]===o.valueId));return <button type="button" key={valueId} disabled={!possible} onClick={()=>{const optionId=variants.flatMap(v=>v.options).find(o=>o.valueId===valueId)!.optionId;setSelected(s=>({...s,[optionId]:valueId}));setQuantity(1)}} className={`rounded-lg border px-3 py-2 text-sm font-semibold disabled:opacity-30 ${Object.values(selected).includes(valueId)?'border-amber-600 bg-amber-50':'border-stone-300'}`}>{label}</button>})}</div></div>)}</div>}
 
       <div className="py-5">
         <p className="mb-2 text-sm font-semibold text-stone-800">
@@ -104,7 +109,8 @@ function ProductPurchaseBox({ product }: Props) {
           </output>
           <button
             type="button"
-            onClick={increaseQuantity}
+          onClick={increaseQuantity}
+            disabled={quantity>=effectiveStock}
             aria-label={t("increaseQuantity")}
             className="flex h-11 w-11 items-center justify-center transition-colors hover:bg-stone-100 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none focus-visible:ring-inset"
           >
@@ -117,6 +123,7 @@ function ProductPurchaseBox({ product }: Props) {
         <button
           type="button"
           onClick={handleAddInCard}
+          disabled={(variants.length>0&&!selectedVariant)||effectiveStock<quantity}
           className="flex min-h-12 items-center justify-center gap-2 rounded-xl border-2 border-stone-950 bg-white px-5 text-sm font-bold text-stone-950 transition-colors duration-200 hover:bg-stone-100 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:outline-none"
         >
           <ShoppingCartOutlined aria-hidden className="text-lg" />
@@ -125,6 +132,7 @@ function ProductPurchaseBox({ product }: Props) {
         <button
           type="button"
           onClick={handlePurchase}
+          disabled={(variants.length>0&&!selectedVariant)||effectiveStock<quantity}
           className="flex min-h-12 items-center justify-center gap-2 rounded-xl bg-stone-950 px-5 text-sm font-bold text-white transition-colors duration-200 hover:bg-amber-600 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:outline-none"
         >
           <ThunderboltOutlined aria-hidden className="text-lg" />

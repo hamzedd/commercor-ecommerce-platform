@@ -16,6 +16,7 @@ import { PricingService } from './pricing.service';
 import { RewardsService } from '@/src/modules/rewards/rewards.service';
 import { OrderStatus, PaymentStatus } from '@/src/utils/enums/PaymentEnums';
 import { pendingPaymentExpiresAt } from '@/src/modules/payments/services/payment-expiration.service';
+import { ProductVariantEntity } from '@/src/libs/models/entities/product/ProductVariant.entity';
 
 @Injectable()
 export class OrdersService {
@@ -96,8 +97,7 @@ export class OrdersService {
 
       for (const item of pricing.items) {
         const product = item.product;
-        product.stock -= item.quantity;
-        await productsRepo.save(product);
+        if(item.variant){item.variant.stock-=item.quantity;await manager.getRepository(ProductVariantEntity).save(item.variant);}else{product.stock -= item.quantity;await productsRepo.save(product);}
 
         orderItems.push(
           orderItemsRepo.create({
@@ -105,6 +105,9 @@ export class OrdersService {
             productId: product.id,
             quantity: item.quantity,
             unitPrice: item.unitPrice,
+            variantId: item.variant?.id || null,
+            variantSku: item.variant?.sku || null,
+            variantDescription: item.variantDescription,
           }),
         );
       }

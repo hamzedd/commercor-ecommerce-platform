@@ -17,6 +17,7 @@ import formatCurrency from "@/src/utils/functions/formatCurrency";
 interface Props {
   productId: ProductType["id"];
   quantity: number;
+  variantId?: string | null;
   lang: string;
   onCartUpdate: () => void;
   setProductPrices: Dispatch<
@@ -27,6 +28,7 @@ interface Props {
 function CartItem({
   productId,
   quantity,
+  variantId,
   lang,
   onCartUpdate,
   setProductPrices,
@@ -36,9 +38,9 @@ function CartItem({
   const { data, isLoading, error } = useProductQuery({ id: productId });
 
   useEffect(() => {
-    if (data?.price)
-      setProductPrices((previous) => ({ ...previous, [data.id]: data.price }));
-  }, [data?.id, data?.price, setProductPrices]);
+    const variant=data?.variants?.find(v=>v.id===variantId); const price=variant?.effectivePrice??data?.price;
+    if (price) setProductPrices((previous) => ({ ...previous, [`${data!.id}:${variantId||''}`]: String(price) }));
+  }, [data, variantId, setProductPrices]);
 
   const updateCart = (updatedCart: CreateOrderItemType[]) => {
     localStorage.setItem("cart", JSON.stringify(updatedCart));
@@ -50,7 +52,7 @@ function CartItem({
     const cart: CreateOrderItemType[] = JSON.parse(
       localStorage.getItem("cart") || "[]",
     );
-    const itemIndex = cart.findIndex((item) => item.productId === productId);
+    const itemIndex = cart.findIndex((item) => item.productId === productId&&(item.variantId||null)===(variantId||null));
     if (itemIndex < 0) return;
     if (newQuantity <= 0) cart.splice(itemIndex, 1);
     else cart[itemIndex].quantity = newQuantity;
@@ -61,7 +63,7 @@ function CartItem({
     const cart: CreateOrderItemType[] = JSON.parse(
       localStorage.getItem("cart") || "[]",
     );
-    updateCart(cart.filter((item) => item.productId !== productId));
+    updateCart(cart.filter((item) => !(item.productId===productId&&(item.variantId||null)===(variantId||null))));
   };
 
   if (isLoading) {
@@ -91,8 +93,8 @@ function CartItem({
     data.translations.find(
       (item) => item.lang.toLowerCase() === lang.toLowerCase(),
     ) || data.translations[0];
-  const primaryImage = data.images?.[0];
-  const unitPrice = Number.parseFloat(data.price || "0");
+  const variant=data.variants?.find(v=>v.id===variantId); const primaryImageName=variant?.image||data.images?.[0]?.name;
+  const unitPrice = Number(variant?.effectivePrice??data.price??0);
   const totalPrice = unitPrice * quantity;
 
   return (
@@ -105,11 +107,11 @@ function CartItem({
           }}
           className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-stone-100 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:outline-none sm:h-32 sm:w-32"
         >
-          {primaryImage ? (
+          {primaryImageName ? (
             <Image
               src={getImageSrcByBucketAndFileNames({
                 bucketName: "products",
-                fileName: primaryImage.name,
+                fileName: primaryImageName,
               })}
               alt={translation?.name || t("product")}
               fill
@@ -139,6 +141,7 @@ function CartItem({
                 {formatCurrency(unitPrice, settings.currencyCode, lang)}{" "}
                 {t("each")}
               </p>
+              {variant&&<p className="mt-1 text-xs font-medium text-amber-700">{variant.description}</p>}
             </div>
             <p className="shrink-0 text-base font-bold text-stone-950 sm:text-lg">
               {formatCurrency(totalPrice, settings.currencyCode, lang)}
@@ -166,7 +169,7 @@ function CartItem({
                 <button
                   type="button"
                   aria-label={t("increaseQuantity")}
-                  disabled={data.stock !== undefined && quantity >= data.stock}
+                  disabled={quantity >= (variant?.stock??data.stock??0)}
                   onClick={() => handleQuantityChange(quantity + 1)}
                   className="flex h-11 w-11 items-center justify-center transition-colors hover:bg-stone-100 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none focus-visible:ring-inset disabled:cursor-not-allowed disabled:opacity-40"
                 >

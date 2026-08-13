@@ -177,5 +177,6 @@
   "applyCoupon": "Apply",
   "removeCoupon": "Remove coupon",
   "couponDiscount": "Coupon discount",
-  "couponValidatedAtCheckout": "Your coupon will be validated securely at checkout."
+  "couponValidatedAtCheckout": "Your coupon will be validated securely at checkout.",
+  "selectVariant": "Select options"
 }

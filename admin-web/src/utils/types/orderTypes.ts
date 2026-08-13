@@ -13,6 +13,9 @@ export type OrderItemType = {
   productId: string;
   quantity: number;
   unitPrice: number;
+  variantId: string | null;
+  variantSku: string | null;
+  variantDescription: string | null;
 };
 
 export type OrderType = {

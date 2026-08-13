@@ -4,9 +4,11 @@ import { ProductTranslationEntity } from '@/src/libs/models/entities/product/Pro
 import { ProductImageEntity } from '@/src/libs/models/entities/product/ProductImage.entity';
 import { BrandEntity } from '@/src/libs/models/entities/brand/Brand.entity';
 import { CategoryEntity } from '@/src/libs/models/entities/category/Category.entity';
+import { ProductVariantEntity } from './ProductVariant.entity';
 
 @Entity('products')
 export class ProductEntity extends BaseEntity {
+  @OneToMany(() => ProductVariantEntity, (variant) => variant.product) variants: ProductVariantEntity[];
   @Column({
     type: 'decimal',
     precision: 10,

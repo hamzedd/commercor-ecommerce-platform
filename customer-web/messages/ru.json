@@ -177,5 +177,6 @@
   "applyCoupon": "Применить",
   "removeCoupon": "Удалить купон",
   "couponDiscount": "Скидка по купону",
-  "couponValidatedAtCheckout": "Купон будет безопасно проверен при оформлении заказа."
+  "couponValidatedAtCheckout": "Купон будет безопасно проверен при оформлении заказа.",
+  "selectVariant": "Выберите параметры"
 }

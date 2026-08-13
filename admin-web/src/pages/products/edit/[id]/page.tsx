@@ -2,6 +2,7 @@ import { Link, useParams } from "react-router";
 import { Button, Tabs } from "antd";
 import EditProductPageProductTab from "../../../../components/pageComponents/productEditPage/EditProductPageProductTab.tsx";
 import EditProductPageFiltersTab from "../../../../components/pageComponents/productEditPage/EditProductPageFiltersTab.tsx";
+import EditProductPageVariantsTab from "../../../../components/pageComponents/productEditPage/EditProductPageVariantsTab.tsx";
 
 function EditProductPage() {
   const { id } = useParams();
@@ -21,6 +22,7 @@ function EditProductPage() {
       label: "Filters",
       children: <EditProductPageFiltersTab productId={id} />,
     },
+    { key: "variants", label: "Variants", children: <EditProductPageVariantsTab productId={id} /> },
   ];
 
   return (

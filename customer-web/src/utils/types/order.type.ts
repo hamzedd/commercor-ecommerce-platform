@@ -10,6 +10,7 @@ export type CreateOrderRequestType = {
 
 export type CreateOrderItemType = {
   productId: string;
+  variantId?: string | null;
   quantity: number;
 };
 
@@ -54,4 +55,7 @@ export type OrderItemType = {
   productId: "4c0ac378-e547-4b7d-8f82-1f67c4d6a26d";
   quantity: number;
   unitPrice: number;
+  variantId: string | null;
+  variantSku: string | null;
+  variantDescription: string | null;
 };

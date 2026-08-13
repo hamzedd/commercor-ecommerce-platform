@@ -91,9 +91,10 @@ function CartPage() {
             >
               {cart.map((item) => (
                 <CartItem
-                  key={item.productId}
+                  key={`${item.productId}:${item.variantId||''}`}
                   productId={item.productId}
                   quantity={item.quantity}
+                  variantId={item.variantId}
                   lang={locale}
                   onCartUpdate={refreshCart}
                   setProductPrices={setProductPrices}
