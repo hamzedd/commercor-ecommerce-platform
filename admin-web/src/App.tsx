@@ -33,6 +33,7 @@ import LoyaltySettingsPage from "./pages/loyalty-settings/page.tsx";
 import CouponsPage from "./pages/coupons/page.tsx";
 import ReviewsPage from "./pages/reviews/page.tsx";
 import InvoicesPage from "./pages/invoices/page.tsx";
+import InventoryPage from "./pages/inventory/page.tsx";
 
 function App() {
   const router = createBrowserRouter([
@@ -156,6 +157,7 @@ function App() {
         { path: "coupons", element: <CouponsPage /> },
         { path: "reviews", element: <ReviewsPage /> },
         { path: "invoices", element: <InvoicesPage /> },
+        { path: "inventory", element: <InventoryPage /> },
       ],
     },
     {

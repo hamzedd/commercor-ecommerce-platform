@@ -1,1 +1,20 @@
-import{Column,Entity,Index,JoinColumn,ManyToOne}from'typeorm';import{BaseEntity}from'../BaseEntity';import{ProductVariantEntity}from'./ProductVariant.entity';import{ProductVariantOptionValueEntity}from'./ProductVariantOptionValue.entity';@Entity('product_variant_values')@Index('UQ_variant_option_assignment',['variantId','optionValueId'],{unique:true})export class ProductVariantValueEntity extends BaseEntity{@Column()variantId:string;@ManyToOne(()=>ProductVariantEntity,v=>v.values,{onDelete:'CASCADE'})@JoinColumn({name:'variantId'})variant:ProductVariantEntity;@Column()optionValueId:string;@ManyToOne(()=>ProductVariantOptionValueEntity,{onDelete:'RESTRICT'})@JoinColumn({name:'optionValueId'})optionValue:ProductVariantOptionValueEntity;}
+import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
+import { BaseEntity } from '../BaseEntity';
+import { ProductVariantEntity } from './ProductVariant.entity';
+import { ProductVariantOptionValueEntity } from './ProductVariantOptionValue.entity';
+@Entity('product_variant_values')
+@Index('UQ_variant_option_assignment', ['variantId', 'optionValueId'], {
+  unique: true,
+})
+export class ProductVariantValueEntity extends BaseEntity {
+  @Column() variantId: string;
+  @ManyToOne(() => ProductVariantEntity, (v) => v.values, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'variantId' })
+  variant: ProductVariantEntity;
+  @Column() optionValueId: string;
+  @ManyToOne(() => ProductVariantOptionValueEntity, { onDelete: 'RESTRICT' })
+  @JoinColumn({ name: 'optionValueId' })
+  optionValue: ProductVariantOptionValueEntity;
+}

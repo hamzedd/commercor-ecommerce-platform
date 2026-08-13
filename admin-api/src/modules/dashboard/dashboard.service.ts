@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, LessThanOrEqual, Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { OrderEntity } from '@/src/libs/models/entities/order/Order.entity';
 import { OrderItemEntity } from '@/src/libs/models/entities/order/OrderItem.entity';
 import { PaymentEntity } from '@/src/libs/models/entities/payment/Payment.entity';
@@ -38,9 +38,11 @@ export class DashboardService {
       this.orderRepository.count({
         where: [{ status: 'pending' }, { status: 'processing' }],
       }),
-      this.productRepository.count({
-        where: { stock: LessThanOrEqual(5) },
-      }),
+      this.productRepository.query(`SELECT COUNT(*)::int AS count FROM (
+        SELECT p.id FROM products p WHERE p.deleted_at IS NULL AND NOT EXISTS (SELECT 1 FROM product_variants v WHERE v."productId"=p.id AND v.deleted_at IS NULL) AND p.stock > 0 AND p.stock <= COALESCE(p."lowStockThreshold",5)
+        UNION ALL
+        SELECT v.id FROM product_variants v JOIN products p ON p.id=v."productId" WHERE v.deleted_at IS NULL AND p.deleted_at IS NULL AND v.stock > 0 AND v.stock <= COALESCE(v."lowStockThreshold",p."lowStockThreshold",5)
+      ) low`).then(rows=>Number(rows[0]?.count||0)),
       this.getWeeklyRevenueRows(weekStart, weekEnd),
       this.getOrderStatusBreakdown(),
       this.getTopSellingProducts(),

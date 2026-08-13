@@ -4,6 +4,9 @@ import {
   ValidateNested,
   ArrayMinSize,
   IsUUID,
+  IsOptional,
+  IsInt,
+  Min,
 } from 'class-validator';
 import { plainToInstance, Transform, Type } from 'class-transformer';
 import { ProductTranslationDto } from '@/src/libs/models/dtos/products/ProductTranslation.dto';
@@ -25,6 +28,12 @@ export class ProductDto {
   })
   @IsNotEmpty()
   stock: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(0)
+  lowStockThreshold?: number | null;
 
   @ApiProperty({
     type: () => [ProductTranslationDto],

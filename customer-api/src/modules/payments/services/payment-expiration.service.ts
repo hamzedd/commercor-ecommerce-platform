@@ -9,6 +9,8 @@ import { RewardsService } from '@/src/modules/rewards/rewards.service';
 import { PAYMENT_PENDING_EXPIRY_MINUTES } from '@/src/utils/environmentConstants';
 import { ProductVariantEntity } from '@/src/libs/models/entities/product/ProductVariant.entity';
 import { NotificationService } from '@/src/modules/notifications/notification.service';
+import { InventoryService } from '@/src/modules/inventory/inventory.service';
+import { InventoryMovementType } from '@/src/libs/models/entities/inventory/InventoryMovement.entity';
 
 export const PAYMENT_EXPIRATION_REASON = 'pending_payment_expired';
 
@@ -33,6 +35,7 @@ export class PaymentExpirationService {
     private readonly dataSource: DataSource,
     private readonly rewards: RewardsService,
     private readonly notifications: NotificationService,
+    private readonly inventory: InventoryService,
   ) {}
 
   async expirePendingPayments(
@@ -96,27 +99,15 @@ export class PaymentExpirationService {
       .getRepository(OrderItemEntity)
       .findBy({ orderId: order.id });
     for (const item of items) {
-      if (item.variantId) {
-        const variant = await manager
-          .getRepository(ProductVariantEntity)
-          .findOne({
-            where: { id: item.variantId },
-            lock: { mode: 'pessimistic_write' },
-          });
-        if (variant) {
-          variant.stock += item.quantity;
-          await manager.getRepository(ProductVariantEntity).save(variant);
-        }
-        continue;
-      }
-      const product = await manager.getRepository(ProductEntity).findOne({
-        where: { id: item.productId },
-        lock: { mode: 'pessimistic_write' },
+      await this.inventory.change(manager, {
+        productId: item.productId,
+        variantId: item.variantId,
+        delta: item.quantity,
+        type: InventoryMovementType.ORDER_RESTORE,
+        orderId: order.id,
+        reason: 'Pending payment expired',
+        referenceKey: `order_restore:${order.id}:${item.id}`,
       });
-      if (product) {
-        product.stock += item.quantity;
-        await manager.getRepository(ProductEntity).save(product);
-      }
     }
 
     await manager.getRepository(PaymentEntity).save(payment);

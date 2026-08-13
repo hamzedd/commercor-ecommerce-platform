@@ -125,7 +125,7 @@ export class ProductsService {
         });
 
         Object.keys(data).forEach((key) => {
-          if (key !== 'translations') {
+          if (key !== 'translations' && key !== 'stock') {
             product[key] = data[key];
           }
         });

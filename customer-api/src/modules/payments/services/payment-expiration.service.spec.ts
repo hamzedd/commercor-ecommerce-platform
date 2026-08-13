@@ -112,6 +112,7 @@ describe('PaymentExpirationService', () => {
       dataSource as any,
       rewards as any,
       { queue: jest.fn() } as any,
+      { change: jest.fn(async (_manager, input) => { product.stock += input.delta; return true; }) } as any,
     );
 
     await expect(service.expirePendingPayments(now)).resolves.toBe(1);
@@ -121,6 +122,6 @@ describe('PaymentExpirationService', () => {
     expect(order.status).toBe(OrderStatus.CANCELLED);
     expect(product.stock).toBe(5);
     expect(rewards.restoreRedemption).toHaveBeenCalledTimes(1);
-    expect(productRepo.save).toHaveBeenCalledTimes(1);
+    expect(productRepo.save).not.toHaveBeenCalled();
   });
 });

@@ -8,7 +8,8 @@ import { ProductVariantEntity } from './ProductVariant.entity';
 
 @Entity('products')
 export class ProductEntity extends BaseEntity {
-  @OneToMany(() => ProductVariantEntity, (variant) => variant.product) variants: ProductVariantEntity[];
+  @OneToMany(() => ProductVariantEntity, (variant) => variant.product)
+  variants: ProductVariantEntity[];
   @Column({
     type: 'decimal',
     precision: 10,
@@ -18,6 +19,7 @@ export class ProductEntity extends BaseEntity {
 
   @Column()
   stock: number;
+  @Column({ type: 'integer', nullable: true }) lowStockThreshold: number | null;
 
   @OneToMany(
     () => ProductTranslationEntity,

@@ -1,2 +1,169 @@
-import{BadRequestException,ConflictException,Injectable,NotFoundException}from'@nestjs/common';import{DataSource,In}from'typeorm';import{ProductEntity}from'@/src/libs/models/entities/product/Product.entity';import{ProductVariantEntity}from'@/src/libs/models/entities/product/ProductVariant.entity';import{ProductVariantOptionEntity}from'@/src/libs/models/entities/product/ProductVariantOption.entity';import{ProductVariantOptionValueEntity}from'@/src/libs/models/entities/product/ProductVariantOptionValue.entity';import{ProductVariantValueEntity}from'@/src/libs/models/entities/product/ProductVariantValue.entity';import{OrderItemEntity}from'@/src/libs/models/entities/order/OrderItem.entity';import{VariantDto,VariantOptionDto}from'../dtos/variant.dto';
-@Injectable()export class ProductVariantsService{constructor(private db:DataSource){}async list(productId:string){await this.product(productId);const options=await this.db.getRepository(ProductVariantOptionEntity).find({where:{productId},relations:{values:true},order:{position:'ASC',values:{position:'ASC'}}});const variants=await this.db.getRepository(ProductVariantEntity).find({where:{productId},relations:{values:{optionValue:{option:true}}},order:{created_at:'ASC'}});return{options,variants:variants.map(v=>this.serialize(v))};}async addOption(productId:string,d:VariantOptionDto){await this.product(productId);const name=d.name.trim();const vals=[...new Set(d.values.map(v=>v.trim()).filter(Boolean))];if(!vals.length)throw new BadRequestException('At least one option value is required');return this.db.transaction(async m=>{const or=m.getRepository(ProductVariantOptionEntity);if(await or.existsBy({productId,name}))throw new ConflictException('Variant option already exists');const position=await or.countBy({productId});const o=await or.save(or.create({productId,name,position}));await m.getRepository(ProductVariantOptionValueEntity).save(vals.map((value,i)=>({optionId:o.id,value,position:i})));return this.list(productId);});}async create(productId:string,d:VariantDto){return this.save(productId,null,d)}async update(productId:string,id:string,d:VariantDto){return this.save(productId,id,d)}async remove(productId:string,id:string){const r=this.db.getRepository(ProductVariantEntity),v=await r.findOneBy({id,productId});if(!v)throw new NotFoundException('Variant not found');if(await this.db.getRepository(OrderItemEntity).existsBy({variantId:id})){v.enabled=false;return r.save(v)}await r.softRemove(v);return{id,archived:true}}private async save(productId:string,id:string|null,d:VariantDto){await this.product(productId);return this.db.transaction(async m=>{const values=await m.getRepository(ProductVariantOptionValueEntity).find({where:{id:In([...new Set(d.optionValueIds)])},relations:{option:true}});if(values.length!==new Set(d.optionValueIds).size||values.some(v=>v.option.productId!==productId))throw new BadRequestException('Invalid variant option value');if(new Set(values.map(v=>v.optionId)).size!==values.length)throw new BadRequestException('Select exactly one value per option');const optionCount=await m.getRepository(ProductVariantOptionEntity).countBy({productId});if(values.length!==optionCount)throw new BadRequestException('A value is required for every variant option');const key=values.map(v=>v.id).sort().join(':');const r=m.getRepository(ProductVariantEntity);let variant=id?await r.findOneBy({id,productId}):null;if(id&&!variant)throw new NotFoundException('Variant not found');if(await r.createQueryBuilder('v').where('v.productId=:productId AND v.combinationKey=:key',{productId,key}).andWhere(id?'v.id<>:id':'1=1',{id}).getExists())throw new ConflictException('Duplicate variant option combination');const sku=d.sku?.trim()||null;if(sku&&await r.createQueryBuilder('v').where('v.sku=:sku',{sku}).andWhere(id?'v.id<>:id':'1=1',{id}).getExists())throw new ConflictException('Variant SKU already exists');variant=r.create({...variant,...d,productId,sku,priceOverride:d.priceOverride??null,image:d.image||null,combinationKey:key});variant=await r.save(variant);await m.getRepository(ProductVariantValueEntity).delete({variantId:variant.id});await m.getRepository(ProductVariantValueEntity).save(values.map(v=>({variantId:variant!.id,optionValueId:v.id})));return variant;});}private async product(id:string){if(!await this.db.getRepository(ProductEntity).existsBy({id}))throw new NotFoundException('Product not found')}private serialize(v:ProductVariantEntity){const selections=v.values.map(a=>({optionId:a.optionValue.optionId,optionName:a.optionValue.option.name,valueId:a.optionValue.id,value:a.optionValue.value})).sort((a,b)=>a.optionName.localeCompare(b.optionName));return{id:v.id,sku:v.sku,priceOverride:v.priceOverride==null?null:Number(v.priceOverride),effectivePrice:v.priceOverride==null?null:Number(v.priceOverride),stock:v.stock,enabled:v.enabled,image:v.image,selections,description:selections.map(s=>s.value).join(' / ')}}}
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { DataSource, In } from 'typeorm';
+import { ProductEntity } from '@/src/libs/models/entities/product/Product.entity';
+import { ProductVariantEntity } from '@/src/libs/models/entities/product/ProductVariant.entity';
+import { ProductVariantOptionEntity } from '@/src/libs/models/entities/product/ProductVariantOption.entity';
+import { ProductVariantOptionValueEntity } from '@/src/libs/models/entities/product/ProductVariantOptionValue.entity';
+import { ProductVariantValueEntity } from '@/src/libs/models/entities/product/ProductVariantValue.entity';
+import { OrderItemEntity } from '@/src/libs/models/entities/order/OrderItem.entity';
+import { VariantDto, VariantOptionDto } from '../dtos/variant.dto';
+@Injectable()
+export class ProductVariantsService {
+  constructor(private db: DataSource) {}
+  async list(productId: string) {
+    await this.product(productId);
+    const options = await this.db
+      .getRepository(ProductVariantOptionEntity)
+      .find({
+        where: { productId },
+        relations: { values: true },
+        order: { position: 'ASC', values: { position: 'ASC' } },
+      });
+    const variants = await this.db.getRepository(ProductVariantEntity).find({
+      where: { productId },
+      relations: { values: { optionValue: { option: true } } },
+      order: { created_at: 'ASC' },
+    });
+    return { options, variants: variants.map((v) => this.serialize(v)) };
+  }
+  async addOption(productId: string, d: VariantOptionDto) {
+    await this.product(productId);
+    const name = d.name.trim();
+    const vals = [...new Set(d.values.map((v) => v.trim()).filter(Boolean))];
+    if (!vals.length)
+      throw new BadRequestException('At least one option value is required');
+    return this.db.transaction(async (m) => {
+      const or = m.getRepository(ProductVariantOptionEntity);
+      if (await or.existsBy({ productId, name }))
+        throw new ConflictException('Variant option already exists');
+      const position = await or.countBy({ productId });
+      const o = await or.save(or.create({ productId, name, position }));
+      await m
+        .getRepository(ProductVariantOptionValueEntity)
+        .save(vals.map((value, i) => ({ optionId: o.id, value, position: i })));
+      return this.list(productId);
+    });
+  }
+  async create(productId: string, d: VariantDto) {
+    return this.save(productId, null, d);
+  }
+  async update(productId: string, id: string, d: VariantDto) {
+    return this.save(productId, id, d);
+  }
+  async remove(productId: string, id: string) {
+    const r = this.db.getRepository(ProductVariantEntity),
+      v = await r.findOneBy({ id, productId });
+    if (!v) throw new NotFoundException('Variant not found');
+    if (
+      await this.db.getRepository(OrderItemEntity).existsBy({ variantId: id })
+    ) {
+      v.enabled = false;
+      return r.save(v);
+    }
+    await r.softRemove(v);
+    return { id, archived: true };
+  }
+  private async save(productId: string, id: string | null, d: VariantDto) {
+    await this.product(productId);
+    return this.db.transaction(async (m) => {
+      const values = await m
+        .getRepository(ProductVariantOptionValueEntity)
+        .find({
+          where: { id: In([...new Set(d.optionValueIds)]) },
+          relations: { option: true },
+        });
+      if (
+        values.length !== new Set(d.optionValueIds).size ||
+        values.some((v) => v.option.productId !== productId)
+      )
+        throw new BadRequestException('Invalid variant option value');
+      if (new Set(values.map((v) => v.optionId)).size !== values.length)
+        throw new BadRequestException('Select exactly one value per option');
+      const optionCount = await m
+        .getRepository(ProductVariantOptionEntity)
+        .countBy({ productId });
+      if (values.length !== optionCount)
+        throw new BadRequestException(
+          'A value is required for every variant option',
+        );
+      const key = values
+        .map((v) => v.id)
+        .sort()
+        .join(':');
+      const r = m.getRepository(ProductVariantEntity);
+      let variant = id ? await r.findOneBy({ id, productId }) : null;
+      if (id && !variant) throw new NotFoundException('Variant not found');
+      if (
+        await r
+          .createQueryBuilder('v')
+          .where('v.productId=:productId AND v.combinationKey=:key', {
+            productId,
+            key,
+          })
+          .andWhere(id ? 'v.id<>:id' : '1=1', { id })
+          .getExists()
+      )
+        throw new ConflictException('Duplicate variant option combination');
+      const sku = d.sku?.trim() || null;
+      if (
+        sku &&
+        (await r
+          .createQueryBuilder('v')
+          .where('v.sku=:sku', { sku })
+          .andWhere(id ? 'v.id<>:id' : '1=1', { id })
+          .getExists())
+      )
+        throw new ConflictException('Variant SKU already exists');
+      variant = r.create({
+        ...variant,
+        ...d,
+        stock: variant?.stock ?? d.stock,
+        productId,
+        sku,
+        priceOverride: d.priceOverride ?? null,
+        image: d.image || null,
+        combinationKey: key,
+      });
+      variant = await r.save(variant);
+      await m
+        .getRepository(ProductVariantValueEntity)
+        .delete({ variantId: variant.id });
+      await m
+        .getRepository(ProductVariantValueEntity)
+        .save(
+          values.map((v) => ({ variantId: variant!.id, optionValueId: v.id })),
+        );
+      return variant;
+    });
+  }
+  private async product(id: string) {
+    if (!(await this.db.getRepository(ProductEntity).existsBy({ id })))
+      throw new NotFoundException('Product not found');
+  }
+  private serialize(v: ProductVariantEntity) {
+    const selections = v.values
+      .map((a) => ({
+        optionId: a.optionValue.optionId,
+        optionName: a.optionValue.option.name,
+        valueId: a.optionValue.id,
+        value: a.optionValue.value,
+      }))
+      .sort((a, b) => a.optionName.localeCompare(b.optionName));
+    return {
+      id: v.id,
+      sku: v.sku,
+      priceOverride: v.priceOverride == null ? null : Number(v.priceOverride),
+      effectivePrice: v.priceOverride == null ? null : Number(v.priceOverride),
+      stock: v.stock,
+      enabled: v.enabled,
+      image: v.image,
+      selections,
+      description: selections.map((s) => s.value).join(' / '),
+    };
+  }
+}

@@ -12,6 +12,8 @@ import { CouponUsageEntity } from '@/src/libs/models/entities/coupon/CouponUsage
 import { ProductVariantEntity } from '@/src/libs/models/entities/product/ProductVariant.entity';
 import { NotificationService } from '@/src/modules/notifications/notification.service';
 import { InvoicesService } from '@/src/modules/invoices/invoices.service';
+import { InventoryService } from '@/src/modules/inventory/inventory.service';
+import { InventoryMovementType } from '@/src/libs/models/entities/inventory/InventoryMovement.entity';
 
 @Injectable()
 export class PaymentCompletionService {
@@ -20,23 +22,20 @@ export class PaymentCompletionService {
     private readonly rewards: RewardsService,
     private readonly notifications: NotificationService,
     private readonly invoices: InvoicesService,
+    private readonly inventory: InventoryService,
   ) {}
 
   async completeVerified(event: VerifiedPaymentEvent) {
     return this.dataSource.transaction(async (manager) => {
-      const payment = await manager
-        .getRepository(PaymentEntity)
-        .findOne({
-          where: { id: event.paymentId },
-          lock: { mode: 'pessimistic_write' },
-        });
+      const payment = await manager.getRepository(PaymentEntity).findOne({
+        where: { id: event.paymentId },
+        lock: { mode: 'pessimistic_write' },
+      });
       if (!payment) throw new BadRequestException('Payment does not exist');
-      const order = await manager
-        .getRepository(OrderEntity)
-        .findOne({
-          where: { paymentId: payment.id },
-          lock: { mode: 'pessimistic_write' },
-        });
+      const order = await manager.getRepository(OrderEntity).findOne({
+        where: { paymentId: payment.id },
+        lock: { mode: 'pessimistic_write' },
+      });
       if (!order) throw new BadRequestException('Payment has no order');
       let action;
       try {
@@ -68,12 +67,10 @@ export class PaymentCompletionService {
       await manager.getRepository(PaymentEntity).save(payment);
       await manager.getRepository(OrderEntity).save(order);
       if (order.couponId) {
-        const coupon = await manager
-          .getRepository(CouponEntity)
-          .findOne({
-            where: { id: order.couponId },
-            lock: { mode: 'pessimistic_write' },
-          });
+        const coupon = await manager.getRepository(CouponEntity).findOne({
+          where: { id: order.couponId },
+          lock: { mode: 'pessimistic_write' },
+        });
         if (!coupon)
           throw new BadRequestException('Order coupon no longer exists');
         if (
@@ -98,18 +95,14 @@ export class PaymentCompletionService {
             throw new BadRequestException(
               'Coupon customer usage limit has been reached',
             );
-          await manager
-            .getRepository(CouponUsageEntity)
-            .save(
-              manager
-                .getRepository(CouponUsageEntity)
-                .create({
-                  couponId: coupon.id,
-                  customerId: order.customerId,
-                  orderId: order.id,
-                  discountAmount: Number(order.couponDiscountAmount),
-                }),
-            );
+          await manager.getRepository(CouponUsageEntity).save(
+            manager.getRepository(CouponUsageEntity).create({
+              couponId: coupon.id,
+              customerId: order.customerId,
+              orderId: order.id,
+              discountAmount: Number(order.couponDiscountAmount),
+            }),
+          );
           coupon.totalUsageCount += 1;
           await manager.getRepository(CouponEntity).save(coupon);
         }
@@ -152,12 +145,10 @@ export class PaymentCompletionService {
     status: PaymentStatus.FAILED | PaymentStatus.CANCELLED;
   }) {
     return this.dataSource.transaction(async (manager) => {
-      const payment = await manager
-        .getRepository(PaymentEntity)
-        .findOne({
-          where: { id: event.paymentId },
-          lock: { mode: 'pessimistic_write' },
-        });
+      const payment = await manager.getRepository(PaymentEntity).findOne({
+        where: { id: event.paymentId },
+        lock: { mode: 'pessimistic_write' },
+      });
       if (!payment) throw new BadRequestException('Payment does not exist');
       if (
         payment.status === event.status &&
@@ -168,12 +159,10 @@ export class PaymentCompletionService {
         throw new BadRequestException(
           `Invalid payment transition: ${payment.status} -> ${event.status}`,
         );
-      const order = await manager
-        .getRepository(OrderEntity)
-        .findOne({
-          where: { paymentId: payment.id },
-          lock: { mode: 'pessimistic_write' },
-        });
+      const order = await manager.getRepository(OrderEntity).findOne({
+        where: { paymentId: payment.id },
+        lock: { mode: 'pessimistic_write' },
+      });
       if (!order) throw new BadRequestException('Payment has no order');
       payment.status = event.status;
       payment.provider = event.provider;
@@ -196,29 +185,15 @@ export class PaymentCompletionService {
       for (const item of await manager
         .getRepository(OrderItemEntity)
         .findBy({ orderId: order.id })) {
-        if (item.variantId) {
-          const variant = await manager
-            .getRepository(ProductVariantEntity)
-            .findOne({
-              where: { id: item.variantId },
-              lock: { mode: 'pessimistic_write' },
-            });
-          if (variant) {
-            variant.stock += item.quantity;
-            await manager.getRepository(ProductVariantEntity).save(variant);
-          }
-          continue;
-        }
-        const product = await manager
-          .getRepository(ProductEntity)
-          .findOne({
-            where: { id: item.productId },
-            lock: { mode: 'pessimistic_write' },
-          });
-        if (product) {
-          product.stock += item.quantity;
-          await manager.getRepository(ProductEntity).save(product);
-        }
+        await this.inventory.change(manager, {
+          productId: item.productId,
+          variantId: item.variantId,
+          delta: item.quantity,
+          type: InventoryMovementType.ORDER_RESTORE,
+          orderId: order.id,
+          reason: 'Payment failed or cancelled',
+          referenceKey: `order_restore:${order.id}:${item.id}`,
+        });
       }
       await manager.getRepository(PaymentEntity).save(payment);
       await manager.getRepository(OrderEntity).save(order);

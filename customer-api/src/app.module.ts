@@ -23,6 +23,7 @@ import { RewardsModule } from '@/src/modules/rewards/rewards.module';
 import { WishlistModule } from '@/src/modules/wishlist/wishlist.module';
 import { NotificationsModule } from '@/src/modules/notifications/notifications.module';
 import { InvoicesModule } from '@/src/modules/invoices/invoices.module';
+import { InventoryModule } from '@/src/modules/inventory/inventory.module';
 
 @Module({
   imports: [
@@ -54,6 +55,7 @@ import { InvoicesModule } from '@/src/modules/invoices/invoices.module';
     WishlistModule,
     NotificationsModule,
     InvoicesModule,
+    InventoryModule,
   ],
   controllers: [],
   providers: [],

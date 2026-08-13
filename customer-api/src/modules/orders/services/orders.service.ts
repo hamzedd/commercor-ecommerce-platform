@@ -20,6 +20,8 @@ import { ProductVariantEntity } from '@/src/libs/models/entities/product/Product
 import { OrderStatusHistoryEntity } from '@/src/libs/models/entities/order/OrderStatusHistory.entity';
 import { NotificationService } from '@/src/modules/notifications/notification.service';
 import { InvoiceEntity } from '@/src/libs/models/entities/invoice/Invoice.entity';
+import { InventoryService } from '@/src/modules/inventory/inventory.service';
+import { InventoryMovementType } from '@/src/libs/models/entities/inventory/InventoryMovement.entity';
 
 @Injectable()
 export class OrdersService {
@@ -32,6 +34,7 @@ export class OrdersService {
     private readonly pricingService: PricingService,
     private readonly rewardsService: RewardsService,
     private readonly notifications: NotificationService,
+    private readonly inventory: InventoryService,
   ) {}
 
   async quote(customerId: string, data: CreateOrderDto) {
@@ -101,14 +104,6 @@ export class OrdersService {
 
       for (const item of pricing.items) {
         const product = item.product;
-        if (item.variant) {
-          item.variant.stock -= item.quantity;
-          await manager.getRepository(ProductVariantEntity).save(item.variant);
-        } else {
-          product.stock -= item.quantity;
-          await productsRepo.save(product);
-        }
-
         orderItems.push(
           orderItemsRepo.create({
             order,
@@ -151,7 +146,7 @@ export class OrdersService {
         pricing.cashbackUsed,
       );
 
-      await Promise.all(
+      const savedItems = await Promise.all(
         orderItems.map((item) =>
           orderItemsRepo.save({
             ...item,
@@ -159,6 +154,15 @@ export class OrdersService {
           }),
         ),
       );
+      for (const item of savedItems)
+        await this.inventory.change(manager, {
+          productId: item.productId,
+          variantId: item.variantId,
+          delta: -item.quantity,
+          type: InventoryMovementType.ORDER_RESERVATION,
+          orderId: savedOrder.id,
+          referenceKey: `order_reservation:${savedOrder.id}:${item.id}`,
+        });
       await this.notifications.queue(
         manager,
         'order_created',
@@ -193,10 +197,12 @@ export class OrdersService {
     return await Promise.all(
       orders.map(async (order) => ({
         ...order,
-        invoice: await this.dataSource.manager.getRepository(InvoiceEntity).findOne({
-          where: { orderId: order.id },
-          select: { id: true, invoiceNumber: true, issuedAt: true },
-        }),
+        invoice: await this.dataSource.manager
+          .getRepository(InvoiceEntity)
+          .findOne({
+            where: { orderId: order.id },
+            select: { id: true, invoiceNumber: true, issuedAt: true },
+          }),
         statusHistory: (
           await this.dataSource.manager
             .getRepository(OrderStatusHistoryEntity)
