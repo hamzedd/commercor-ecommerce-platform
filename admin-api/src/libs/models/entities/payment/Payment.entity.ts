@@ -3,10 +3,10 @@ import { BaseEntity } from '@/src/libs/models/entities/BaseEntity';
 
 @Entity('payments')
 export class PaymentEntity extends BaseEntity {
-  @Column()
+  @Column({ type: 'decimal', precision: 12, scale: 2 })
   totalAmount: number;
 
-  @Column()
+  @Column({ type: 'decimal', precision: 12, scale: 2, default: 0 })
   refundedAmount: number;
 
   @Column()

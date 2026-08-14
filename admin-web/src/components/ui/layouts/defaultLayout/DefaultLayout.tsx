@@ -10,7 +10,9 @@ const { Header, Sider, Content } = Layout;
 function DefaultLayout() {
   const navigate = useNavigate();
   const { resetUser, user } = useAuth();
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(
+    () => window.matchMedia("(max-width: 991px)").matches,
+  );
 
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -18,7 +20,15 @@ function DefaultLayout() {
 
   return (
     <Layout className={"h-full"}>
-      <Sider collapsible collapsed={collapsed}>
+      <Sider
+        collapsible
+        collapsed={collapsed}
+        collapsedWidth={0}
+        breakpoint="lg"
+        onBreakpoint={setCollapsed}
+        trigger={null}
+        className="max-lg:!fixed max-lg:!inset-y-0 max-lg:!start-0 max-lg:!z-50"
+      >
         <div className="demo-logo-vertical" />
         <Menu
           theme="dark"
@@ -49,7 +59,7 @@ function DefaultLayout() {
           ]}
         />
       </Sider>
-      <Layout>
+      <Layout className="min-w-0">
         <Header style={{ padding: 0, background: colorBgContainer }}>
           <Button
             type="text"
@@ -64,8 +74,8 @@ function DefaultLayout() {
         </Header>
         <Content
           style={{
-            margin: "24px 16px",
-            padding: 24,
+            margin: "clamp(8px, 2vw, 24px) clamp(8px, 1.5vw, 16px)",
+            padding: "clamp(12px, 2vw, 24px)",
             minHeight: 280,
             background: colorBgContainer,
             borderRadius: borderRadiusLG,

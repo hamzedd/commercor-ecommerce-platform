@@ -20,7 +20,7 @@ async function ProductPageHeader({ productTranslation, product }: Props) {
           product={product}
           productTranslation={productTranslation}
         />
-        <div className="mt-5 flex flex-col gap-4 sm:mt-6 sm:flex-row sm:items-end sm:justify-between">
+        <div className="mt-5 sm:mt-6">
           <div className="max-w-4xl">
             <p className="text-xs font-bold tracking-[0.18em] text-amber-300 uppercase">
               {t("productOverview")}
@@ -29,10 +29,6 @@ async function ProductPageHeader({ productTranslation, product }: Props) {
               {productTranslation?.name}
             </h1>
           </div>
-          <p className="w-fit rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-xs text-stone-300">
-            <span className="font-semibold text-white">{t("productId")}</span>:{" "}
-            {product.id}
-          </p>
         </div>
       </div>
     </section>
