@@ -47,6 +47,7 @@ export class PayPalWebhookService {
         payment.id,
         event.externalTransactionId,
         event.refundAmount,
+        event.currencyCode,
       );
     }
     throw new BadRequestException('Unsupported PayPal webhook event');

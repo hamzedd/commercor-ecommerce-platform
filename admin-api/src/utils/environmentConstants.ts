@@ -14,6 +14,12 @@ export const MINIO_PORT = process.env.MINIO_PORT;
 export const MINIO_ACCESS_KEY = process.env.MINIO_ACCESS_KEY;
 export const MINIO_SECRET_KEY = process.env.MINIO_SECRET_KEY;
 export const PAYPAL_ENV = (process.env.PAYPAL_ENV || 'sandbox').toLowerCase();
+if (!['sandbox', 'live'].includes(PAYPAL_ENV))
+  throw new Error('PAYPAL_ENV must be sandbox or live');
+if (PAYPAL_ENV === 'live' && process.env.PAYPAL_ALLOW_LIVE !== 'true')
+  throw new Error(
+    'Live PayPal is disabled. Set PAYPAL_ALLOW_LIVE=true explicitly to enable it.',
+  );
 export const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID || '';
 export const PAYPAL_CLIENT_SECRET = process.env.PAYPAL_CLIENT_SECRET || '';
 

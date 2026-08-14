@@ -16,11 +16,25 @@ export class VerifiedRefundService {
     private readonly notifications: NotificationService,
   ) {}
 
-  async record(paymentId: string, externalRefundId: string, amount: number) {
+  async record(
+    paymentId: string,
+    externalRefundId: string,
+    amount: number,
+    currencyCode: string,
+  ) {
     return this.dataSource.transaction(async (manager) => {
       const refunds = manager.getRepository(PaymentRefundEntity);
       const duplicate = await refunds.findOneBy({ externalRefundId });
-      if (duplicate) return { status: 'recorded', idempotent: true };
+      if (duplicate) {
+        if (
+          duplicate.paymentId !== paymentId ||
+          Number(duplicate.amount) !== Number(amount)
+        )
+          throw new BadRequestException(
+            'Refund reference conflicts with an existing refund',
+          );
+        return { status: 'recorded', idempotent: true };
+      }
       const payment = await manager
         .getRepository(PaymentEntity)
         .findOne({
@@ -28,6 +42,13 @@ export class VerifiedRefundService {
           lock: { mode: 'pessimistic_write' },
         });
       if (!payment) throw new BadRequestException('Payment does not exist');
+      if (
+        !payment.currencyCode ||
+        payment.currencyCode.toUpperCase() !== currencyCode.toUpperCase()
+      )
+        throw new BadRequestException(
+          'Refund currency does not match the payment currency',
+        );
       const paid = Number(payment.paidAmount ?? payment.totalAmount);
       const remaining = Number(
         (paid - Number(payment.refundedAmount)).toFixed(2),
