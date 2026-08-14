@@ -29,3 +29,10 @@ export function failedDelivery(
           ),
   };
 }
+
+export function safeDeliveryError(error: unknown, secrets: string[] = []) {
+  let message = String((error as Error)?.message || error || 'Delivery failed');
+  for (const secret of secrets.filter(Boolean))
+    message = message.replaceAll(secret, '[redacted]');
+  return message.slice(0, 2_000);
+}

@@ -9,10 +9,14 @@ import {
   NotificationOutboxEntity,
   OutboxStatus,
 } from '@/src/libs/models/entities/notification/NotificationOutbox.entity';
-import { EMAIL_MAX_ATTEMPTS } from '@/src/utils/environmentConstants';
+import {
+  EMAIL_MAX_ATTEMPTS,
+  EMAIL_PROVIDER,
+  SMTP_PASSWORD,
+} from '@/src/utils/environmentConstants';
 import { EmailProvider } from './email.provider';
 import { renderNotification } from './notification.templates';
-import { failedDelivery } from './outbox-policy';
+import { failedDelivery, safeDeliveryError } from './outbox-policy';
 
 @Injectable()
 export class OutboxWorker
@@ -37,6 +41,7 @@ export class OutboxWorker
   }
 
   async runOnce(now = new Date(), batch = 25) {
+    if (EMAIL_PROVIDER === 'disabled') return 0;
     if (this.running) return 0;
     this.running = true;
     try {
@@ -85,7 +90,7 @@ export class OutboxWorker
             row,
             failedDelivery(row.attempts, EMAIL_MAX_ATTEMPTS, now),
           );
-          row.lastError = String((error as Error).message).slice(0, 2_000);
+          row.lastError = safeDeliveryError(error, [SMTP_PASSWORD]);
           this.log.warn(`Notification ${row.id} failed`);
         }
         await this.db.getRepository(NotificationOutboxEntity).save(row);

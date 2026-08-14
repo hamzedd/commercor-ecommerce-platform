@@ -93,8 +93,10 @@ export class FulfillmentService {
       ) {
         const outbox = m.getRepository(NotificationOutboxEntity),
           deduplicationKey = `${type}:${order.id}`;
-        if (!(await outbox.existsBy({ deduplicationKey })))
-          await outbox.save(
+        await outbox
+          .createQueryBuilder()
+          .insert()
+          .values(
             outbox.create({
               type,
               deduplicationKey,
@@ -122,7 +124,9 @@ export class FulfillmentService {
               nextAttemptAt: null,
               sentAt: null,
             }),
-          );
+          )
+          .orIgnore()
+          .execute();
       }
       return {
         ...order,

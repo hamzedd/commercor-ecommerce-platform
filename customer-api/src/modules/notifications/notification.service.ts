@@ -17,23 +17,27 @@ export class NotificationService {
     payload: Record<string, unknown>,
   ) {
     const repo = manager.getRepository(NotificationOutboxEntity);
-    if (await repo.existsBy({ deduplicationKey: dedupe })) return;
-    await repo.save(
-      repo.create({
-        type,
-        deduplicationKey: dedupe,
-        customerId: customer.id,
-        orderId: null,
-        recipientEmail: customer.email,
-        subject: this.subject(type),
-        payload: { customerName: customer.firstName, ...payload },
-        status: OutboxStatus.PENDING,
-        attempts: 0,
-        lastError: null,
-        nextAttemptAt: null,
-        sentAt: null,
-      }),
-    );
+    await repo
+      .createQueryBuilder()
+      .insert()
+      .values(
+        repo.create({
+          type,
+          deduplicationKey: dedupe,
+          customerId: customer.id,
+          orderId: null,
+          recipientEmail: customer.email,
+          subject: this.subject(type),
+          payload: { customerName: customer.firstName, ...payload },
+          status: OutboxStatus.PENDING,
+          attempts: 0,
+          lastError: null,
+          nextAttemptAt: null,
+          sentAt: null,
+        }) as any,
+      )
+      .orIgnore()
+      .execute();
   }
   async queue(
     manager: EntityManager,
@@ -47,30 +51,34 @@ export class NotificationService {
       .findOneBy({ id: order.customerId });
     if (!customer) return;
     const repo = manager.getRepository(NotificationOutboxEntity);
-    if (await repo.existsBy({ deduplicationKey: dedupe })) return;
-    await repo.save(
-      repo.create({
-        type,
-        deduplicationKey: dedupe,
-        customerId: customer.id,
-        orderId: order.id,
-        recipientEmail: customer.email,
-        subject: this.subject(type),
-        payload: {
-          customerName: customer.firstName,
-          orderReference: order.id,
-          orderUrl: DOMAIN_URL
-            ? `${DOMAIN_URL.replace(/\/$/, '')}/profile`
-            : undefined,
-          ...payload,
-        },
-        status: OutboxStatus.PENDING,
-        attempts: 0,
-        lastError: null,
-        nextAttemptAt: null,
-        sentAt: null,
-      }),
-    );
+    await repo
+      .createQueryBuilder()
+      .insert()
+      .values(
+        repo.create({
+          type,
+          deduplicationKey: dedupe,
+          customerId: customer.id,
+          orderId: order.id,
+          recipientEmail: customer.email,
+          subject: this.subject(type),
+          payload: {
+            customerName: customer.firstName,
+            orderReference: order.id,
+            orderUrl: DOMAIN_URL
+              ? `${DOMAIN_URL.replace(/\/$/, '')}/profile`
+              : undefined,
+            ...payload,
+          },
+          status: OutboxStatus.PENDING,
+          attempts: 0,
+          lastError: null,
+          nextAttemptAt: null,
+          sentAt: null,
+        }) as any,
+      )
+      .orIgnore()
+      .execute();
   }
   private subject(t: string) {
     return (

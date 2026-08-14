@@ -6,22 +6,35 @@ const esc = (v: unknown) =>
         c
       ]!,
   );
+const safeUrl = (value: unknown) => {
+  const url = String(value || '');
+  try {
+    return ['http:', 'https:'].includes(new URL(url).protocol) ? url : '';
+  } catch {
+    return '';
+  }
+};
 export function renderNotification(type: string, p: any) {
   const name = esc(p.customerName || 'Customer'),
     order = esc(p.orderReference),
     store = esc(p.storeName || 'Commercor'),
-    link = String(p.orderUrl || '');
+    link = safeUrl(p.orderUrl);
   if (type === 'password_reset') {
-    const resetLink = esc(p.resetUrl);
+    const resetUrl = safeUrl(p.resetUrl);
+    const resetLink = esc(resetUrl);
     const minutes = esc(p.expiryMinutes);
     return {
-      text: `${store}\nHello ${name},\nReset your password: ${p.resetUrl}\nThis link expires in ${minutes} minutes. If you didn't request this, you can ignore this email.`,
-      html: `<div style="font-family:Arial;color:#1c1917"><h1>${store}</h1><p>Hello ${name},</p><p>We received a request to reset your password.</p><p><a href="${resetLink}">Reset your password</a></p><p>This link expires in ${minutes} minutes.</p><p>If you didn't request this, you can ignore this email.</p></div>`,
+      text: `${store}\nHello ${name},\n${resetUrl ? `Reset your password: ${resetUrl}\n` : ''}This link expires in ${minutes} minutes. If you didn't request this, you can ignore this email.`,
+      html: `<div style="font-family:Arial;color:#1c1917"><h1>${store}</h1><p>Hello ${name},</p><p>We received a request to reset your password.</p>${resetUrl ? `<p><a href="${resetLink}">Reset your password</a></p>` : ''}<p>This link expires in ${minutes} minutes.</p><p>If you didn't request this, you can ignore this email.</p></div>`,
     };
   }
   if (type === 'abandoned_cart') {
-    const cartLink = esc(p.cartUrl);
-    return { text: `${store}\nHello ${name},\nYour cart is waiting. Return to cart: ${p.cartUrl}`, html: `<div style="font-family:Arial;color:#1c1917"><h1>${store}</h1><p>Hello ${name},</p><p>Your cart is waiting${p.itemCount ? ` with ${esc(p.itemCount)} item(s)` : ''}.</p><p><a href="${cartLink}">Return to cart</a></p></div>` };
+    const cartUrl = safeUrl(p.cartUrl);
+    const cartLink = esc(cartUrl);
+    return {
+      text: `${store}\nHello ${name},\nYour cart is waiting.${cartUrl ? ` Return to cart: ${cartUrl}` : ''}`,
+      html: `<div style="font-family:Arial;color:#1c1917"><h1>${store}</h1><p>Hello ${name},</p><p>Your cart is waiting${p.itemCount ? ` with ${esc(p.itemCount)} item(s)` : ''}.</p>${cartUrl ? `<p><a href="${cartLink}">Return to cart</a></p>` : ''}</div>`,
+    };
   }
   const messages: Record<string, string> = {
     order_created: 'Your order was created and payment is pending.',
@@ -36,8 +49,9 @@ export function renderNotification(type: string, p: any) {
   const body = messages[type] || 'There is an update to your order.';
   const invoice = p.invoiceNumber ? `\nInvoice: ${esc(p.invoiceNumber)}` : '';
   const text = `${store}\nHello ${name},\n${body}\nOrder: ${order}${invoice}${link ? `\n${link}` : ''}`;
+  const trackingUrl = safeUrl(p.trackingUrl);
   return {
     text,
-    html: `<div style="font-family:Arial;color:#1c1917"><h1>${store}</h1><p>Hello ${name},</p><p>${body}</p><p><strong>Order:</strong> ${order}</p>${p.invoiceNumber ? `<p><strong>Invoice:</strong> ${esc(p.invoiceNumber)}</p>` : ''}${link ? `<p><a href="${esc(link)}">View order</a></p>` : ''}${p.trackingUrl ? `<p><a href="${esc(p.trackingUrl)}">Track package</a></p>` : ''}</div>`,
+    html: `<div style="font-family:Arial;color:#1c1917"><h1>${store}</h1><p>Hello ${name},</p><p>${body}</p><p><strong>Order:</strong> ${order}</p>${p.invoiceNumber ? `<p><strong>Invoice:</strong> ${esc(p.invoiceNumber)}</p>` : ''}${link ? `<p><a href="${esc(link)}">View order</a></p>` : ''}${trackingUrl ? `<p><a href="${esc(trackingUrl)}">Track package</a></p>` : ''}</div>`,
   };
 }
