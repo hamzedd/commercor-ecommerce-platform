@@ -1,0 +1,189 @@
+name: commercor
+
+x-api-environment: &api-environment
+  NODE_ENV: production
+  DB_TYPE: postgres
+  DB_HOST: postgres
+  DB_PORT: 5432
+  DB_NAME: ${POSTGRES_DB}
+  DB_USERNAME: ${POSTGRES_USER}
+  DB_PASSWORD: ${POSTGRES_PASSWORD}
+  DB_POOL_MAX: ${DB_POOL_MAX:-10}
+  DB_CONNECTION_TIMEOUT_MS: ${DB_CONNECTION_TIMEOUT_MS:-5000}
+  DB_IDLE_TIMEOUT_MS: ${DB_IDLE_TIMEOUT_MS:-30000}
+  JWT_SECRET: ${JWT_SECRET}
+  ADMIN_WEB_ORIGIN: https://${ADMIN_DOMAIN}
+  CUSTOMER_WEB_ORIGIN: https://${STORE_DOMAIN}
+  RATE_LIMIT_WINDOW_MS: ${RATE_LIMIT_WINDOW_MS:-60000}
+  RATE_LIMIT_MAX: ${RATE_LIMIT_MAX:-300}
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks: [backend]
+
+  minio:
+    image: minio/minio:RELEASE.2025-04-22T22-12-26Z
+    restart: unless-stopped
+    command: server /data --console-address :9001
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    volumes:
+      - minio-data:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks: [backend]
+
+  admin-api:
+    build: ./admin-api
+    restart: unless-stopped
+    environment:
+      <<: *api-environment
+      PORT: 3000
+      MINIO_ENDPOINT: minio
+      MINIO_PORT: 9000
+      MINIO_USE_SSL: "false"
+      MINIO_ACCESS_KEY: ${MINIO_ROOT_USER}
+      MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD}
+      UPLOAD_MAX_BYTES: ${UPLOAD_MAX_BYTES:-5242880}
+      AUTH_RATE_LIMIT_MAX: ${AUTH_RATE_LIMIT_MAX:-10}
+      PAYPAL_ENV: ${PAYPAL_ENV:-sandbox}
+      PAYPAL_CLIENT_ID: ${PAYPAL_CLIENT_ID:-}
+      PAYPAL_CLIENT_SECRET: ${PAYPAL_CLIENT_SECRET:-}
+      PAYPAL_ALLOW_LIVE: ${PAYPAL_ALLOW_LIVE:-false}
+      CRM_NEW_CUSTOMER_DAYS: ${CRM_NEW_CUSTOMER_DAYS:-30}
+      CRM_ACTIVE_DAYS: ${CRM_ACTIVE_DAYS:-60}
+      CRM_AT_RISK_DAYS: ${CRM_AT_RISK_DAYS:-90}
+      CRM_INACTIVE_DAYS: ${CRM_INACTIVE_DAYS:-180}
+      CRM_VIP_MIN_SPEND: ${CRM_VIP_MIN_SPEND:-1000}
+      CRM_VIP_MIN_ORDERS: ${CRM_VIP_MIN_ORDERS:-10}
+    depends_on:
+      postgres: { condition: service_healthy }
+      minio: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:3000/api/admin/health/ready"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+    networks: [backend]
+
+  customer-api:
+    build: ./customer-api
+    restart: unless-stopped
+    environment:
+      <<: *api-environment
+      PORT: 3001
+      DOMAIN_URL: https://${STORE_DOMAIN}
+      SENSITIVE_RATE_LIMIT_MAX: ${SENSITIVE_RATE_LIMIT_MAX:-20}
+      PAYMENT_PROVIDER: ${PAYMENT_PROVIDER:-manual_disabled}
+      PAYMENT_PENDING_EXPIRY_MINUTES: ${PAYMENT_PENDING_EXPIRY_MINUTES:-30}
+      PAYPAL_ENV: ${PAYPAL_ENV:-sandbox}
+      PAYPAL_CLIENT_ID: ${PAYPAL_CLIENT_ID:-}
+      PAYPAL_CLIENT_SECRET: ${PAYPAL_CLIENT_SECRET:-}
+      PAYPAL_WEBHOOK_ID: ${PAYPAL_WEBHOOK_ID:-}
+      PAYPAL_ALLOW_LIVE: ${PAYPAL_ALLOW_LIVE:-false}
+      EMAIL_PROVIDER: ${EMAIL_PROVIDER:-disabled}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_SECURE: ${SMTP_SECURE:-false}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_FROM_EMAIL: ${SMTP_FROM_EMAIL:-}
+      SMTP_FROM_NAME: ${SMTP_FROM_NAME:-Commercor}
+      EMAIL_MAX_ATTEMPTS: ${EMAIL_MAX_ATTEMPTS:-5}
+      PASSWORD_RESET_EXPIRY_MINUTES: ${PASSWORD_RESET_EXPIRY_MINUTES:-30}
+      ABANDONED_CART_MINUTES: ${ABANDONED_CART_MINUTES:-60}
+      ABANDONED_CART_EMAIL_COOLDOWN_HOURS: ${ABANDONED_CART_EMAIL_COOLDOWN_HOURS:-24}
+    depends_on:
+      postgres: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:3001/api/health/ready"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+    networks: [backend]
+
+  admin-web:
+    build:
+      context: ./admin-web
+      args:
+        VITE_API_BASE_URL: https://${ADMIN_API_DOMAIN}/api
+    restart: unless-stopped
+    depends_on: [admin-api]
+    networks: [frontend]
+
+  customer-web:
+    build:
+      context: ./customer-web
+      args:
+        NEXT_PUBLIC_API_BASE_URL: https://${CUSTOMER_API_DOMAIN}/api
+        NEXT_PUBLIC_SSR_API_BASE_URL: http://customer-api:3001/api
+        NEXT_PUBLIC_FILES_BASE_URL: https://${ADMIN_API_DOMAIN}/api
+    restart: unless-stopped
+    environment:
+      PORT: 8080
+      NEXT_PUBLIC_API_BASE_URL: https://${CUSTOMER_API_DOMAIN}/api
+      NEXT_PUBLIC_SSR_API_BASE_URL: http://customer-api:3001/api
+      NEXT_PUBLIC_FILES_BASE_URL: https://${ADMIN_API_DOMAIN}/api
+    depends_on: [customer-api, admin-api]
+    networks: [frontend, backend]
+
+  proxy:
+    image: caddy:2.8.4-alpine
+    restart: unless-stopped
+    environment:
+      STORE_DOMAIN: ${STORE_DOMAIN}
+      CUSTOMER_API_DOMAIN: ${CUSTOMER_API_DOMAIN}
+      ADMIN_DOMAIN: ${ADMIN_DOMAIN}
+      ADMIN_API_DOMAIN: ${ADMIN_API_DOMAIN}
+      ACME_EMAIL: ${ACME_EMAIL}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on: [customer-web, admin-web, customer-api, admin-api]
+    networks: [frontend, backend]
+
+  migrations:
+    build: ./admin-api
+    profiles: ["tools"]
+    environment:
+      <<: *api-environment
+      MINIO_ENDPOINT: minio
+      MINIO_ACCESS_KEY: ${MINIO_ROOT_USER}
+      MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD}
+    depends_on:
+      postgres: { condition: service_healthy }
+    command: ["node", "node_modules/typeorm/cli.js", "-d", "dist/utils/migrationDataSource.js", "migration:run"]
+    networks: [backend]
+
+networks:
+  frontend:
+  backend:
+    internal: true
+
+volumes:
+  postgres-data:
+  minio-data:
+  caddy-data:
+  caddy-config:

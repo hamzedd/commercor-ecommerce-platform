@@ -8,6 +8,9 @@ import {
   DB_PORT,
   DB_TYPE,
   DB_USERNAME,
+  DB_POOL_MAX,
+  DB_CONNECTION_TIMEOUT_MS,
+  DB_IDLE_TIMEOUT_MS,
 } from '@/src/utils/environmentConstants';
 import { ConfigModule } from '@nestjs/config';
 import { CustomersModule } from './modules/customers/customers.module';
@@ -32,6 +35,7 @@ import { AbandonedCartsModule } from '@/src/modules/abandonedCarts/abandoned-car
 import { PromotionsModule } from '@/src/modules/promotions/promotions.module';
 import { AnalyticsModule } from '@/src/modules/analytics/analytics.module';
 import { HealthController } from './health.controller';
+import { SystemModule } from './modules/system/system.module';
 
 @Module({
   imports: [
@@ -44,6 +48,11 @@ import { HealthController } from './health.controller';
       password: DB_PASSWORD,
       database: DB_NAME,
       synchronize: false,
+      extra: {
+        max: DB_POOL_MAX,
+        connectionTimeoutMillis: DB_CONNECTION_TIMEOUT_MS,
+        idleTimeoutMillis: DB_IDLE_TIMEOUT_MS,
+      },
       entities: [
         'dist/libs/models/entities/*.entity.{js,ts}',
         'dist/libs/models/entities/*/*.entity.{js,ts}',
@@ -71,6 +80,7 @@ import { HealthController } from './health.controller';
     AbandonedCartsModule,
     PromotionsModule,
     AnalyticsModule,
+    SystemModule,
   ],
   controllers: [HealthController],
   providers: [],

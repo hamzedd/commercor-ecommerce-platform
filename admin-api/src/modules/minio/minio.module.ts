@@ -6,6 +6,7 @@ import {
   MINIO_ENDPOINT,
   MINIO_PORT,
   MINIO_SECRET_KEY,
+  MINIO_USE_SSL,
 } from '@/src/utils/environmentConstants';
 
 @Module({
@@ -19,7 +20,7 @@ import {
           port: +MINIO_PORT,
           accessKey: MINIO_ACCESS_KEY,
           secretKey: MINIO_SECRET_KEY,
-          useSSL: false,
+          useSSL: MINIO_USE_SSL,
         });
       },
     },

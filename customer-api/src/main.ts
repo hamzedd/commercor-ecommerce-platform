@@ -4,8 +4,13 @@ import { AppModule } from './app.module';
 import { PORT } from '@/src/utils/environmentConstants';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { updateGlobalConfig } from 'nestjs-paginate';
-import { allowedOrigins, rateLimiter, securityHeaders } from './utils/httpSecurity';
+import {
+  allowedOrigins,
+  rateLimiter,
+  securityHeaders,
+} from './utils/httpSecurity';
 import { SafeExceptionFilter } from './utils/safeException.filter';
+import { requestId } from './utils/requestId';
 
 async function bootstrap() {
   updateGlobalConfig({
@@ -15,8 +20,9 @@ async function bootstrap() {
   });
 
   const app = await NestFactory.create(AppModule, { rawBody: true });
+  app.enableShutdownHooks();
   app.getHttpAdapter().getInstance().set('trust proxy', 1);
-  app.use(securityHeaders, rateLimiter);
+  app.use(requestId, securityHeaders, rateLimiter);
   app.useGlobalFilters(new SafeExceptionFilter());
   app.setGlobalPrefix('api');
   app.useGlobalPipes(

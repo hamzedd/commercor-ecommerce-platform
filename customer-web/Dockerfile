@@ -23,6 +23,13 @@ RUN corepack enable
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
+ARG NEXT_PUBLIC_API_BASE_URL
+ARG NEXT_PUBLIC_SSR_API_BASE_URL
+ARG NEXT_PUBLIC_FILES_BASE_URL
+ENV NEXT_PUBLIC_API_BASE_URL=$NEXT_PUBLIC_API_BASE_URL
+ENV NEXT_PUBLIC_SSR_API_BASE_URL=$NEXT_PUBLIC_SSR_API_BASE_URL
+ENV NEXT_PUBLIC_FILES_BASE_URL=$NEXT_PUBLIC_FILES_BASE_URL
+
 RUN \
   if [ -f yarn.lock ]; then yarn build; \
   elif [ -f pnpm-lock.yaml ]; then pnpm build; \

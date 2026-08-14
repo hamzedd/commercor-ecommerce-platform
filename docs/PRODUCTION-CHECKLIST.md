@@ -4,6 +4,7 @@
 
 - [ ] Provision PostgreSQL with TLS, least-privilege application credentials, connection limits, and no public exposure.
 - [ ] Back up the database and object storage; test restore procedures and record retention/RPO/RTO.
+- [ ] Before every migration, verify the database backup, back up object storage when relevant, review `migration:show`, release notes, application/schema compatibility, and a written rollback or forward-fix plan.
 - [ ] Run every TypeORM migration in order against a staging copy; confirm `synchronize=false` in both APIs.
 - [ ] Store a unique 32+ character `JWT_SECRET` in a secret manager. Do not place secrets in images, source control, frontend variables, or logs.
 - [ ] Set `NODE_ENV=production`, API ports, all DB variables, and explicit `CUSTOMER_WEB_ORIGIN` / `ADMIN_WEB_ORIGIN` (or `CORS_ALLOWED_ORIGINS`).
@@ -20,14 +21,15 @@
 - [ ] Configure both API environment files with the same database connection and all required service variables.
 - [ ] Build `admin-api`, then run `node node_modules/typeorm/cli.js -d dist/utils/migrationDataSource.js migration:run` from `admin-api`.
 - [ ] Run `migration:show` and confirm every migration, beginning with `InitialSchema1786224000000`, is marked `[X]`.
-- [ ] Bootstrap the first admin through an approved operational process. There is intentionally no default production password in migrations.
+- [ ] Bootstrap the first admin with the documented `admin:create` CLI and process-scoped `ADMIN_BOOTSTRAP_*` values. Unset them afterward. There is no public bootstrap route or default password.
 - [ ] Start both APIs and verify `/api/admin/health` and `/api/health` before exposing traffic.
 
 For databases created before the baseline migration, take a verified backup and run the normal migration command. `InitialSchema1786224000000` validates that all legacy core tables exist and then records itself without recreating them. It aborts on a partial legacy schema. The following corrective migration safely adds any missing product-filter category indexes. Never manually insert the baseline migration record unless the documented validation has been performed.
 
 ## Observability and operations
 
-- [ ] Monitor `GET /api/admin/health` and `GET /api/health`; add infrastructure-level DB/object-storage readiness probes if required.
+- [ ] Monitor liveness and DB-backed readiness at `/api/admin/health/live`, `/api/admin/health/ready`, `/api/health/live`, and `/api/health/ready`.
+- [ ] Alert on outbox backlog using the ADMIN-only count endpoint `/api/admin/system/notifications`; never export message bodies or recipients to public monitoring.
 - [ ] Centralize structured logs and alert on unexpected errors, migration/startup failures, payment failures, webhook verification failures, and permanently failed email outbox records.
 - [ ] Ensure logs never retain passwords, JWTs, reset tokens, provider credentials, or full sensitive customer payloads.
 - [ ] Alert on elevated 401/403/429/5xx rates, payment reconciliation differences, storage errors, and backup failures.

@@ -5,13 +5,19 @@ import { ValidationError } from 'class-validator';
 import flattenValidationErrors from '@/src/utils/functions/flattenClassValidationErrors';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { PORT } from '@/src/utils/environmentConstants';
-import { allowedOrigins, rateLimiter, securityHeaders } from './utils/httpSecurity';
+import {
+  allowedOrigins,
+  rateLimiter,
+  securityHeaders,
+} from './utils/httpSecurity';
 import { SafeExceptionFilter } from './utils/safeException.filter';
+import { requestId } from './utils/requestId';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableShutdownHooks();
   app.getHttpAdapter().getInstance().set('trust proxy', 1);
-  app.use(securityHeaders, rateLimiter);
+  app.use(requestId, securityHeaders, rateLimiter);
   app.useGlobalFilters(new SafeExceptionFilter());
   app.setGlobalPrefix('api/admin');
   app.useGlobalPipes(

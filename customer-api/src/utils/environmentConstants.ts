@@ -8,6 +8,15 @@ export const DB_PORT = parseInt(process.env.DB_PORT || '5432', 10);
 export const DB_USERNAME = process.env.DB_USERNAME;
 export const DB_PASSWORD = process.env.DB_PASSWORD;
 export const DB_NAME = process.env.DB_NAME;
+export const DB_POOL_MAX = Math.max(1, Number(process.env.DB_POOL_MAX || 10));
+export const DB_CONNECTION_TIMEOUT_MS = Math.max(
+  1000,
+  Number(process.env.DB_CONNECTION_TIMEOUT_MS || 5000),
+);
+export const DB_IDLE_TIMEOUT_MS = Math.max(
+  1000,
+  Number(process.env.DB_IDLE_TIMEOUT_MS || 30000),
+);
 export const MINIO_ENDPOINT = process.env.MINIO_ENDPOINT;
 export const MINIO_PORT = process.env.MINIO_PORT;
 export const MINIO_ACCESS_KEY = process.env.MINIO_ACCESS_KEY;

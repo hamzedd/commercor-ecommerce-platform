@@ -8,6 +8,9 @@ import {
   DB_PORT,
   DB_TYPE,
   DB_USERNAME,
+  DB_POOL_MAX,
+  DB_CONNECTION_TIMEOUT_MS,
+  DB_IDLE_TIMEOUT_MS,
 } from './utils/environmentConstants';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { ProductsModule } from './modules/products/products.module';
@@ -38,6 +41,11 @@ import { HealthController } from './health.controller';
       password: DB_PASSWORD,
       database: DB_NAME,
       synchronize: false,
+      extra: {
+        max: DB_POOL_MAX,
+        connectionTimeoutMillis: DB_CONNECTION_TIMEOUT_MS,
+        idleTimeoutMillis: DB_IDLE_TIMEOUT_MS,
+      },
       entities: [
         'dist/libs/models/entities/*.entity.{js,ts}',
         'dist/libs/models/entities/*/*.entity.{js,ts}',
