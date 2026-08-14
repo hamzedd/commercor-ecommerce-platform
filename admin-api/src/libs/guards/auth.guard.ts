@@ -29,6 +29,8 @@ export class AuthGuard implements CanActivate {
       const payload: { id: string; username: string } =
         await this.jwtService.verifyAsync(token, {
           secret: JWT_SECRET,
+          issuer: 'commercor-admin-api',
+          audience: 'commercor-admin-web',
         });
 
       request['user'] = await this.usersRepository.findOneOrFail({
@@ -46,6 +48,6 @@ export class AuthGuard implements CanActivate {
 
   private extractTokenFromHeader(request: Request): string | undefined {
     const [type, token] = request.headers.authorization?.split(' ') ?? [];
-    return type === 'Bearer' ? token : undefined;
+    return type?.toLowerCase() === 'bearer' && token ? token : undefined;
   }
 }

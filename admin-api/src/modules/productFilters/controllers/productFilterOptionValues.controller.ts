@@ -1,9 +1,15 @@
-import { Body, Controller, Delete, Param, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Param, Put, UseGuards } from '@nestjs/common';
 import { ApiBody } from '@nestjs/swagger';
 import { ProductFilterOptionValueDto } from '@/src/libs/models/dtos/productsFilter/ProductFilterOptionValue.dto';
 import { ProductFilterOptionValuesService } from '@/src/modules/productFilters/services/productFilterOptionValues.service';
+import { AuthGuard } from '@/src/libs/guards/auth.guard';
+import { RoleGuard } from '@/src/libs/guards/role.guard';
+import { Role } from '@/src/libs/decorators/roles.decorator';
+import { UserRoleEnum } from '@/src/utils/enums/UserEnums';
 
 @Controller('products/filter-values')
+@Role(UserRoleEnum.ADMIN)
+@UseGuards(AuthGuard, RoleGuard)
 export class ProductFilterOptionValuesController {
   constructor(
     private readonly productFilterOptionValuesService: ProductFilterOptionValuesService,

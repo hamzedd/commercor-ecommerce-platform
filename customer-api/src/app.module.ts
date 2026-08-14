@@ -25,6 +25,7 @@ import { NotificationsModule } from '@/src/modules/notifications/notifications.m
 import { InvoicesModule } from '@/src/modules/invoices/invoices.module';
 import { InventoryModule } from '@/src/modules/inventory/inventory.module';
 import { CartModule } from '@/src/modules/cart/cart.module';
+import { HealthController } from './health.controller';
 
 @Module({
   imports: [
@@ -59,7 +60,7 @@ import { CartModule } from '@/src/modules/cart/cart.module';
     InventoryModule,
     CartModule,
   ],
-  controllers: [],
+  controllers: [HealthController],
   providers: [],
 })
 export class AppModule {}

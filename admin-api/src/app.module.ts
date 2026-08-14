@@ -31,6 +31,7 @@ import { InventoryModule } from '@/src/modules/inventory/inventory.module';
 import { AbandonedCartsModule } from '@/src/modules/abandonedCarts/abandoned-carts.module';
 import { PromotionsModule } from '@/src/modules/promotions/promotions.module';
 import { AnalyticsModule } from '@/src/modules/analytics/analytics.module';
+import { HealthController } from './health.controller';
 
 @Module({
   imports: [
@@ -71,7 +72,7 @@ import { AnalyticsModule } from '@/src/modules/analytics/analytics.module';
     PromotionsModule,
     AnalyticsModule,
   ],
-  controllers: [],
+  controllers: [HealthController],
   providers: [],
 })
 export class AppModule {}

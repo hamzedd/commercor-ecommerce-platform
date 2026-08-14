@@ -40,6 +40,9 @@ export class AuthService {
         },
         {
           secret: JWT_SECRET,
+          expiresIn: '1d',
+          issuer: 'commercor-admin-api',
+          audience: 'commercor-admin-web',
         },
       ),
     };

@@ -46,10 +46,15 @@ export class AuthService {
     }
 
     return {
-      accessToken: await this.jwtService.signAsync({
-        id: customerExists.id,
-        username: customerExists.username,
-      }),
+      accessToken: await this.jwtService.signAsync(
+        { id: customerExists.id, username: customerExists.username },
+        {
+          secret: process.env.JWT_SECRET,
+          expiresIn: '1d',
+          issuer: 'commercor-customer-api',
+          audience: 'commercor-customer-web',
+        },
+      ),
     };
   }
 

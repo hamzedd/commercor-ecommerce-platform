@@ -5,9 +5,14 @@ import { ValidationError } from 'class-validator';
 import flattenValidationErrors from '@/src/utils/functions/flattenClassValidationErrors';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { PORT } from '@/src/utils/environmentConstants';
+import { allowedOrigins, rateLimiter, securityHeaders } from './utils/httpSecurity';
+import { SafeExceptionFilter } from './utils/safeException.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.getHttpAdapter().getInstance().set('trust proxy', 1);
+  app.use(securityHeaders, rateLimiter);
+  app.useGlobalFilters(new SafeExceptionFilter());
   app.setGlobalPrefix('api/admin');
   app.useGlobalPipes(
     new ValidationPipe({
@@ -49,7 +54,7 @@ async function bootstrap() {
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/admin', app, documentFactory);
-  app.enableCors();
+  app.enableCors({ origin: allowedOrigins(), credentials: true });
   await app.listen(PORT);
 }
 bootstrap();

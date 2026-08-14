@@ -8,6 +8,7 @@ import {
   Param,
   UseInterceptors,
   UploadedFiles,
+  UseGuards,
 } from '@nestjs/common';
 import { ProductDto } from '@/src/libs/models/dtos/products/Product.dto';
 import { ProductsService } from '@/src/modules/product/services/products.service';
@@ -16,8 +17,14 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { ImagesValidationPipe } from '@/src/libs/pipes/images-validation.pipe';
 import { ProductVariantsService } from '../services/product-variants.service';
 import { VariantDto, VariantOptionDto } from '../dtos/variant.dto';
+import { AuthGuard } from '@/src/libs/guards/auth.guard';
+import { RoleGuard } from '@/src/libs/guards/role.guard';
+import { Role } from '@/src/libs/decorators/roles.decorator';
+import { UserRoleEnum } from '@/src/utils/enums/UserEnums';
 
 @Controller('products')
+@Role(UserRoleEnum.ADMIN)
+@UseGuards(AuthGuard, RoleGuard)
 export class ProductsController {
   constructor(private readonly productsService: ProductsService, private readonly variants: ProductVariantsService) {}
   @Get(':id/variants') getVariants(@Param('id') id:string){return this.variants.list(id)}

@@ -4,6 +4,8 @@ import { AppModule } from './app.module';
 import { PORT } from '@/src/utils/environmentConstants';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { updateGlobalConfig } from 'nestjs-paginate';
+import { allowedOrigins, rateLimiter, securityHeaders } from './utils/httpSecurity';
+import { SafeExceptionFilter } from './utils/safeException.filter';
 
 async function bootstrap() {
   updateGlobalConfig({
@@ -13,6 +15,9 @@ async function bootstrap() {
   });
 
   const app = await NestFactory.create(AppModule, { rawBody: true });
+  app.getHttpAdapter().getInstance().set('trust proxy', 1);
+  app.use(securityHeaders, rateLimiter);
+  app.useGlobalFilters(new SafeExceptionFilter());
   app.setGlobalPrefix('api');
   app.useGlobalPipes(
     new ValidationPipe({
@@ -35,7 +40,7 @@ async function bootstrap() {
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/swagger', app, documentFactory);
-  app.enableCors();
+  app.enableCors({ origin: allowedOrigins(), credentials: true });
   await app.listen(PORT);
 }
 bootstrap();
