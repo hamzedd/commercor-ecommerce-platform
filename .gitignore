@@ -12,3 +12,7 @@ coverage/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Local development tools and backups
+.local-tools/
+backups/
