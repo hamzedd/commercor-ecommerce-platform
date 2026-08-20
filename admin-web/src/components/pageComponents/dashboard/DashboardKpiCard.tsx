@@ -12,7 +12,7 @@ function DashboardKpiCard({ title, value, icon, accent }: Props) {
   return (
     <Card
       bordered={false}
-      className="h-full overflow-hidden border border-stone-200 shadow-sm"
+      className="h-full overflow-hidden border border-slate-200 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
       styles={{ body: { padding: 22 } }}
     >
       <div className="flex items-start justify-between gap-4">

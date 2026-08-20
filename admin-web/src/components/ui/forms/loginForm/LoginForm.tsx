@@ -10,7 +10,11 @@ function LoginForm(props: FormProps) {
           label: "Username",
           rules: [{ required: true, message: "Please input your username!" }],
         }}
-        inputProps={{ type: "text" }}
+        inputProps={{
+          type: "text",
+          placeholder: "Enter your username",
+          size: "large",
+        }}
       ></TextInput>
       <TextInput
         formProps={{
@@ -20,10 +24,17 @@ function LoginForm(props: FormProps) {
         }}
         inputProps={{
           type: "password",
+          placeholder: "Enter your password",
+          size: "large",
         }}
       ></TextInput>
       <Form.Item>
-        <Button type={"primary"} htmlType="submit" className="w-full">
+        <Button
+          type="primary"
+          htmlType="submit"
+          size="large"
+          className="w-full"
+        >
           Log In
         </Button>
       </Form.Item>

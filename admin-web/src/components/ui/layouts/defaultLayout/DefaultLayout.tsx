@@ -1,87 +1,191 @@
-import { Button, Layout, Menu, theme } from "antd";
-import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import { useState } from "react";
-import { Link, Outlet, useNavigate } from "react-router";
-import defaultLayoutLinksList from "./componets/defaultLayoutLinksList.tsx";
+import {
+  BellOutlined,
+  LogoutOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  ShopOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
+import {
+  Avatar,
+  Button,
+  Divider,
+  Drawer,
+  Dropdown,
+  Layout,
+  Menu,
+  Tooltip,
+  Typography,
+} from "antd";
+import { useEffect, useMemo, useState } from "react";
+import { Link, Outlet, useLocation, useNavigate } from "react-router";
 import { useAuth } from "../../../contexts/userContext/userContext.ts";
+import defaultLayoutLinksList from "./componets/defaultLayoutLinksList.tsx";
 
 const { Header, Sider, Content } = Layout;
 
 function DefaultLayout() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { resetUser, user } = useAuth();
-  const [collapsed, setCollapsed] = useState(
-    () => window.matchMedia("(max-width: 991px)").matches,
+  const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobile, setMobile] = useState(() => window.innerWidth < 1024);
+
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 1023px)");
+    const sync = () => setMobile(media.matches);
+    sync();
+    media.addEventListener("change", sync);
+    return () => media.removeEventListener("change", sync);
+  }, []);
+
+  const visibleLinks = useMemo(
+    () =>
+      defaultLayoutLinksList.filter((item) => item.roles.includes(user.role)),
+    [user.role],
+  );
+  const selectedKey = [...visibleLinks]
+    .sort((a, b) => b.path.length - a.path.length)
+    .find((item) =>
+      item.path === "/admin"
+        ? location.pathname === item.path
+        : location.pathname.startsWith(item.path),
+    )?.key;
+  const current = visibleLinks.find((item) => item.key === selectedKey);
+  const menuItems = visibleLinks.map((item) => ({
+    key: item.key,
+    icon: item.icon,
+    label: (
+      <Link to={item.path} onClick={() => setMobileOpen(false)}>
+        {item.label}
+      </Link>
+    ),
+  }));
+
+  const signOut = () => {
+    resetUser();
+    navigate("/admin/login");
+  };
+  const nav = (
+    <div className="admin-nav">
+      <div className="admin-brand">
+        <span className="admin-brand-mark">
+          <ShopOutlined />
+        </span>
+        <span className="admin-brand-copy">
+          <b>Commercor</b>
+          <small>Admin workspace</small>
+        </span>
+      </div>
+      <div className="admin-nav-label">Workspace</div>
+      <Menu
+        mode="inline"
+        selectedKeys={selectedKey ? [selectedKey] : []}
+        items={menuItems}
+      />
+    </div>
   );
 
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
-
   return (
-    <Layout className={"h-full"}>
-      <Sider
-        collapsible
-        collapsed={collapsed}
-        collapsedWidth={0}
-        breakpoint="lg"
-        onBreakpoint={setCollapsed}
-        trigger={null}
-        className="max-lg:!fixed max-lg:!inset-y-0 max-lg:!start-0 max-lg:!z-50"
-      >
-        <div className="demo-logo-vertical" />
-        <Menu
-          theme="dark"
-          mode="inline"
-          defaultSelectedKeys={["1"]}
-          items={[
-            ...defaultLayoutLinksList
-              .filter((item) => item.roles.includes(user.role))
-              .map((item) => ({
-                key: item.key,
-                icon: item.icon,
-                label: <Link to={item.path}>{item.label}</Link>,
-              })),
-            {
-              key: "logout",
-              icon: <MenuUnfoldOutlined />,
-              label: (
-                <span
-                  onClick={() => {
-                    resetUser();
-                    navigate("/login");
-                  }}
-                >
-                  Logout
-                </span>
-              ),
-            },
-          ]}
-        />
-      </Sider>
-      <Layout className="min-w-0">
-        <Header style={{ padding: 0, background: colorBgContainer }}>
-          <Button
-            type="text"
-            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            onClick={() => setCollapsed(!collapsed)}
-            style={{
-              fontSize: "16px",
-              width: 64,
-              height: 64,
-            }}
-          />
-        </Header>
-        <Content
-          style={{
-            margin: "clamp(8px, 2vw, 24px) clamp(8px, 1.5vw, 16px)",
-            padding: "clamp(12px, 2vw, 24px)",
-            minHeight: 280,
-            background: colorBgContainer,
-            borderRadius: borderRadiusLG,
-          }}
+    <Layout className="admin-shell">
+      {!mobile && (
+        <Sider
+          width={248}
+          collapsedWidth={76}
+          collapsed={collapsed}
+          trigger={null}
+          className="admin-sider"
         >
-          <Outlet></Outlet>
+          {nav}
+          <div className="admin-sider-footer">
+            <Tooltip
+              title={collapsed ? "Sign out" : undefined}
+              placement="right"
+            >
+              <Button type="text" icon={<LogoutOutlined />} onClick={signOut}>
+                {!collapsed && "Sign out"}
+              </Button>
+            </Tooltip>
+          </div>
+        </Sider>
+      )}
+      <Drawer
+        placement="left"
+        width={280}
+        open={mobileOpen}
+        onClose={() => setMobileOpen(false)}
+        closable={false}
+        styles={{ body: { padding: 0 } }}
+      >
+        {nav}
+        <Divider className="!my-2" />
+        <Button
+          className="!mx-4"
+          type="text"
+          icon={<LogoutOutlined />}
+          onClick={signOut}
+        >
+          Sign out
+        </Button>
+      </Drawer>
+      <Layout className="admin-main">
+        <Header className="admin-header">
+          <div className="admin-header-start">
+            <Button
+              type="text"
+              aria-label={mobile ? "Open navigation" : "Toggle navigation"}
+              icon={
+                mobile || collapsed ? (
+                  <MenuUnfoldOutlined />
+                ) : (
+                  <MenuFoldOutlined />
+                )
+              }
+              onClick={() =>
+                mobile ? setMobileOpen(true) : setCollapsed(!collapsed)
+              }
+            />
+            <div className="admin-page-context">
+              <Typography.Text>
+                {current?.label || "Administration"}
+              </Typography.Text>
+              <small>Manage your commerce operations</small>
+            </div>
+          </div>
+          <div className="admin-header-actions">
+            <Button
+              type="text"
+              aria-label="Notifications"
+              icon={<BellOutlined />}
+            />
+            <Dropdown
+              trigger={["click"]}
+              menu={{
+                items: [
+                  {
+                    key: "logout",
+                    icon: <LogoutOutlined />,
+                    label: "Sign out",
+                    onClick: signOut,
+                  },
+                ],
+              }}
+            >
+              <button className="admin-profile" type="button">
+                <Avatar size={34} icon={<UserOutlined />} />
+                <span>
+                  <b>{user.username || "Administrator"}</b>
+                  <small>{user.email || user.role}</small>
+                </span>
+              </button>
+            </Dropdown>
+          </div>
+        </Header>
+        <Content className="admin-content">
+          <div className="admin-content-inner">
+            <Outlet />
+          </div>
         </Content>
       </Layout>
     </Layout>

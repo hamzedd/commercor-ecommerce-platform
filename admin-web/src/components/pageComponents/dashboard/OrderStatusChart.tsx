@@ -20,7 +20,7 @@ const fallbackColors = ["#1c1917", "#a16207", "#57534e", "#ca8a04", "#44403c"];
 const formatStatus = (status: string) =>
   status
     .replace(/[_-]+/g, " ")
-    .replace(/w/g, (character) => character.toUpperCase());
+    .replace(/\b\w/g, (character) => character.toUpperCase());
 
 function OrderStatusChart({ data }: { data: OrderStatusBreakdownType[] }) {
   const total = data.reduce((sum, item) => sum + item.count, 0);

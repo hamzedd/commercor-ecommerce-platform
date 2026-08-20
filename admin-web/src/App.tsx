@@ -38,6 +38,8 @@ import AbandonedCartsPage from "./pages/abandoned-carts/page.tsx";
 import CustomerCrmPage from "./pages/customers/[id]/page.tsx";
 import PromotionsPage from "./pages/promotions/page.tsx";
 import AnalyticsPage from "./pages/analytics/page.tsx";
+import { App as AntApp, ConfigProvider } from "antd";
+import { adminTheme } from "./styles/theme.ts";
 
 function App() {
   const router = createBrowserRouter([
@@ -174,7 +176,13 @@ function App() {
     },
   ]);
 
-  return <RouterProvider router={router} />;
+  return (
+    <ConfigProvider theme={adminTheme}>
+      <AntApp>
+        <RouterProvider router={router} />
+      </AntApp>
+    </ConfigProvider>
+  );
 }
 
 export default App;

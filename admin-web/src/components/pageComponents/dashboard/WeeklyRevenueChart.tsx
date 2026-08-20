@@ -22,7 +22,7 @@ function WeeklyRevenueChart({ data }: { data: WeeklyRevenueType[] }) {
   return (
     <Card
       bordered={false}
-      className="h-full border border-stone-200 shadow-sm"
+      className="chart-reveal h-full border border-slate-200 shadow-sm"
       title={
         <div className="py-1">
           <div className="text-base font-bold text-stone-900">
@@ -42,11 +42,15 @@ function WeeklyRevenueChart({ data }: { data: WeeklyRevenueType[] }) {
           >
             <defs>
               <linearGradient id="revenueFill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#b7791f" stopOpacity={0.32} />
-                <stop offset="95%" stopColor="#b7791f" stopOpacity={0.02} />
+                <stop offset="5%" stopColor="#2563eb" stopOpacity={0.26} />
+                <stop offset="95%" stopColor="#2563eb" stopOpacity={0.02} />
               </linearGradient>
             </defs>
-            <CartesianGrid stroke="#e7e5e4" strokeDasharray="3 3" vertical={false} />
+            <CartesianGrid
+              stroke="#e7e5e4"
+              strokeDasharray="3 3"
+              vertical={false}
+            />
             <XAxis
               dataKey="day"
               axisLine={false}
@@ -77,10 +81,10 @@ function WeeklyRevenueChart({ data }: { data: WeeklyRevenueType[] }) {
             <Area
               type="monotone"
               dataKey="revenue"
-              stroke="#9a6b16"
+              stroke="#2563eb"
               strokeWidth={3}
               fill="url(#revenueFill)"
-              activeDot={{ r: 5, fill: "#1c1917", stroke: "#fbbf24" }}
+              activeDot={{ r: 5, fill: "#2563eb", stroke: "#bfdbfe" }}
             />
           </AreaChart>
         </ResponsiveContainer>

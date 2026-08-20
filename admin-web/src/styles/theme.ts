@@ -1,0 +1,70 @@
+import type { ThemeConfig } from "antd";
+
+export const adminTheme: ThemeConfig = {
+  token: {
+    colorPrimary: "#2563eb",
+    colorInfo: "#2563eb",
+    colorSuccess: "#16a34a",
+    colorWarning: "#d97706",
+    colorError: "#dc2626",
+    colorText: "#172033",
+    colorTextSecondary: "#667085",
+    colorBorder: "#e4e7ec",
+    colorBorderSecondary: "#eef0f3",
+    colorBgLayout: "#f5f7fa",
+    colorBgContainer: "#ffffff",
+    borderRadius: 8,
+    borderRadiusLG: 12,
+    controlHeight: 38,
+    fontFamily:
+      'Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+    boxShadowSecondary: "0 12px 32px rgba(16, 24, 40, 0.10)",
+  },
+  components: {
+    Layout: {
+      bodyBg: "#f5f7fa",
+      headerBg: "rgba(255,255,255,.94)",
+      siderBg: "#ffffff",
+    },
+    Menu: {
+      itemBg: "transparent",
+      itemColor: "#475467",
+      itemHoverBg: "#f2f4f7",
+      itemHoverColor: "#172033",
+      itemSelectedBg: "#eff6ff",
+      itemSelectedColor: "#1d4ed8",
+      itemBorderRadius: 8,
+      itemHeight: 40,
+      iconSize: 17,
+    },
+    Button: {
+      borderRadius: 8,
+      primaryShadow: "0 1px 2px rgba(16,24,40,.12)",
+      fontWeight: 600,
+    },
+    Card: {
+      borderRadiusLG: 12,
+      headerFontSize: 15,
+      headerHeight: 54,
+      paddingLG: 20,
+    },
+    Table: {
+      headerBg: "#f8fafc",
+      headerColor: "#475467",
+      headerSplitColor: "transparent",
+      rowHoverBg: "#f8fbff",
+      cellPaddingBlock: 13,
+      cellPaddingInline: 16,
+    },
+    Form: {
+      labelColor: "#344054",
+      labelFontSize: 13,
+      verticalLabelPadding: "0 0 6px",
+    },
+    Input: { activeBorderColor: "#2563eb", hoverBorderColor: "#94a3b8" },
+    Select: { optionSelectedBg: "#eff6ff" },
+    Modal: { borderRadiusLG: 14 },
+    Drawer: { colorBgElevated: "#ffffff" },
+    Tabs: { itemSelectedColor: "#1d4ed8", inkBarColor: "#2563eb" },
+  },
+};

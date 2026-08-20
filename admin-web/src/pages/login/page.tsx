@@ -2,6 +2,8 @@ import LoginForm from "../../components/ui/forms/loginForm/LoginForm.tsx";
 import { loginService } from "../../service/apiServices/authServices.ts";
 import { useNavigate } from "react-router";
 import { useState } from "react";
+import { ShopOutlined } from "@ant-design/icons";
+import { Typography } from "antd";
 
 function LoginPage() {
   const [loading, setLoading] = useState(false);
@@ -28,13 +30,27 @@ function LoginPage() {
     }
   };
   return (
-    <div className={"h-full w-full flex items-center justify-center"}>
-      <LoginForm
-        disabled={loading}
-        onFinish={handleLogin}
-        layout={"vertical"}
-        className={"max-w-[500px] w-full !py-20"}
-      ></LoginForm>
+    <div className="login-page">
+      <div className="login-panel">
+        <div className="login-brand">
+          <span>
+            <ShopOutlined />
+          </span>
+          <b>Commercor</b>
+        </div>
+        <div className="login-heading">
+          <Typography.Title level={2}>Welcome back</Typography.Title>
+          <Typography.Text type="secondary">
+            Sign in to manage your commerce workspace.
+          </Typography.Text>
+        </div>
+        <LoginForm
+          disabled={loading}
+          onFinish={handleLogin}
+          layout="vertical"
+        />
+        <div className="login-footer">Secure administrator access</div>
+      </div>
     </div>
   );
 }

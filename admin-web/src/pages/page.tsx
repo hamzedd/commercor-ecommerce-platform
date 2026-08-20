@@ -64,7 +64,7 @@ const formatAmount = (value: number) =>
 
 function DashboardLoading() {
   return (
-    <div className="min-h-full bg-[#f7f5f2] p-4 sm:p-6">
+    <div className="min-h-full">
       <Skeleton active paragraph={{ rows: 2 }} />
       <Row gutter={[16, 16]} className="mt-6">
         {[0, 1, 2, 3].map((item) => (
@@ -106,16 +106,16 @@ function HomePage() {
   if (loading && !dashboard) return <DashboardLoading />;
 
   return (
-    <div className="-m-6 min-h-full bg-[#f7f5f2] p-4 sm:p-6 lg:p-8">
+    <div className="dashboard-page min-h-full">
       <div className="mx-auto max-w-[1600px]">
         <div className="mb-7 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
           <div>
-            <Typography.Text className="text-xs font-bold tracking-[0.2em] text-amber-700 uppercase">
+            <Typography.Text className="text-xs font-bold tracking-[0.16em] text-blue-600 uppercase">
               Commerce overview
             </Typography.Text>
             <Typography.Title
               level={1}
-              className="!mt-2 !mb-1 !text-3xl !tracking-tight !text-stone-950 sm:!text-4xl"
+              className="!mt-2 !mb-1 !text-3xl !tracking-tight !text-slate-950"
             >
               Dashboard
             </Typography.Title>
@@ -149,13 +149,13 @@ function HomePage() {
 
         {dashboard && (
           <>
-            <Row gutter={[16, 16]}>
+            <Row gutter={[16, 16]} className="dashboard-grid">
               <Col xs={24} sm={12} xl={6}>
                 <DashboardKpiCard
                   title="Total Orders"
                   value={formatNumber(dashboard.totalOrders)}
                   icon={<ShoppingCartOutlined />}
-                  accent="#1c1917"
+                  accent="#2563eb"
                 />
               </Col>
               <Col xs={24} sm={12} xl={6}>
@@ -163,7 +163,7 @@ function HomePage() {
                   title="Pending Orders"
                   value={formatNumber(dashboard.pendingOrders)}
                   icon={<ClockCircleOutlined />}
-                  accent="#b7791f"
+                  accent="#d97706"
                 />
               </Col>
               <Col xs={24} sm={12} xl={6}>
@@ -171,7 +171,7 @@ function HomePage() {
                   title="Low Stock Products"
                   value={formatNumber(dashboard.lowStockProducts)}
                   icon={<WarningOutlined />}
-                  accent="#b45309"
+                  accent="#dc2626"
                 />
               </Col>
               <Col xs={24} sm={12} xl={6}>
@@ -179,7 +179,7 @@ function HomePage() {
                   title="Revenue This Week"
                   value={formatAmount(dashboard.revenueThisWeek)}
                   icon={<DollarOutlined />}
-                  accent="#9a6b16"
+                  accent="#16a34a"
                 />
               </Col>
             </Row>
@@ -219,8 +219,8 @@ function HomePage() {
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-5">
                 {quickActions.map((action) => (
                   <Link key={action.path} to={action.path}>
-                    <div className="group flex h-full items-center gap-3 rounded-xl border border-stone-200 bg-stone-50 p-3.5 transition-all hover:border-amber-500 hover:bg-amber-50">
-                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-stone-900 text-amber-400">
+                    <div className="group flex h-full items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3.5 transition-all hover:border-blue-300 hover:bg-blue-50">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-600 text-white">
                         {action.icon}
                       </span>
                       <span className="min-w-0">
