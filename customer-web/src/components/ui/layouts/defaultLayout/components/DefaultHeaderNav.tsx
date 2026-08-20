@@ -14,33 +14,33 @@ function DefaultHeaderNav() {
   const closeMenu = () => setIsMenuOpen(false);
 
   return (
-    <div className="relative flex w-full justify-center border-b border-gray-200 bg-white">
+    <div className="relative flex w-full justify-center border-b border-gray-100 bg-stone-950 text-white">
       <nav
-        className="my-container flex min-h-11 w-full items-center justify-between md:py-3"
+        className="my-container flex min-h-10 w-full items-center justify-between"
         aria-label={t("mainNavigation")}
       >
         <div className="hidden items-center gap-7 md:flex">
           <Link
             href="/"
-            className="rounded-sm text-sm font-medium text-gray-700 transition-colors hover:text-black focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:outline-none"
+            className="rounded-sm text-xs font-semibold text-stone-300 transition-colors hover:text-white focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none"
           >
             {t("home")}
           </Link>
           <Link
             href={"/#categories" as never}
-            className="rounded-sm text-sm font-medium text-gray-700 transition-colors hover:text-black focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:outline-none"
+            className="rounded-sm text-xs font-semibold text-stone-300 transition-colors hover:text-white focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none"
           >
             {t("categories")}
           </Link>
           <Link
             href={"/#featured" as never}
-            className="rounded-sm text-sm font-medium text-gray-700 transition-colors hover:text-black focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:outline-none"
+            className="rounded-sm text-xs font-semibold text-stone-300 transition-colors hover:text-white focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none"
           >
             {t("featured")}
           </Link>
           <Link
             href={"/#contact" as never}
-            className="rounded-sm text-sm font-medium text-gray-700 transition-colors hover:text-black focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:outline-none"
+            className="rounded-sm text-xs font-semibold text-stone-300 transition-colors hover:text-white focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none"
           >
             {t("contact")}
           </Link>
@@ -52,7 +52,7 @@ function DefaultHeaderNav() {
           aria-controls="mobile-navigation"
           aria-label={isMenuOpen ? t("closeMenu") : t("openMenu")}
           onClick={() => setIsMenuOpen((open) => !open)}
-          className="flex h-11 w-11 items-center justify-center text-lg text-gray-800 transition-colors hover:bg-gray-100 focus-visible:ring-2 focus-visible:ring-black focus-visible:outline-none focus-visible:ring-inset md:hidden"
+          className="flex h-10 w-10 items-center justify-center text-lg text-white transition-colors hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none focus-visible:ring-inset md:hidden"
         >
           {isMenuOpen ? (
             <CloseOutlined aria-hidden />
@@ -67,7 +67,7 @@ function DefaultHeaderNav() {
       {isMenuOpen && (
         <div
           id="mobile-navigation"
-          className="absolute top-full inset-x-0 z-50 border-b border-gray-200 bg-white p-3 shadow-lg md:hidden"
+          className="absolute inset-x-0 top-full z-50 border-b border-gray-200 bg-white p-3 shadow-lg md:hidden"
         >
           <div className="my-container grid gap-1 px-0">
             <Link

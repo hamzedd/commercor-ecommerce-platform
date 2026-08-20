@@ -4,10 +4,12 @@ import ProfilePageTabs from "@/src/components/pageComponents/profile/ProfilePage
 
 function Page() {
   return (
-    <div className={"flex w-full flex-col items-center py-5"}>
-      <ProfilePageHeader></ProfilePageHeader>
-      <ProfilePageTabs></ProfilePageTabs>
-    </div>
+    <main className="min-h-screen bg-stone-50 py-8 sm:py-12">
+      <div className="my-container flex w-full flex-col items-center">
+        <ProfilePageHeader></ProfilePageHeader>
+        <ProfilePageTabs></ProfilePageTabs>
+      </div>
+    </main>
   );
 }
 

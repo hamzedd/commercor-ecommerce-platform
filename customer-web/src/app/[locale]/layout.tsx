@@ -11,6 +11,7 @@ import { getStoreSettingsService } from "@/src/service/apiServices/storeSettings
 import getImageSrcByBucketAndFileNames from "@/src/utils/functions/getImageSrcByBucketAndFileNames";
 import { StoreSettingsProvider } from "@/src/components/providers/StoreSettingsProvider";
 import type { CSSProperties } from "react";
+import StorefrontThemeProvider from "@/src/components/providers/StorefrontThemeProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -87,9 +88,13 @@ export default async function RootLayout({
           <ReactQueryProvider>
             <ModalStoreProvider>
               <NextIntlClientProvider>
-                <StoreSettingsProvider settings={settings}>
-                  <DefaultLayout settings={settings}>{children}</DefaultLayout>
-                </StoreSettingsProvider>
+                <StorefrontThemeProvider>
+                  <StoreSettingsProvider settings={settings}>
+                    <DefaultLayout settings={settings}>
+                      {children}
+                    </DefaultLayout>
+                  </StoreSettingsProvider>
+                </StorefrontThemeProvider>
               </NextIntlClientProvider>
             </ModalStoreProvider>
           </ReactQueryProvider>

@@ -4,15 +4,17 @@
 
 @utility my-container {
   width: 100%;
-  max-width: 1440px;
-  padding-left: 40px;
-  padding-right: 40px;
-  margin: 0;
+  max-width: 1480px;
+  padding-inline: clamp(16px, 3.25vw, 48px);
+  margin-inline: auto;
 
   @media (max-width: 1023px) {
     max-width: 100%;
-    padding-left: 16px;
-    padding-right: 16px;
+    padding-inline: 20px;
+  }
+
+  @media (max-width: 639px) {
+    padding-inline: 14px;
   }
 }
 

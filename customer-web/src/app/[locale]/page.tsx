@@ -24,7 +24,10 @@ export default async function Home({ params }: Props) {
   const productsResponse = await fetchProducts({});
   const settings = await getStoreSettingsService();
   const featuredProduct = productsResponse?.data?.[0];
-  const featuredTranslation = selectTranslation(featuredProduct?.translations, locale);
+  const featuredTranslation = selectTranslation(
+    featuredProduct?.translations,
+    locale,
+  );
   const featuredImage = featuredProduct?.images?.[0]?.name
     ? getImageSrcByBucketAndFileNames({
         bucketName: "products",
@@ -44,8 +47,8 @@ export default async function Home({ params }: Props) {
           aria-hidden
           className="absolute -bottom-48 left-1/4 h-96 w-96 rounded-full bg-white/5 blur-3xl"
         />
-        <div className="my-container relative grid items-center gap-8 py-10 sm:gap-10 sm:py-14 md:min-h-[620px] lg:grid-cols-[1.1fr_0.9fr] lg:gap-12 lg:py-20">
-          <div className="flex max-w-3xl flex-col items-start">
+        <div className="my-container relative grid items-center gap-8 py-12 sm:gap-10 sm:py-16 md:min-h-[640px] lg:grid-cols-[1.08fr_0.92fr] lg:gap-16 lg:py-24">
+          <div className="store-card-enter flex max-w-3xl flex-col items-start">
             <span className="mb-4 rounded-full border border-amber-300/25 bg-amber-300/10 px-3 py-1.5 text-[11px] font-semibold tracking-[0.16em] text-amber-200 uppercase sm:mb-6 sm:px-4 sm:py-2 sm:text-xs sm:tracking-[0.18em]">
               {t("homeEyebrow")}
             </span>
@@ -82,7 +85,7 @@ export default async function Home({ params }: Props) {
             </div>
           </div>
 
-          <div className="flex justify-center lg:justify-end">
+          <div className="store-card-enter flex justify-center [animation-delay:100ms] lg:justify-end">
             <div className="relative w-full max-w-[470px] overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.07] p-4 shadow-2xl shadow-black/30 backdrop-blur-sm sm:p-6">
               {featuredImage ? (
                 <div className="overflow-hidden rounded-2xl bg-stone-100">

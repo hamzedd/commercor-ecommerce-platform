@@ -24,7 +24,10 @@ function ProductCard({ product, lang, className, titleClassName }: Props) {
   const t = useTranslations();
   const settings = useStoreSettings();
 
-  const productTranslation: ProductTranslationType = selectTranslation(product?.translations, lang)!;
+  const productTranslation: ProductTranslationType = selectTranslation(
+    product?.translations,
+    lang,
+  )!;
 
   return (
     <Link
@@ -33,11 +36,14 @@ function ProductCard({ product, lang, className, titleClassName }: Props) {
         params: { slug: productTranslation.slug },
       }}
       key={product.id}
-      className={`group relative flex w-full flex-col overflow-hidden rounded-xl bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${className}`}
+      className={`store-card-enter group relative flex w-full flex-col overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-stone-300 hover:shadow-xl ${className}`}
     >
-      <WishlistButton productId={product.id} className="absolute top-3 right-3 z-20" />
+      <WishlistButton
+        productId={product.id}
+        className="absolute end-3 top-3 z-20"
+      />
       {/* Image Container */}
-      <div className="relative aspect-square overflow-hidden bg-gray-50">
+      <div className="relative aspect-[4/5] overflow-hidden bg-[#f4f5f6] sm:aspect-square">
         {product?.images?.[0] && (
           <Image
             src={getImageSrcByBucketAndFileNames({
@@ -48,21 +54,21 @@ function ProductCard({ product, lang, className, titleClassName }: Props) {
             width={300}
             height={300}
             className={
-              "h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+              "h-full w-full object-contain p-3 transition-transform duration-500 group-hover:scale-[1.045] motion-reduce:transition-none"
             }
           />
         )}
 
         {/* Quick View Overlay - appears on hover */}
-        <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all duration-300 group-hover:bg-black/10 group-hover:opacity-100">
-          <span className="translate-y-4 rounded-full bg-white px-4 py-2 text-sm font-medium shadow-lg transition-transform duration-300 group-hover:translate-y-0">
+        <div className="absolute inset-x-3 bottom-3 flex justify-center opacity-0 transition-all duration-200 group-hover:opacity-100 group-focus-visible:opacity-100">
+          <span className="translate-y-2 rounded-xl bg-white/95 px-4 py-2 text-xs font-semibold text-stone-900 shadow-lg backdrop-blur transition-transform duration-200 group-hover:translate-y-0">
             {t("viewDetails")}
           </span>
         </div>
       </div>
 
       {/* Product Info */}
-      <div className="flex flex-1 flex-col p-3 md:p-4">
+      <div className="flex flex-1 flex-col p-3.5 md:p-4">
         <h2
           className={`mb-1 line-clamp-2 text-sm font-semibold text-gray-900 md:text-base ${titleClassName || ""}`}
         >
@@ -75,14 +81,24 @@ function ProductCard({ product, lang, className, titleClassName }: Props) {
         >
           {productTranslation?.description}
         </p>
-        {(product.reviewCount||0)>0&&<p className="mb-2 text-sm font-semibold text-amber-700">★ {product.averageRating?.toFixed(1)} <span className="font-normal text-stone-500">({product.reviewCount})</span></p>}
+        {(product.reviewCount || 0) > 0 && (
+          <p className="mb-2 text-sm font-semibold text-amber-700">
+            ★ {product.averageRating?.toFixed(1)}{" "}
+            <span className="font-normal text-stone-500">
+              ({product.reviewCount})
+            </span>
+          </p>
+        )}
 
         {/* Price */}
-        <div className="flex items-center justify-between border-t pt-3">
+        <div className="flex items-center justify-between border-t border-stone-100 pt-3">
           <p className={"text-lg font-bold text-gray-900 md:text-xl"}>
             {formatCurrency(product.price || 0, settings.currencyCode, lang)}
           </p>
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-black text-white opacity-0 transition-opacity group-hover:opacity-100 md:h-9 md:w-9">
+          <div
+            data-directional-icon="true"
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--store-primary)] text-white opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100 md:h-9 md:w-9"
+          >
             <svg
               className="h-4 w-4 md:h-5 md:w-5"
               fill="none"

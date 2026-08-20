@@ -12,12 +12,14 @@ async function DefaultLayout({
   settings: StoreSettingsType;
 }) {
   return (
-    <>
-      <DefaultHeaderNav />
-      <DefaultHeader settings={settings} />
-      {children}
+    <div className="store-shell">
+      <div className="store-header-stack">
+        <DefaultHeaderNav />
+        <DefaultHeader settings={settings} />
+      </div>
+      <div className="store-page">{children}</div>
       <DefaultFooter settings={settings} />
-    </>
+    </div>
   );
 }
 
