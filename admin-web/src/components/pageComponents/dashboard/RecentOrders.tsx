@@ -1,7 +1,4 @@
-import {
-  ArrowRightOutlined,
-  ShoppingOutlined,
-} from "@ant-design/icons";
+import { ArrowRightOutlined, ShoppingOutlined } from "@ant-design/icons";
 import { Button, Card, Empty, Grid, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { Link } from "react-router";
@@ -92,7 +89,7 @@ function RecentOrders({ orders }: { orders: DashboardOrderType[] }) {
 
   return (
     <Card
-      bordered={false}
+      variant="borderless"
       className="border border-stone-200 shadow-sm"
       styles={{ body: { padding: 0 } }}
       title={

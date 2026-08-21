@@ -10,10 +10,14 @@ const formatAmount = (value: number) =>
     maximumFractionDigits: 2,
   }).format(value);
 
-function TopSellingProducts({ products }: { products: TopSellingProductType[] }) {
+function TopSellingProducts({
+  products,
+}: {
+  products: TopSellingProductType[];
+}) {
   return (
     <Card
-      bordered={false}
+      variant="borderless"
       className="h-full border border-stone-200 shadow-sm"
       title={
         <div className="flex items-center gap-3 py-1">

@@ -21,7 +21,7 @@ function WeeklyRevenueChart({ data }: { data: WeeklyRevenueType[] }) {
 
   return (
     <Card
-      bordered={false}
+      variant="borderless"
       className="chart-reveal h-full border border-slate-200 shadow-sm"
       title={
         <div className="py-1">

@@ -1,6 +1,6 @@
 import axios from "axios";
-import { message } from "antd";
 import { API_BASE_URL } from "../../utils/contants/environmentConstants.ts";
+import { reportAdminApiError } from "./adminNotificationService.ts";
 
 const adminApi = axios.create({
   baseURL: API_BASE_URL,
@@ -24,7 +24,7 @@ adminApi.interceptors.response.use(
       window.location.href = "/admin/login";
     }
     if (error?.response?.data?.message) {
-      message.error(error.response.data.message);
+      reportAdminApiError(error.response.data.message);
     }
     return Promise.reject(error);
   },

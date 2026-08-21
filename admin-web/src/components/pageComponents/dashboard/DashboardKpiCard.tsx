@@ -11,7 +11,7 @@ interface Props {
 function DashboardKpiCard({ title, value, icon, accent }: Props) {
   return (
     <Card
-      bordered={false}
+      variant="borderless"
       className="h-full overflow-hidden border border-slate-200 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
       styles={{ body: { padding: 22 } }}
     >

@@ -27,6 +27,7 @@ function HeroProductImage({ alt, fallback, src }: Props) {
       width={720}
       height={720}
       priority
+      loading="eager"
       unoptimized
       onError={() => setHasError(true)}
       className="h-[330px] w-full object-contain p-8 sm:h-[390px]"

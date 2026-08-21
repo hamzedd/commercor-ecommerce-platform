@@ -4,7 +4,10 @@ export default function formatCurrency(
   locale = "en",
 ) {
   try {
-    return new Intl.NumberFormat(locale, {
+    // Chromium and Node ship different Georgian currency patterns, which can
+    // otherwise make SSR hydration replace every rendered product price.
+    const stableLocale = locale.toLowerCase() === "ka" ? "en-US" : locale;
+    return new Intl.NumberFormat(stableLocale, {
       style: "currency",
       currency: currencyCode,
     }).format(Number(value));

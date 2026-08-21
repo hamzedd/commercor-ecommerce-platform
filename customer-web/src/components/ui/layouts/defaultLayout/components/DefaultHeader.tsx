@@ -83,7 +83,8 @@ function DefaultHeader({ settings }: Props) {
                   fileName: settings.logo,
                 })}
                 alt={`${settings.storeName} logo`}
-                className="h-9 max-w-32 object-contain md:h-11 md:max-w-none"
+                className="h-9 w-auto max-w-32 object-contain md:h-11 md:max-w-none"
+                style={{ width: "auto" }}
                 width={140}
                 height={44}
                 priority

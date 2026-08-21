@@ -203,7 +203,7 @@ function HomePage() {
             </Row>
 
             <Card
-              bordered={false}
+              variant="borderless"
               className="mt-5 border border-stone-200 shadow-sm"
               title={
                 <div className="py-1">

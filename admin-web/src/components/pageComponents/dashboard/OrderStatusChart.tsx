@@ -27,7 +27,7 @@ function OrderStatusChart({ data }: { data: OrderStatusBreakdownType[] }) {
 
   return (
     <Card
-      bordered={false}
+      variant="borderless"
       className="h-full border border-stone-200 shadow-sm"
       title={
         <div className="py-1">

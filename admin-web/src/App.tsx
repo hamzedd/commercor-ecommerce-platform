@@ -40,6 +40,7 @@ import PromotionsPage from "./pages/promotions/page.tsx";
 import AnalyticsPage from "./pages/analytics/page.tsx";
 import { App as AntApp, ConfigProvider } from "antd";
 import { adminTheme } from "./styles/theme.ts";
+import AdminNotificationBridge from "./service/apiInstances/AdminNotificationBridge.tsx";
 
 function App() {
   const router = createBrowserRouter([
@@ -179,6 +180,7 @@ function App() {
   return (
     <ConfigProvider theme={adminTheme}>
       <AntApp>
+        <AdminNotificationBridge />
         <RouterProvider router={router} />
       </AntApp>
     </ConfigProvider>
