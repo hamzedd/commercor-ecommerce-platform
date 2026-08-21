@@ -135,6 +135,25 @@ img {
   transform: translateY(1px);
 }
 
+.checkout-primary-cta,
+.checkout-primary-cta:hover,
+.checkout-primary-cta:focus-visible,
+.checkout-primary-cta:active,
+.checkout-primary-cta:visited {
+  color: #fff !important;
+}
+.checkout-primary-cta:hover {
+  filter: brightness(1.08);
+}
+.checkout-primary-cta:active {
+  filter: brightness(0.94);
+  transform: translateY(1px);
+}
+.checkout-primary-cta[aria-disabled="true"],
+.checkout-primary-cta:disabled {
+  filter: none;
+}
+
 /* Ant Design commerce consistency */
 .ant-modal-content,
 .ant-drawer-content {

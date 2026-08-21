@@ -261,5 +261,8 @@
   "minimumSpendNotReached": "No se alcanzó el gasto mínimo",
   "promotionUnavailable": "Promoción no disponible",
   "discount": "Descuento",
-  "shippingDiscount": "Descuento de envío"
+  "shippingDiscount": "Descuento de envío",
+  "checkoutInProgress": "Pago en curso",
+  "pendingCheckoutMessage": "Tu carrito está actualmente en proceso de pago. Finaliza el pago actual antes de añadir más artículos.",
+  "continueCheckout": "Continuar con el pago"
 }

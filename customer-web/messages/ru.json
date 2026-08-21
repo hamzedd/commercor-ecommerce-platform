@@ -261,5 +261,8 @@
   "minimumSpendNotReached": "Минимальная сумма не достигнута",
   "promotionUnavailable": "Акция недоступна",
   "discount": "Скидка",
-  "shippingDiscount": "Скидка на доставку"
+  "shippingDiscount": "Скидка на доставку",
+  "checkoutInProgress": "Оформление заказа выполняется",
+  "pendingCheckoutMessage": "Ваша корзина уже находится в процессе оформления. Завершите текущую оплату, прежде чем добавлять новые товары.",
+  "continueCheckout": "Продолжить оформление"
 }

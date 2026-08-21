@@ -261,5 +261,8 @@
   "minimumSpendNotReached": "סכום המינימום לא הושג",
   "promotionUnavailable": "המבצע אינו זמין",
   "discount": "הנחה",
-  "shippingDiscount": "הנחת משלוח"
+  "shippingDiscount": "הנחת משלוח",
+  "checkoutInProgress": "התשלום בתהליך",
+  "pendingCheckoutMessage": "העגלה שלך נמצאת כעת בתהליך תשלום. יש לסיים את התשלום הנוכחי לפני הוספת פריטים נוספים.",
+  "continueCheckout": "המשך לתשלום"
 }

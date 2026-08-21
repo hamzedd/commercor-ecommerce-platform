@@ -29,23 +29,53 @@ function ProductPurchaseBox({ product }: Props) {
   const router = useRouter();
   const toggleLogin = useModalStore((state) => state.toggleLogin);
   const [quantity, setQuantity] = useState(1);
-  const [selected,setSelected]=useState<Record<string,string>>({});
-  const variants=product.variants||[]; const optionGroups=Array.from(new Map(variants.flatMap(v=>v.options).map(o=>[o.optionId,{name:o.optionName,values:new Map<string,string>()}])).values());
-  for(const v of variants)for(const o of v.options){const group=optionGroups.find(g=>g.name===o.optionName);group?.values.set(o.valueId,o.value)}
-  const selectedVariant=variants.find(v=>v.options.every(o=>selected[o.optionId]===o.valueId)); const effectiveStock=selectedVariant?.stock??(variants.length?0:product.stock||0); const effectivePrice=selectedVariant?.effectivePrice??(product.price||0);
+  const [selected, setSelected] = useState<Record<string, string>>({});
+  const variants = product.variants || [];
+  const optionGroups = Array.from(
+    new Map(
+      variants
+        .flatMap((v) => v.options)
+        .map((o) => [
+          o.optionId,
+          { name: o.optionName, values: new Map<string, string>() },
+        ]),
+    ).values(),
+  );
+  for (const v of variants)
+    for (const o of v.options) {
+      const group = optionGroups.find((g) => g.name === o.optionName);
+      group?.values.set(o.valueId, o.value);
+    }
+  const selectedVariant = variants.find((v) =>
+    v.options.every((o) => selected[o.optionId] === o.valueId),
+  );
+  const effectiveStock =
+    selectedVariant?.stock ?? (variants.length ? 0 : product.stock || 0);
+  const effectivePrice =
+    selectedVariant?.effectivePrice ?? (product.price || 0);
 
   const handleAddInCard = async () => {
     if (!user) {
       toggleLogin();
       return;
     }
-    if(variants.length&&!selectedVariant)return;
-    await addCartItem({ productId: product.id, variantId:selectedVariant?.id||null, quantity });
+    if (variants.length && !selectedVariant) return;
+    try {
+      await addCartItem({
+        productId: product.id,
+        variantId: selectedVariant?.id || null,
+        quantity,
+      });
+      return true;
+    } catch {
+      // The API notification layer presents expected commerce errors.
+      return false;
+    }
   };
 
   const handlePurchase = async () => {
-    await handleAddInCard();
-    if (user) router.push("/checkout");
+    const added = await handleAddInCard();
+    if (user && added) router.push("/checkout");
   };
 
   const increaseQuantity = () => setQuantity((previous) => previous + 1);
@@ -53,8 +83,10 @@ function ProductPurchaseBox({ product }: Props) {
     setQuantity((previous) => (previous > 1 ? previous - 1 : 1));
 
   return (
-    <aside className="w-full rounded-2xl border border-stone-200 bg-white p-5 shadow-sm sm:p-6 lg:sticky lg:top-28">
-      <div className="mb-3 flex justify-end"><WishlistButton productId={product.id}/></div>
+    <aside className="w-full rounded-2xl border border-stone-200 bg-white p-5 shadow-sm sm:p-6">
+      <div className="mb-3 flex justify-end">
+        <WishlistButton productId={product.id} />
+      </div>
       <div className="border-b border-stone-200 pb-5">
         <p className="text-xs font-bold tracking-[0.16em] text-amber-700 uppercase">
           {t("price")}
@@ -62,7 +94,7 @@ function ProductPurchaseBox({ product }: Props) {
         <p className="mt-1 text-3xl font-bold tracking-tight text-stone-950 sm:text-4xl">
           {formatCurrency(effectivePrice, settings.currencyCode, locale)}
         </p>
-        {(product.stock !== undefined||variants.length>0) && (
+        {(product.stock !== undefined || variants.length > 0) && (
           <div className="mt-3 flex items-center gap-2 text-sm">
             <span
               aria-hidden
@@ -71,13 +103,58 @@ function ProductPurchaseBox({ product }: Props) {
             <span
               className={`font-semibold ${effectiveStock > 0 ? "text-emerald-700" : "text-red-700"}`}
             >
-              {effectiveStock > 0 ? `${effectiveStock} ${t("inStock")}` : variants.length&&!selectedVariant?t("selectVariant"):t("outOfStock")}
+              {effectiveStock > 0
+                ? `${effectiveStock} ${t("inStock")}`
+                : variants.length && !selectedVariant
+                  ? t("selectVariant")
+                  : t("outOfStock")}
             </span>
           </div>
         )}
       </div>
 
-      {variants.length>0&&<div className="space-y-4 border-b border-stone-200 py-5">{optionGroups.map(group=><div key={group.name}><p className="mb-2 text-sm font-semibold">{group.name}</p><div className="flex flex-wrap gap-2">{Array.from(group.values).map(([valueId,label])=>{const possible=variants.some(v=>v.stock>0&&v.enabled&&v.options.some(o=>o.valueId===valueId)&&v.options.every(o=>o.optionName===group.name||!selected[o.optionId]||selected[o.optionId]===o.valueId));return <button type="button" key={valueId} disabled={!possible} onClick={()=>{const optionId=variants.flatMap(v=>v.options).find(o=>o.valueId===valueId)!.optionId;setSelected(s=>({...s,[optionId]:valueId}));setQuantity(1)}} className={`rounded-lg border px-3 py-2 text-sm font-semibold disabled:opacity-30 ${Object.values(selected).includes(valueId)?'border-amber-600 bg-amber-50':'border-stone-300'}`}>{label}</button>})}</div></div>)}</div>}
+      {variants.length > 0 && (
+        <div className="space-y-4 border-b border-stone-200 py-5">
+          {optionGroups.map((group) => (
+            <div key={group.name}>
+              <p className="mb-2 text-sm font-semibold">{group.name}</p>
+              <div className="flex flex-wrap gap-2">
+                {Array.from(group.values).map(([valueId, label]) => {
+                  const possible = variants.some(
+                    (v) =>
+                      v.stock > 0 &&
+                      v.enabled &&
+                      v.options.some((o) => o.valueId === valueId) &&
+                      v.options.every(
+                        (o) =>
+                          o.optionName === group.name ||
+                          !selected[o.optionId] ||
+                          selected[o.optionId] === o.valueId,
+                      ),
+                  );
+                  return (
+                    <button
+                      type="button"
+                      key={valueId}
+                      disabled={!possible}
+                      onClick={() => {
+                        const optionId = variants
+                          .flatMap((v) => v.options)
+                          .find((o) => o.valueId === valueId)!.optionId;
+                        setSelected((s) => ({ ...s, [optionId]: valueId }));
+                        setQuantity(1);
+                      }}
+                      className={`rounded-lg border px-3 py-2 text-sm font-semibold disabled:opacity-30 ${Object.values(selected).includes(valueId) ? "border-amber-600 bg-amber-50" : "border-stone-300"}`}
+                    >
+                      {label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
 
       <div className="py-5">
         <p className="mb-2 text-sm font-semibold text-stone-800">
@@ -101,8 +178,8 @@ function ProductPurchaseBox({ product }: Props) {
           </output>
           <button
             type="button"
-          onClick={increaseQuantity}
-            disabled={quantity>=effectiveStock}
+            onClick={increaseQuantity}
+            disabled={quantity >= effectiveStock}
             aria-label={t("increaseQuantity")}
             className="flex h-11 w-11 items-center justify-center transition-colors hover:bg-stone-100 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none focus-visible:ring-inset"
           >
@@ -115,7 +192,10 @@ function ProductPurchaseBox({ product }: Props) {
         <button
           type="button"
           onClick={handleAddInCard}
-          disabled={(variants.length>0&&!selectedVariant)||effectiveStock<quantity}
+          disabled={
+            (variants.length > 0 && !selectedVariant) ||
+            effectiveStock < quantity
+          }
           className="flex min-h-12 items-center justify-center gap-2 rounded-xl border-2 border-stone-950 bg-white px-5 text-sm font-bold text-stone-950 transition-colors duration-200 hover:bg-stone-100 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:outline-none"
         >
           <ShoppingCartOutlined aria-hidden className="text-lg" />
@@ -124,8 +204,11 @@ function ProductPurchaseBox({ product }: Props) {
         <button
           type="button"
           onClick={handlePurchase}
-          disabled={(variants.length>0&&!selectedVariant)||effectiveStock<quantity}
-          className="flex min-h-12 items-center justify-center gap-2 rounded-xl bg-stone-950 px-5 text-sm font-bold text-white transition-colors duration-200 hover:bg-amber-600 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:outline-none"
+          disabled={
+            (variants.length > 0 && !selectedVariant) ||
+            effectiveStock < quantity
+          }
+          className="checkout-primary-cta flex min-h-12 items-center justify-center gap-2 rounded-xl bg-stone-950 px-5 text-sm font-bold transition-colors duration-200 hover:bg-amber-600 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:outline-none"
         >
           <ThunderboltOutlined aria-hidden className="text-lg" />
           {t("buyNow")}

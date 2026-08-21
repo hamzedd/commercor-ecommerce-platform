@@ -3,14 +3,17 @@ import { DataSource, EntityManager } from 'typeorm';
 import { PaymentEntity } from '@/src/libs/models/entities/payment/Payment.entity';
 import { OrderEntity } from '@/src/libs/models/entities/order/Order.entity';
 import { OrderItemEntity } from '@/src/libs/models/entities/order/OrderItem.entity';
-import { ProductEntity } from '@/src/libs/models/entities/product/Product.entity';
 import { OrderStatus, PaymentStatus } from '@/src/utils/enums/PaymentEnums';
 import { RewardsService } from '@/src/modules/rewards/rewards.service';
 import { PAYMENT_PENDING_EXPIRY_MINUTES } from '@/src/utils/environmentConstants';
-import { ProductVariantEntity } from '@/src/libs/models/entities/product/ProductVariant.entity';
 import { NotificationService } from '@/src/modules/notifications/notification.service';
 import { InventoryService } from '@/src/modules/inventory/inventory.service';
 import { InventoryMovementType } from '@/src/libs/models/entities/inventory/InventoryMovement.entity';
+import {
+  CartEntity,
+  CartStatus,
+} from '@/src/libs/models/entities/cart/Cart.entity';
+import { isCheckoutPaymentActive } from '../payment-checkout-state';
 
 export const PAYMENT_EXPIRATION_REASON = 'pending_payment_expired';
 
@@ -23,7 +26,7 @@ export function shouldExpirePayment(
   now: Date,
 ) {
   return (
-    payment.status === PaymentStatus.PENDING &&
+    (payment.status as PaymentStatus) === PaymentStatus.PENDING &&
     payment.expiresAt !== null &&
     payment.expiresAt.getTime() <= now.getTime()
   );
@@ -67,16 +70,50 @@ export class PaymentExpirationService {
     });
   }
 
+  async reconcileCheckout(
+    manager: EntityManager,
+    customerId: string,
+    orderId: string,
+    now = new Date(),
+  ): Promise<boolean> {
+    const order = await manager.getRepository(OrderEntity).findOne({
+      where: { id: orderId, customerId },
+      lock: { mode: 'pessimistic_write' },
+    });
+    if (!order) {
+      await this.releaseCart(manager, customerId, orderId, now);
+      return false;
+    }
+    const payment = await manager.getRepository(PaymentEntity).findOne({
+      where: { id: order.paymentId },
+      lock: { mode: 'pessimistic_write' },
+    });
+    if (!payment) {
+      await this.releaseCart(manager, customerId, orderId, now);
+      return false;
+    }
+    if (isCheckoutPaymentActive(payment, now)) return true;
+    if (shouldExpirePayment(payment, now)) {
+      await this.expireLocked(manager, payment, now, order);
+    } else {
+      await this.releaseCart(manager, customerId, orderId, now);
+    }
+    return false;
+  }
+
   private async expireLocked(
     manager: EntityManager,
     payment: PaymentEntity,
     now: Date,
+    existingOrder?: OrderEntity,
   ): Promise<boolean> {
     if (!shouldExpirePayment(payment, now)) return false;
-    const order = await manager.getRepository(OrderEntity).findOne({
-      where: { paymentId: payment.id },
-      lock: { mode: 'pessimistic_write' },
-    });
+    const order =
+      existingOrder ||
+      (await manager.getRepository(OrderEntity).findOne({
+        where: { paymentId: payment.id },
+        lock: { mode: 'pessimistic_write' },
+      }));
     if (!order) return false;
 
     payment.status = PaymentStatus.CANCELLED;
@@ -112,6 +149,7 @@ export class PaymentExpirationService {
 
     await manager.getRepository(PaymentEntity).save(payment);
     await manager.getRepository(OrderEntity).save(order);
+    await this.releaseCart(manager, order.customerId, order.id, now);
     await this.notifications.queue(
       manager,
       'order_cancelled',
@@ -120,5 +158,25 @@ export class PaymentExpirationService {
       { reason: 'payment_expired' },
     );
     return true;
+  }
+
+  private async releaseCart(
+    manager: EntityManager,
+    customerId: string,
+    orderId: string,
+    now: Date,
+  ) {
+    const cart = await manager.getRepository(CartEntity).findOne({
+      where: {
+        customerId,
+        status: CartStatus.ACTIVE,
+        checkoutOrderId: orderId,
+      },
+      lock: { mode: 'pessimistic_write' },
+    });
+    if (!cart) return;
+    cart.checkoutOrderId = null;
+    cart.lastActivityAt = now;
+    await manager.getRepository(CartEntity).save(cart);
   }
 }

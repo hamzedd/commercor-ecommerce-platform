@@ -261,5 +261,8 @@
   "minimumSpendNotReached": "მინიმალური თანხა არ არის მიღწეული",
   "promotionUnavailable": "აქცია მიუწვდომელია",
   "discount": "ფასდაკლება",
-  "shippingDiscount": "მიწოდების ფასდაკლება"
+  "shippingDiscount": "მიწოდების ფასდაკლება",
+  "checkoutInProgress": "გადახდა მიმდინარეობს",
+  "pendingCheckoutMessage": "თქვენი კალათა ამჟამად გადახდის პროცესშია. მეტი პროდუქტის დამატებამდე დაასრულეთ მიმდინარე გადახდა.",
+  "continueCheckout": "გადახდის გაგრძელება"
 }

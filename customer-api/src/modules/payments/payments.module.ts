@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CustomerEntity } from '@/src/libs/models/entities/customer/Customer.entity';
 import { OrderEntity } from '@/src/libs/models/entities/order/Order.entity';
@@ -51,7 +51,7 @@ import { PromotionUsageEntity } from '@/src/libs/models/entities/promotion/Promo
     RewardsModule,
     NotificationsModule,
     InvoicesModule,
-    CartModule,
+    forwardRef(() => CartModule),
   ],
   controllers: [PaymentsController],
   providers: [

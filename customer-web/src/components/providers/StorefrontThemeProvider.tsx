@@ -1,8 +1,9 @@
 "use client";
 
-import { ConfigProvider } from "antd";
+import { App as AntApp, ConfigProvider } from "antd";
 import { useLocale } from "next-intl";
 import type { ReactNode } from "react";
+import { ApiNotificationBridge } from "@/src/service/apis/apiNotifications";
 
 export default function StorefrontThemeProvider({
   children,
@@ -38,7 +39,9 @@ export default function StorefrontThemeProvider({
         },
       }}
     >
-      {children}
+      <AntApp>
+        <ApiNotificationBridge>{children}</ApiNotificationBridge>
+      </AntApp>
     </ConfigProvider>
   );
 }

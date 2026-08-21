@@ -261,5 +261,8 @@
   "minimumSpendNotReached": "Minimum spend not reached",
   "promotionUnavailable": "Promotion unavailable",
   "discount": "Discount",
-  "shippingDiscount": "Shipping discount"
+  "shippingDiscount": "Shipping discount",
+  "checkoutInProgress": "Checkout in progress",
+  "pendingCheckoutMessage": "Your cart is currently in checkout. Finish the current checkout before adding more items.",
+  "continueCheckout": "Continue checkout"
 }

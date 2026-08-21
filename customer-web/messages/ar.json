@@ -261,5 +261,8 @@
   "minimumSpendNotReached": "لم يتم بلوغ الحد الأدنى للإنفاق",
   "promotionUnavailable": "العرض غير متاح",
   "discount": "خصم",
-  "shippingDiscount": "خصم الشحن"
+  "shippingDiscount": "خصم الشحن",
+  "checkoutInProgress": "الدفع قيد التنفيذ",
+  "pendingCheckoutMessage": "سلة التسوق قيد الدفع حاليًا. أكمل عملية الدفع الحالية قبل إضافة المزيد من المنتجات.",
+  "continueCheckout": "متابعة الدفع"
 }

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return, @typescript-eslint/require-await */
+
 import {
   PaymentExpirationService,
   PAYMENT_EXPIRATION_REASON,
@@ -64,6 +66,12 @@ describe('PaymentExpirationService', () => {
       cashbackUsed: 5,
     };
     const product: any = { id: 'product', stock: 3 };
+    const cart: any = {
+      customerId: order.customerId,
+      checkoutOrderId: order.id,
+      status: 'active',
+      lastActivityAt: new Date(now.getTime() - 60_000),
+    };
     const query = {
       setLock: jest.fn(),
       setOnLocked: jest.fn(),
@@ -96,11 +104,18 @@ describe('PaymentExpirationService', () => {
       findOne: jest.fn(async () => product),
       save: jest.fn(),
     };
+    const cartRepo = {
+      findOne: jest.fn(async () =>
+        cart.checkoutOrderId === order.id ? cart : null,
+      ),
+      save: jest.fn(),
+    };
     const manager = {
       getRepository: jest.fn((entity) => {
         if (entity.name === 'PaymentEntity') return paymentRepo;
         if (entity.name === 'OrderEntity') return orderRepo;
         if (entity.name === 'OrderItemEntity') return itemRepo;
+        if (entity.name === 'CartEntity') return cartRepo;
         return productRepo;
       }),
     };
@@ -112,7 +127,12 @@ describe('PaymentExpirationService', () => {
       dataSource as any,
       rewards as any,
       { queue: jest.fn() } as any,
-      { change: jest.fn(async (_manager, input) => { product.stock += input.delta; return true; }) } as any,
+      {
+        change: jest.fn(async (_manager, input) => {
+          product.stock += input.delta;
+          return true;
+        }),
+      } as any,
     );
 
     await expect(service.expirePendingPayments(now)).resolves.toBe(1);
@@ -120,6 +140,8 @@ describe('PaymentExpirationService', () => {
     expect(payment.status).toBe(PaymentStatus.CANCELLED);
     expect(payment.cancellationReason).toBe(PAYMENT_EXPIRATION_REASON);
     expect(order.status).toBe(OrderStatus.CANCELLED);
+    expect(cart.checkoutOrderId).toBeNull();
+    expect(cartRepo.save).toHaveBeenCalledTimes(1);
     expect(product.stock).toBe(5);
     expect(rewards.restoreRedemption).toHaveBeenCalledTimes(1);
     expect(productRepo.save).not.toHaveBeenCalled();

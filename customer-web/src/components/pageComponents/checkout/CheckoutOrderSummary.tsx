@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
 import CheckoutAddressList from "@/src/components/pageComponents/checkout/CheckoutAddressList";
-import { useRouter } from "@/src/i18n/navigation";
+import { Link, useRouter } from "@/src/i18n/navigation";
 import {
   createOrderService,
   getCheckoutQuoteService,
@@ -24,11 +24,24 @@ import {
   initializePaymentService,
   PaymentInitialization,
 } from "@/src/service/apiServices/payment.service";
+import { getServerCart } from "@/src/service/apiServices/cart.service";
 
 interface Props {
   cart: CreateOrderItemType[];
   lang: string;
   productPrices: Record<string, string | undefined>;
+}
+
+function getCheckoutErrorMessage(error: unknown, fallback: string) {
+  const requestError = error as {
+    response?: { data?: { message?: string | string[] } };
+  };
+  const message = requestError.response?.data?.message;
+  if (Array.isArray(message)) return message.join(" ");
+  if (typeof message === "string" && message.trim()) {
+    return message;
+  }
+  return fallback;
 }
 
 function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
@@ -49,6 +62,9 @@ function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
   const [useCashback, setUseCashback] = useState(0);
   const [couponInput, setCouponInput] = useState("");
   const [couponCode, setCouponCode] = useState("");
+  const [pendingPaymentId, setPendingPaymentId] = useState<
+    string | null | undefined
+  >(undefined);
   const [rewards, setRewards] = useState<{
     pointsBalance: number;
     cashbackBalance: number;
@@ -56,14 +72,32 @@ function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
     cashbackEnabled: boolean;
   }>();
   useEffect(() => {
-    const stored=window.sessionStorage.getItem("commercor-coupon")||""; setCouponInput(stored); setCouponCode(stored);
+    const stored = window.sessionStorage.getItem("commercor-coupon") || "";
+    // Browser storage is unavailable during the server render.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setCouponInput(stored);
+    setCouponCode(stored);
     getRewardsService()
       .then(setRewards)
       .catch(() => setRewards(undefined));
+    getServerCart()
+      .then((serverCart) =>
+        setPendingPaymentId(
+          serverCart.checkoutPending ? serverCart.pendingPaymentId : null,
+        ),
+      )
+      .catch(() => setPendingPaymentId(null));
   }, []);
 
   useEffect(() => {
-    if (!selectedAddress || cart.length === 0) {
+    if (
+      pendingPaymentId === undefined ||
+      pendingPaymentId ||
+      !selectedAddress ||
+      cart.length === 0
+    ) {
+      // Reset a quote that no longer matches an address/cart selection.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setQuote(undefined);
       setQuoteError(undefined);
       return;
@@ -83,7 +117,7 @@ function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
         .catch((error) => {
           if (!controller.signal.aborted) {
             setQuote(undefined);
-            setQuoteError(error?.response?.data?.message || t("quoteError"));
+            setQuoteError(getCheckoutErrorMessage(error, t("quoteError")));
           }
         })
         .finally(() => {
@@ -94,7 +128,15 @@ function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
       controller.abort();
       window.clearTimeout(timer);
     };
-  }, [cart, selectedAddress, usePoints, useCashback, couponCode, t]);
+  }, [
+    cart,
+    selectedAddress,
+    usePoints,
+    useCashback,
+    couponCode,
+    pendingPaymentId,
+    t,
+  ]);
 
   const handleCheckout = async () => {
     if (!quote) return;
@@ -112,16 +154,13 @@ function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
       setPendingPayment({ id: paymentId, url: paymentUrl, initialization });
       setSubmitting(false);
     } catch (error: unknown) {
-      const requestError = error as {
-        response?: { data?: { message?: string } };
-      };
-      setQuoteError(requestError.response?.data?.message || t("checkoutError"));
+      setQuoteError(getCheckoutErrorMessage(error, t("checkoutError")));
       setSubmitting(false);
     }
   };
 
   const totalPrice = cart.reduce((total, item) => {
-    const price = productPrices[`${item.productId}:${item.variantId||''}`];
+    const price = productPrices[`${item.productId}:${item.variantId || ""}`];
     return price ? total + +price * item.quantity : total;
   }, 0);
 
@@ -158,9 +197,47 @@ function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
             </dd>
           </div>
         )}
-        {quote && quote.couponDiscount > 0 && <div className="mt-3 flex justify-between text-sm text-emerald-700"><dt>{t("couponDiscount")} ({quote.couponCode})</dt><dd>-{formatCurrency(quote.couponDiscount,settings.currencyCode,lang)}</dd></div>}
-        {quote?.promotions.map(p=><div key={p.id} className="mt-3 flex justify-between text-sm text-emerald-700"><dt>{p.name}</dt><dd>{p.discountAmount>0?`-${formatCurrency(p.discountAmount,settings.currencyCode,lang)}`:t('freeShipping')}</dd></div>)}
-        {quote&&quote.shippingDiscount>0&&<div className="mt-3 flex justify-between text-sm text-emerald-700"><dt>{t('shippingDiscount')}</dt><dd>-{formatCurrency(quote.shippingDiscount,settings.currencyCode,lang)}</dd></div>}
+        {quote && quote.couponDiscount > 0 && (
+          <div className="mt-3 flex justify-between text-sm text-emerald-700">
+            <dt>
+              {t("couponDiscount")} ({quote.couponCode})
+            </dt>
+            <dd>
+              -
+              {formatCurrency(
+                quote.couponDiscount,
+                settings.currencyCode,
+                lang,
+              )}
+            </dd>
+          </div>
+        )}
+        {quote?.promotions.map((p) => (
+          <div
+            key={p.id}
+            className="mt-3 flex justify-between text-sm text-emerald-700"
+          >
+            <dt>{p.name}</dt>
+            <dd>
+              {p.discountAmount > 0
+                ? `-${formatCurrency(p.discountAmount, settings.currencyCode, lang)}`
+                : t("freeShipping")}
+            </dd>
+          </div>
+        ))}
+        {quote && quote.shippingDiscount > 0 && (
+          <div className="mt-3 flex justify-between text-sm text-emerald-700">
+            <dt>{t("shippingDiscount")}</dt>
+            <dd>
+              -
+              {formatCurrency(
+                quote.shippingDiscount,
+                settings.currencyCode,
+                lang,
+              )}
+            </dd>
+          </div>
+        )}
         {quote && quote.cashbackUsed > 0 && (
           <div className="mt-3 flex justify-between text-sm text-emerald-700">
             <dt>Cashback used</dt>
@@ -206,7 +283,44 @@ function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
           </dd>
         </div>
       </dl>
-      <div className="mt-5 rounded-xl bg-stone-50 p-4"><label className="text-sm font-semibold" htmlFor="coupon-code">{t("couponCode")}</label><div className="mt-2 flex gap-2"><Input id="coupon-code" value={couponInput} placeholder={t("couponCode")} onChange={e=>setCouponInput(e.target.value.toUpperCase())}/><button type="button" className="rounded-lg bg-stone-900 px-4 text-sm font-bold text-white disabled:bg-stone-300" disabled={!couponInput.trim()||couponInput.trim()===couponCode} onClick={()=>{const code=couponInput.trim().toUpperCase();window.sessionStorage.setItem("commercor-coupon",code);setCouponCode(code)}}>{t("applyCoupon")}</button></div>{couponCode&&<button type="button" className="mt-2 text-sm font-semibold text-red-700" onClick={()=>{window.sessionStorage.removeItem("commercor-coupon");setCouponInput("");setCouponCode("")}}>{t("removeCoupon")}</button>}</div>
+      <div className="mt-5 rounded-xl bg-stone-50 p-4">
+        <label className="text-sm font-semibold" htmlFor="coupon-code">
+          {t("couponCode")}
+        </label>
+        <div className="mt-2 flex gap-2">
+          <Input
+            id="coupon-code"
+            value={couponInput}
+            placeholder={t("couponCode")}
+            onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
+          />
+          <button
+            type="button"
+            className="rounded-lg bg-stone-900 px-4 text-sm font-bold text-white disabled:bg-stone-300"
+            disabled={!couponInput.trim() || couponInput.trim() === couponCode}
+            onClick={() => {
+              const code = couponInput.trim().toUpperCase();
+              window.sessionStorage.setItem("commercor-coupon", code);
+              setCouponCode(code);
+            }}
+          >
+            {t("applyCoupon")}
+          </button>
+        </div>
+        {couponCode && (
+          <button
+            type="button"
+            className="mt-2 text-sm font-semibold text-red-700"
+            onClick={() => {
+              window.sessionStorage.removeItem("commercor-coupon");
+              setCouponInput("");
+              setCouponCode("");
+            }}
+          >
+            {t("removeCoupon")}
+          </button>
+        )}
+      </div>
       {rewards && (rewards.pointsEnabled || rewards.cashbackEnabled) && (
         <div className="mt-5 space-y-3 rounded-xl bg-stone-50 p-4">
           {rewards.pointsEnabled && rewards.pointsBalance > 0 && (
@@ -258,6 +372,22 @@ function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
         </p>
       )}
 
+      {pendingPaymentId && (
+        <div className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-stone-800">
+          <p className="font-semibold">{t("checkoutInProgress")}</p>
+          <p className="mt-1 leading-6">{t("pendingCheckoutMessage")}</p>
+          <Link
+            href={{
+              pathname: "/payment-status/[id]",
+              params: { id: pendingPaymentId },
+            }}
+            className="checkout-primary-cta mt-4 inline-flex min-h-10 items-center justify-center rounded-lg bg-stone-950 px-4 font-bold"
+          >
+            {t("continueCheckout")}
+          </Link>
+        </div>
+      )}
+
       <div className="mt-6">
         <CheckoutAddressList
           onAddressSelect={setSelectedAddress}
@@ -265,7 +395,7 @@ function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
         />
       </div>
 
-      {!pendingPayment && (
+      {!pendingPayment && pendingPaymentId === null && (
         <button
           type="button"
           onClick={handleCheckout}
@@ -276,7 +406,7 @@ function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
             quoteLoading ||
             submitting
           }
-          className="mt-6 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-stone-950 px-5 text-sm font-bold text-white transition-colors duration-200 hover:bg-amber-600 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-stone-300 disabled:text-stone-500"
+          className="checkout-primary-cta mt-6 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-stone-950 px-5 text-sm font-bold transition-colors duration-200 hover:bg-amber-600 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-stone-300 disabled:!text-stone-600"
         >
           <LockOutlined aria-hidden />
           {submitting ? t("processingPayment") : t("proceedToCheckout")}
