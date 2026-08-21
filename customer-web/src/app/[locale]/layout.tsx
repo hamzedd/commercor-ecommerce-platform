@@ -12,6 +12,7 @@ import getImageSrcByBucketAndFileNames from "@/src/utils/functions/getImageSrcBy
 import { StoreSettingsProvider } from "@/src/components/providers/StoreSettingsProvider";
 import type { CSSProperties } from "react";
 import StorefrontThemeProvider from "@/src/components/providers/StorefrontThemeProvider";
+import type { Metadata } from "next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,7 +30,10 @@ type Props = {
 };
 
 // eslint-disable-next-line react-refresh/only-export-components
-export async function generateMetadata() {
+export async function generateMetadata({
+  params,
+}: Pick<Props, "params">): Promise<Metadata> {
+  const { locale } = await params;
   const settings = await getStoreSettingsService();
   const imageUrl = (name?: string) =>
     name
@@ -38,17 +42,29 @@ export async function generateMetadata() {
           fileName: name,
         })
       : undefined;
-  const metaData = {
-    icons: {},
-    title: settings.homeMetaTitle || settings.storeName,
-    description:
-      settings.homeMetaDescription || `${settings.storeName} online store`,
+  const title = settings.homeMetaTitle || settings.storeName;
+  const description =
+    settings.homeMetaDescription || `${settings.storeName} online store`;
+  const socialImage = settings.openGraphImage
+    ? imageUrl(settings.openGraphImage)
+    : undefined;
+  const metaData: Metadata = {
+    icons: { icon: "/favicon.ico" },
+    title,
+    description,
     openGraph: {
-      title: settings.homeMetaTitle || settings.storeName,
-      description: settings.homeMetaDescription,
-      images: settings.openGraphImage
-        ? [imageUrl(settings.openGraphImage)!]
-        : [],
+      type: "website",
+      locale,
+      title,
+      description,
+      siteName: settings.storeName,
+      images: socialImage ? [socialImage] : [],
+    },
+    twitter: {
+      card: socialImage ? "summary_large_image" : "summary",
+      title,
+      description,
+      images: socialImage ? [socialImage] : [],
     },
   };
   if (settings.favicon)

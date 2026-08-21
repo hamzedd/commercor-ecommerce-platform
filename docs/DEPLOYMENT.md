@@ -12,6 +12,14 @@ Install Docker Engine with Compose v2. Point the four configured DNS records to 
 
 ## Release sequence
 
+The repository includes safe wrappers for the standard sequence. After creating
+and reviewing `.env.production`, run `sh scripts/production-up.sh
+.env.production`, then `sh scripts/production-health.sh .env.production`.
+The wrapper validates Compose configuration, builds images, starts PostgreSQL
+and MinIO, runs migrations, and starts the remaining services. Use `sh
+scripts/production-down.sh .env.production` to stop containers without deleting
+persistent volumes.
+
 1. Create and validate PostgreSQL and object-storage backups. Review `migration:show`, release notes, compatibility, and rollback plan.
 2. Build immutable images: `docker compose --env-file .env.production -f docker-compose.production.yml build`.
 3. Run migrations explicitly: `docker compose --env-file .env.production -f docker-compose.production.yml --profile tools run --rm migrations`.
@@ -20,6 +28,9 @@ Install Docker Engine with Compose v2. Point the four configured DNS records to 
 6. Verify readiness and smoke URLs below before directing traffic.
 
 Migrations are intentionally not part of API container startup. Prefer forward corrective migrations. Restore only after an incident decision and verified backup.
+
+The complete variable contract is in `PRODUCTION-ENVIRONMENT.md`; routine
+health, logs, restart, and incident procedures are in `OPERATIONS.md`.
 
 ## First administrator
 

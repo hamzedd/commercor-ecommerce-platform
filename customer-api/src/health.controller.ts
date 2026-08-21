@@ -1,5 +1,10 @@
 import { Controller, Get, ServiceUnavailableException } from '@nestjs/common';
 import { DataSource } from 'typeorm';
+import {
+  EMAIL_PROVIDER,
+  PAYMENT_PROVIDER,
+  PAYPAL_ENV,
+} from '@/src/utils/environmentConstants';
 
 @Controller('health')
 export class HealthController {
@@ -30,6 +35,12 @@ export class HealthController {
       service: 'customer-api',
       status: 'ready',
       database: 'ok',
+      integrations: {
+        paymentProvider: PAYMENT_PROVIDER,
+        paymentEnvironment:
+          PAYMENT_PROVIDER === 'paypal' ? PAYPAL_ENV : 'disabled',
+        emailProvider: EMAIL_PROVIDER,
+      },
       timestamp: new Date().toISOString(),
     };
   }

@@ -1,11 +1,7 @@
 import * as bcrypt from 'bcrypt';
 
-let generatedSalt: string | null = null;
 export async function hashString(input: string): Promise<string> {
-  if (!generatedSalt) {
-    generatedSalt = await bcrypt.genSalt(10);
-  }
-  return await bcrypt.hash(input, generatedSalt);
+  return await bcrypt.hash(input, await bcrypt.genSalt(12));
 }
 
 export async function compareHashString({

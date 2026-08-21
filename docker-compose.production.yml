@@ -5,15 +5,15 @@ x-api-environment: &api-environment
   DB_TYPE: postgres
   DB_HOST: postgres
   DB_PORT: 5432
-  DB_NAME: ${POSTGRES_DB}
-  DB_USERNAME: ${POSTGRES_USER}
-  DB_PASSWORD: ${POSTGRES_PASSWORD}
+  DB_NAME: ${POSTGRES_DB:?POSTGRES_DB is required}
+  DB_USERNAME: ${POSTGRES_USER:?POSTGRES_USER is required}
+  DB_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
   DB_POOL_MAX: ${DB_POOL_MAX:-10}
   DB_CONNECTION_TIMEOUT_MS: ${DB_CONNECTION_TIMEOUT_MS:-5000}
   DB_IDLE_TIMEOUT_MS: ${DB_IDLE_TIMEOUT_MS:-30000}
-  JWT_SECRET: ${JWT_SECRET}
-  ADMIN_WEB_ORIGIN: https://${ADMIN_DOMAIN}
-  CUSTOMER_WEB_ORIGIN: https://${STORE_DOMAIN}
+  JWT_SECRET: ${JWT_SECRET:?JWT_SECRET is required}
+  ADMIN_WEB_ORIGIN: https://${ADMIN_DOMAIN:?ADMIN_DOMAIN is required}
+  CUSTOMER_WEB_ORIGIN: https://${STORE_DOMAIN:?STORE_DOMAIN is required}
   RATE_LIMIT_WINDOW_MS: ${RATE_LIMIT_WINDOW_MS:-60000}
   RATE_LIMIT_MAX: ${RATE_LIMIT_MAX:-300}
 
@@ -24,7 +24,7 @@ services:
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
     volumes:
       - postgres-data:/var/lib/postgresql/data
     healthcheck:
@@ -39,8 +39,8 @@ services:
     restart: unless-stopped
     command: server /data --console-address :9001
     environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:?MINIO_ROOT_USER is required}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:?MINIO_ROOT_PASSWORD is required}
     volumes:
       - minio-data:/data
     healthcheck:
@@ -89,7 +89,7 @@ services:
     environment:
       <<: *api-environment
       PORT: 3001
-      DOMAIN_URL: https://${STORE_DOMAIN}
+      DOMAIN_URL: https://${STORE_DOMAIN:?STORE_DOMAIN is required}
       SENSITIVE_RATE_LIMIT_MAX: ${SENSITIVE_RATE_LIMIT_MAX:-20}
       PAYMENT_PROVIDER: ${PAYMENT_PROVIDER:-manual_disabled}
       PAYMENT_PENDING_EXPIRY_MINUTES: ${PAYMENT_PENDING_EXPIRY_MINUTES:-30}
@@ -123,7 +123,7 @@ services:
     build:
       context: ./admin-web
       args:
-        VITE_API_BASE_URL: https://${ADMIN_API_DOMAIN}/api
+        VITE_API_BASE_URL: https://${ADMIN_API_DOMAIN:?ADMIN_API_DOMAIN is required}/api
     restart: unless-stopped
     depends_on: [admin-api]
     networks: [frontend]
@@ -132,15 +132,15 @@ services:
     build:
       context: ./customer-web
       args:
-        NEXT_PUBLIC_API_BASE_URL: https://${CUSTOMER_API_DOMAIN}/api
+        NEXT_PUBLIC_API_BASE_URL: https://${CUSTOMER_API_DOMAIN:?CUSTOMER_API_DOMAIN is required}/api
         NEXT_PUBLIC_SSR_API_BASE_URL: http://customer-api:3001/api
-        NEXT_PUBLIC_FILES_BASE_URL: https://${ADMIN_API_DOMAIN}/api
+        NEXT_PUBLIC_FILES_BASE_URL: https://${ADMIN_API_DOMAIN:?ADMIN_API_DOMAIN is required}/api
     restart: unless-stopped
     environment:
       PORT: 8080
-      NEXT_PUBLIC_API_BASE_URL: https://${CUSTOMER_API_DOMAIN}/api
+      NEXT_PUBLIC_API_BASE_URL: https://${CUSTOMER_API_DOMAIN:?CUSTOMER_API_DOMAIN is required}/api
       NEXT_PUBLIC_SSR_API_BASE_URL: http://customer-api:3001/api
-      NEXT_PUBLIC_FILES_BASE_URL: https://${ADMIN_API_DOMAIN}/api
+      NEXT_PUBLIC_FILES_BASE_URL: https://${ADMIN_API_DOMAIN:?ADMIN_API_DOMAIN is required}/api
     depends_on: [customer-api, admin-api]
     networks: [frontend, backend]
 
@@ -148,11 +148,11 @@ services:
     image: caddy:2.8.4-alpine
     restart: unless-stopped
     environment:
-      STORE_DOMAIN: ${STORE_DOMAIN}
-      CUSTOMER_API_DOMAIN: ${CUSTOMER_API_DOMAIN}
-      ADMIN_DOMAIN: ${ADMIN_DOMAIN}
-      ADMIN_API_DOMAIN: ${ADMIN_API_DOMAIN}
-      ACME_EMAIL: ${ACME_EMAIL}
+      STORE_DOMAIN: ${STORE_DOMAIN:?STORE_DOMAIN is required}
+      CUSTOMER_API_DOMAIN: ${CUSTOMER_API_DOMAIN:?CUSTOMER_API_DOMAIN is required}
+      ADMIN_DOMAIN: ${ADMIN_DOMAIN:?ADMIN_DOMAIN is required}
+      ADMIN_API_DOMAIN: ${ADMIN_API_DOMAIN:?ADMIN_API_DOMAIN is required}
+      ACME_EMAIL: ${ACME_EMAIL:?ACME_EMAIL is required}
     ports:
       - "80:80"
       - "443:443"

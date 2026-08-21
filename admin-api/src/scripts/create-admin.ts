@@ -19,10 +19,18 @@ function strongPassword(password: string) {
   );
 }
 
+function validUsername(username: string) {
+  return /^[A-Za-z0-9][A-Za-z0-9._-]{2,49}$/.test(username);
+}
+
 async function main() {
   const username = required('ADMIN_BOOTSTRAP_USERNAME');
   const email = required('ADMIN_BOOTSTRAP_EMAIL').toLowerCase();
   const password = required('ADMIN_BOOTSTRAP_PASSWORD');
+  if (!validUsername(username))
+    throw new Error(
+      'ADMIN_BOOTSTRAP_USERNAME must be 3-50 characters using letters, numbers, dot, underscore, or hyphen',
+    );
   if (!/^\S+@\S+\.\S+$/.test(email))
     throw new Error('ADMIN_BOOTSTRAP_EMAIL must be valid');
   if (!strongPassword(password))
@@ -50,7 +58,7 @@ async function main() {
         role: UserRoleEnum.ADMIN,
       }),
     );
-    process.stdout.write(`Administrator created for ${email}\n`);
+    process.stdout.write('Administrator created successfully\n');
   } finally {
     await dataSource.destroy();
   }
