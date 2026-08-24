@@ -27,7 +27,7 @@ export async function fetchProducts(
   return fetchApi(`/products?${queryParams.toString()}`, {
     next: {
       tags: ["products", queryParams.toString()],
-      revalidate: 1000 * 60 * 5,
+      revalidate: 60 * 5,
     },
     method: "POST",
   });
@@ -37,7 +37,7 @@ export async function fetchProduct(slug: string): Promise<ProductType> {
   return fetchApi(`/products/slug/${slug}`, {
     next: {
       tags: ["products", "slugs", slug],
-      revalidate: 1000 * 60 * 5,
+      revalidate: 60 * 5,
     },
   });
 }

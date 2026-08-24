@@ -9,20 +9,22 @@ import {
   MINIO_USE_SSL,
 } from '@/src/utils/environmentConstants';
 
+export function createMinioClient(): Minio.Client {
+  return new Minio.Client({
+    endPoint: MINIO_ENDPOINT,
+    port: +MINIO_PORT,
+    accessKey: MINIO_ACCESS_KEY,
+    secretKey: MINIO_SECRET_KEY,
+    useSSL: MINIO_USE_SSL,
+  });
+}
+
 @Module({
   exports: [MINIO_TOKEN],
   providers: [
     {
       provide: MINIO_TOKEN,
-      useFactory: async (): Promise<Minio.Client> => {
-        return new Minio.Client({
-          endPoint: MINIO_ENDPOINT,
-          port: +MINIO_PORT,
-          accessKey: MINIO_ACCESS_KEY,
-          secretKey: MINIO_SECRET_KEY,
-          useSSL: MINIO_USE_SSL,
-        });
-      },
+      useFactory: async (): Promise<Minio.Client> => createMinioClient(),
     },
   ],
 })

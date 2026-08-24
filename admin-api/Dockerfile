@@ -27,6 +27,7 @@ RUN sed -i 's#https://registry.yarnpkg.com/#https://registry.npmjs.org/#g' yarn.
     && yarn cache clean
 
 COPY --from=build --chown=node:node /app/dist ./dist
+COPY --from=build --chown=node:node /app/demo-assets ./demo-assets
 
 RUN find dist -name '*.map' -delete
 
