@@ -32,6 +32,7 @@ export class FilesController {
       name,
       bucketName,
     });
+    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
     res.setHeader('Content-Disposition', `inline; filename="${name}"`);
     stream.pipe(res);
   }
