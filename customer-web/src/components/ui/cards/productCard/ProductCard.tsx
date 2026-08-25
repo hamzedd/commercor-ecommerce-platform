@@ -82,13 +82,13 @@ function ProductCard({
       {/* Product Info */}
       <div className="flex flex-1 flex-col p-3.5 md:p-4">
         <h2
-          className={`mb-1 line-clamp-2 text-sm font-semibold text-gray-900 md:text-base ${titleClassName || ""}`}
+          className={`mb-1 line-clamp-2 text-sm font-semibold text-slate-950 md:text-base ${titleClassName || ""}`}
         >
           {productTranslation?.name}
         </h2>
         <p
           className={
-            "mb-2 line-clamp-2 flex-1 text-xs text-gray-600 md:text-sm"
+            "mb-2 line-clamp-2 flex-1 text-xs text-slate-600 md:text-sm"
           }
         >
           {productTranslation?.description}
@@ -104,7 +104,7 @@ function ProductCard({
 
         {/* Price */}
         <div className="flex items-center justify-between border-t border-slate-100 pt-3">
-          <p className={"text-lg font-bold text-gray-900 md:text-xl"}>
+          <p className={"text-lg font-bold text-slate-950 md:text-xl"}>
             {formatCurrency(product.price || 0, settings.currencyCode, lang)}
           </p>
           <div

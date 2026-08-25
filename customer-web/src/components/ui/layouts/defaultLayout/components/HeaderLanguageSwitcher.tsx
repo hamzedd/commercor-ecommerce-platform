@@ -43,7 +43,7 @@ export default function HeaderLanguageSwitcher() {
       {/* Desktop Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="hidden items-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 transition-all hover:border-gray-400 hover:bg-gray-50 md:flex"
+        className="hidden items-center gap-2 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition-all duration-200 hover:border-violet-300 hover:bg-violet-50 hover:text-violet-700 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none md:flex"
       >
         <GlobalOutlined className="text-base" />
         <span className="flex items-center gap-1">
@@ -70,7 +70,7 @@ export default function HeaderLanguageSwitcher() {
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
         aria-label={currentLanguage?.name}
-        className="flex h-11 min-w-11 items-center justify-center gap-1.5 rounded-lg border border-gray-300 bg-white px-2.5 text-sm font-medium text-gray-700 transition-all hover:border-gray-400 hover:bg-gray-50 focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:outline-none md:hidden"
+        className="flex h-11 min-w-11 items-center justify-center gap-1.5 rounded-lg border border-slate-300 bg-white px-2.5 text-sm font-medium text-slate-700 transition-all duration-200 hover:border-violet-300 hover:bg-violet-50 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 focus-visible:outline-none md:hidden"
       >
         <GlobalOutlined className="text-sm" />
         <span>{currentLanguage?.flag}</span>
@@ -91,7 +91,7 @@ export default function HeaderLanguageSwitcher() {
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute top-full end-0 z-50 mt-2 w-48 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg">
+        <div className="store-card-enter absolute end-0 top-full z-50 mt-2 w-48 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-lg shadow-violet-950/10">
           {languages.map((lang) => (
             <Link
               key={lang.code}
@@ -103,17 +103,17 @@ export default function HeaderLanguageSwitcher() {
               }
               locale={lang.code}
               onClick={() => setIsOpen(false)}
-              className={`flex w-full items-center gap-3 px-4 py-2.5 text-sm transition-colors hover:bg-gray-50 ${
+              className={`flex w-full items-center gap-3 px-4 py-2.5 text-sm transition-colors hover:bg-violet-50 ${
                 locale === lang.code
-                  ? "bg-gray-100 font-medium text-black"
-                  : "text-gray-700"
+                  ? "bg-gradient-to-r from-violet-50 to-blue-50 font-semibold text-violet-700"
+                  : "text-slate-700"
               }`}
             >
               <span className="text-xl">{lang.flag}</span>
               <span>{lang.name}</span>
               {locale === lang.code && (
                 <svg
-                  className="ms-auto h-4 w-4 text-black"
+                  className="ms-auto h-4 w-4 text-violet-700"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >

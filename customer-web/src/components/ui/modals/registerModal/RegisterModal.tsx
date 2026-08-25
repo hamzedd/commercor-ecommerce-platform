@@ -12,7 +12,7 @@ interface Props {
   handleOpenLoginModal: () => void;
 }
 function RegisterModal({ show, setShow, handleOpenLoginModal }: Props) {
-  const t=useTranslations();
+  const t = useTranslations();
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
 
@@ -29,7 +29,11 @@ function RegisterModal({ show, setShow, handleOpenLoginModal }: Props) {
     }
   };
   return (
-    <DefaultModal title={t("register")} onClose={() => setShow(false)} show={show}>
+    <DefaultModal
+      title={t("register")}
+      onClose={() => setShow(false)}
+      show={show}
+    >
       <RegisterForm
         onFinish={handleSubmit}
         className={"w-full max-w-[500px]"}
@@ -37,14 +41,20 @@ function RegisterModal({ show, setShow, handleOpenLoginModal }: Props) {
         disabled={loading}
       />
       <div className="flex w-full items-center justify-center gap-5">
-        <div className={"h-[1px] w-full grow bg-gray-500/20"}></div>
-        <p className={"font-semibold uppercase"}>{t("or")}</p>
-        <div className={"h-[1px] w-full grow bg-gray-500/20"}></div>
+        <div className={"h-[1px] w-full grow bg-slate-200"}></div>
+        <p
+          className={
+            "text-xs font-bold tracking-[0.16em] text-slate-400 uppercase"
+          }
+        >
+          {t("or")}
+        </p>
+        <div className={"h-[1px] w-full grow bg-slate-200"}></div>
       </div>
       <button
         type={"button"}
         className={
-          "w-full max-w-[500px] rounded-md border border-gray-300 bg-white px-4 py-2 text-center shadow-sm hover:bg-gray-100"
+          "w-full max-w-[500px] rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-center font-semibold text-slate-700 transition-all duration-200 hover:border-violet-300 hover:bg-violet-50 hover:text-violet-700 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none"
         }
         onClick={handleOpenLoginModal}
       >

@@ -69,12 +69,12 @@ function DefaultHeader({ settings }: Props) {
 
   return (
     <>
-      <header className="w-full border-b border-gray-100 bg-white">
+      <header className="w-full border-b border-slate-100 bg-white">
         <div className="my-container flex flex-row flex-wrap items-center justify-between gap-2 py-2.5 md:flex-nowrap md:gap-5 md:py-4">
           {/* Brand */}
           <Link
             href="/"
-            className="flex min-w-0 shrink items-center gap-2 transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:outline-none md:shrink-0 md:gap-3"
+            className="flex min-w-0 shrink items-center gap-2 transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 focus-visible:outline-none md:shrink-0 md:gap-3"
           >
             {settings.logo ? (
               <Image
@@ -96,11 +96,11 @@ function DefaultHeader({ settings }: Props) {
                 </div>
 
                 <div className="hidden sm:block">
-                  <p className="text-xl font-bold tracking-tight text-gray-950">
+                  <p className="text-xl font-bold tracking-tight text-slate-950">
                     {settings.storeName}
                   </p>
 
-                  <p className="text-[10px] font-medium tracking-[0.2em] text-gray-400 uppercase">
+                  <p className="text-[10px] font-medium tracking-[0.2em] text-slate-400 uppercase">
                     Online Store
                   </p>
                 </div>
@@ -118,30 +118,30 @@ function DefaultHeader({ settings }: Props) {
             {userData?.id && (
               <Link
                 href="/profile"
-                className="group hidden h-11 w-11 items-center justify-center rounded-full border border-gray-200 bg-white transition-all hover:border-gray-400 hover:bg-gray-50 focus-visible:ring-2 focus-visible:ring-[var(--store-accent)] focus-visible:outline-none sm:flex"
+                className="group hidden h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white transition-all duration-200 hover:-translate-y-0.5 hover:border-violet-300 hover:bg-violet-50 hover:shadow-sm hover:shadow-violet-500/10 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none sm:flex"
                 aria-label={t("wishlist")}
               >
-                <HeartOutlined className="text-base text-gray-700" />
+                <HeartOutlined className="text-base text-slate-700 transition-colors group-hover:text-violet-700" />
               </Link>
             )}
             {/* Cart */}
             {userData?.id ? (
               <Link
                 href="/cart"
-                className="group relative flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 bg-white transition-all hover:border-gray-400 hover:bg-gray-50 focus-visible:ring-2 focus-visible:ring-[var(--store-accent)] focus-visible:outline-none"
+                className="group relative flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white transition-all duration-200 hover:-translate-y-0.5 hover:border-violet-300 hover:bg-violet-50 hover:shadow-sm hover:shadow-violet-500/10 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none"
                 aria-label={t("cart")}
               >
-                <ShoppingCartOutlined className="text-base text-gray-700 md:text-lg" />
+                <ShoppingCartOutlined className="text-base text-slate-700 transition-colors group-hover:text-violet-700 md:text-lg" />
                 {cartBadge}
               </Link>
             ) : (
               <button
                 type="button"
                 onClick={() => toggleLogin()}
-                className="group relative flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 bg-white transition-all hover:border-gray-400 hover:bg-gray-50 focus-visible:ring-2 focus-visible:ring-[var(--store-accent)] focus-visible:outline-none"
+                className="group relative flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white transition-all duration-200 hover:-translate-y-0.5 hover:border-violet-300 hover:bg-violet-50 hover:shadow-sm hover:shadow-violet-500/10 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none"
                 aria-label={t("cart")}
               >
-                <ShoppingCartOutlined className="text-base text-gray-700 md:text-lg" />
+                <ShoppingCartOutlined className="text-base text-slate-700 transition-colors group-hover:text-violet-700 md:text-lg" />
                 {cartBadge}
               </button>
             )}
@@ -150,11 +150,11 @@ function DefaultHeader({ settings }: Props) {
             {userData?.id ? (
               <Link
                 href="/profile"
-                className="group flex h-11 w-11 items-center justify-center gap-2 rounded-full border border-gray-200 bg-white transition-all hover:border-gray-400 hover:bg-gray-50 focus-visible:ring-2 focus-visible:ring-[var(--store-accent)] focus-visible:outline-none md:w-auto md:px-4"
+                className="group flex h-11 w-11 items-center justify-center gap-2 rounded-full border border-slate-200 bg-white transition-all duration-200 hover:-translate-y-0.5 hover:border-violet-300 hover:bg-violet-50 hover:shadow-sm hover:shadow-violet-500/10 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none md:w-auto md:px-4"
               >
-                <UserOutlined className="text-base text-gray-700 md:text-lg" />
+                <UserOutlined className="text-base text-slate-700 transition-colors group-hover:text-violet-700 md:text-lg" />
 
-                <span className="hidden text-sm font-semibold text-gray-700 md:inline">
+                <span className="hidden text-sm font-semibold text-slate-700 transition-colors group-hover:text-violet-700 md:inline">
                   {userData.firstName}
                 </span>
               </Link>
@@ -162,12 +162,12 @@ function DefaultHeader({ settings }: Props) {
               <button
                 type="button"
                 onClick={() => toggleLogin()}
-                className="group flex h-11 w-11 items-center justify-center gap-2 rounded-full border border-gray-200 bg-white transition-all hover:border-gray-400 hover:bg-gray-50 focus-visible:ring-2 focus-visible:ring-[var(--store-accent)] focus-visible:outline-none md:w-auto md:px-4"
+                className="group flex h-11 w-11 items-center justify-center gap-2 rounded-full border border-slate-200 bg-white transition-all duration-200 hover:-translate-y-0.5 hover:border-violet-300 hover:bg-violet-50 hover:shadow-sm hover:shadow-violet-500/10 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none md:w-auto md:px-4"
                 aria-label={t("login")}
               >
-                <UserOutlined className="text-base text-gray-700 md:text-lg" />
+                <UserOutlined className="text-base text-slate-700 transition-colors group-hover:text-violet-700 md:text-lg" />
 
-                <span className="hidden text-sm font-semibold text-gray-700 md:inline">
+                <span className="hidden text-sm font-semibold text-slate-700 transition-colors group-hover:text-violet-700 md:inline">
                   {t("login")}
                 </span>
               </button>

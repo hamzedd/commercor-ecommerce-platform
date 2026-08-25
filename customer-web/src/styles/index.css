@@ -201,6 +201,17 @@ img {
 .ant-tabs-nav::before {
   border-color: var(--store-line) !important;
 }
+.ant-tabs-ink-bar {
+  background: linear-gradient(90deg, #2563eb, #7c3aed, #db2777) !important;
+  height: 3px !important;
+}
+.ant-tabs-tab:hover .ant-tabs-tab-btn {
+  color: #7c3aed !important;
+}
+.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #6d28d9 !important;
+  font-weight: 650 !important;
+}
 .ant-skeleton .ant-skeleton-title,
 .ant-skeleton .ant-skeleton-paragraph > li {
   background: linear-gradient(
@@ -344,16 +355,6 @@ section[class*="rounded-2xl"] {
   }
   100% {
     background-position: 0% 50%;
-  }
-}
-@keyframes reveal-up {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
   }
 }
 @keyframes badge-glow {

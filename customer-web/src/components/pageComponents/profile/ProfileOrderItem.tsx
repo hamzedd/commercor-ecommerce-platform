@@ -29,9 +29,9 @@ export default function ProfileOrderItem({
         pathname: "/products/[slug]",
         params: { slug: productTranslation?.slug },
       }}
-      className="flex items-start gap-3 border-b py-3 last:border-b-0 sm:items-center sm:gap-4"
+      className="group flex items-start gap-3 border-b border-slate-100 py-3 transition-colors last:border-b-0 hover:bg-violet-50/40 sm:items-center sm:gap-4"
     >
-      <div className="h-12 w-12 flex-shrink-0 overflow-hidden rounded-md bg-gray-100 sm:h-16 sm:w-16">
+      <div className="h-12 w-12 flex-shrink-0 overflow-hidden rounded-lg bg-slate-100 sm:h-16 sm:w-16">
         <Image
           src={getImageSrcByBucketAndFileNames({
             fileName: productImage,
@@ -40,11 +40,11 @@ export default function ProfileOrderItem({
           width={48}
           height={48}
           alt={productTranslation?.name}
-          className="h-auto w-full object-contain"
+          className="h-auto w-full object-contain transition-transform duration-300 group-hover:scale-105"
         />
       </div>
       <div className="min-w-0 flex-1">
-        <h4 className="truncate text-sm font-medium text-gray-800 sm:text-base">
+        <h4 className="truncate text-sm font-medium text-slate-800 transition-colors group-hover:text-violet-700 sm:text-base">
           {productTranslation?.name}
         </h4>
         {item.variantDescription && (
@@ -53,15 +53,15 @@ export default function ProfileOrderItem({
             {item.variantSku ? ` · ${item.variantSku}` : ""}
           </p>
         )}
-        <p className="text-xs text-gray-500 sm:text-sm">
+        <p className="text-xs text-slate-500 sm:text-sm">
           {t("quantity")}: {item?.quantity}
         </p>
       </div>
       <div className="flex-shrink-0 text-right">
-        <p className="text-sm font-semibold text-gray-800 sm:text-base">
+        <p className="text-sm font-semibold text-slate-800 sm:text-base">
           {formatCurrency(item?.unitPrice || 0, settings.currencyCode, locale)}
         </p>
-        <p className="text-xs text-gray-500 sm:text-sm">{t("perItem")}</p>
+        <p className="text-xs text-slate-500 sm:text-sm">{t("perItem")}</p>
       </div>
     </Link>
   );

@@ -39,7 +39,7 @@ async function HomeCallToAction({ settings }: Props) {
           <div className="mt-7 flex flex-wrap items-center justify-center gap-3 sm:mt-8">
             <Link
               href={"/#categories" as never}
-              className="group relative inline-flex items-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-blue-500 via-violet-500 to-pink-500 bg-[length:200%_auto] bg-[position:0%_50%] px-5 py-3 text-sm font-bold text-white shadow-lg shadow-violet-900/40 transition-all duration-300 hover:scale-[1.04] hover:bg-[position:100%_50%] hover:shadow-xl hover:shadow-pink-800/40 focus-visible:ring-2 focus-visible:ring-violet-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#1e1147] focus-visible:outline-none"
+              className="group relative inline-flex items-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-blue-500 via-violet-500 to-pink-500 bg-[length:200%_auto] bg-[position:0%_50%] px-5 py-3 text-sm font-bold text-white shadow-lg shadow-violet-900/40 transition-all duration-200 hover:scale-[1.02] hover:bg-[position:100%_50%] hover:shadow-xl hover:shadow-pink-800/40 focus-visible:ring-2 focus-visible:ring-violet-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#1e1147] focus-visible:outline-none"
             >
               {t("browseCategories")}
               <ArrowRightOutlined

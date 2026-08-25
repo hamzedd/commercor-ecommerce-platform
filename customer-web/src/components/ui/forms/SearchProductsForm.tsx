@@ -9,20 +9,20 @@ function SearchProductsForm(props: FormProps) {
   return (
     <Form {...props}>
       <Form.Item noStyle={true} name={"search"}>
-        <div className="relative flex h-11 w-full overflow-hidden rounded-xl border border-gray-200 bg-gray-50 transition-all focus-within:border-gray-400 focus-within:bg-white focus-within:ring-2 focus-within:ring-[var(--store-accent)]/20 md:h-12">
+        <div className="relative flex h-11 w-full overflow-hidden rounded-xl border border-slate-200 bg-slate-50 transition-all duration-200 focus-within:border-violet-300 focus-within:bg-white focus-within:ring-2 focus-within:ring-violet-500/20 md:h-12">
           <input
             value={search}
             onChange={(e) => {
               props.form?.setFieldsValue({ search: e.target.value });
             }}
             type="text"
-            className="h-full min-w-0 flex-1 bg-transparent px-4 text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none md:px-5"
+            className="h-full min-w-0 flex-1 bg-transparent px-4 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none md:px-5"
             placeholder={t("searchPlaceholder")}
           />
           <button
             type="submit"
             aria-label={t("search")}
-            className="flex items-center gap-2 bg-[var(--store-primary)] px-4 text-sm font-semibold text-white transition-opacity hover:opacity-90 md:px-5"
+            className="flex items-center gap-2 bg-gradient-to-r from-blue-600 via-violet-600 to-pink-600 px-4 text-sm font-semibold text-white transition-all duration-200 hover:shadow-md hover:shadow-violet-900/20 md:px-5"
           >
             <SearchOutlined className="text-base md:text-lg" />
             <span className="hidden sm:inline">{t("search")}</span>

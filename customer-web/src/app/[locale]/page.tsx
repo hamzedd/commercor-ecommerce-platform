@@ -138,7 +138,7 @@ export default async function Home({ params }: Props) {
             <div className="mt-5 flex flex-wrap items-center gap-2.5 sm:mt-7 sm:gap-3">
               <a
                 href="#categories"
-                className="group relative inline-flex items-center overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 via-violet-600 to-pink-600 bg-[length:200%_auto] bg-[position:0%_50%] px-4 py-3 text-sm font-bold text-white shadow-lg shadow-violet-900/40 transition-all duration-300 hover:scale-[1.03] hover:bg-[position:100%_50%] hover:shadow-xl hover:shadow-violet-800/50 focus-visible:ring-2 focus-visible:ring-violet-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b0821] focus-visible:outline-none sm:px-5"
+                className="group relative inline-flex items-center overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 via-violet-600 to-pink-600 bg-[length:200%_auto] bg-[position:0%_50%] px-4 py-3 text-sm font-bold text-white shadow-lg shadow-violet-900/40 transition-all duration-200 hover:scale-[1.02] hover:bg-[position:100%_50%] hover:shadow-xl hover:shadow-violet-800/50 focus-visible:ring-2 focus-visible:ring-violet-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b0821] focus-visible:outline-none sm:px-5"
               >
                 {t("browseCategories")}
               </a>

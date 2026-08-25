@@ -71,34 +71,34 @@ function DefaultHeaderNav() {
       {isMenuOpen && (
         <div
           id="mobile-navigation"
-          className="absolute inset-x-0 top-full z-50 border-b border-gray-200 bg-white p-3 shadow-lg md:hidden"
+          className="store-card-enter absolute inset-x-0 top-full z-50 border-b border-slate-200 bg-white p-3 shadow-lg shadow-violet-950/10 md:hidden"
         >
           <div className="my-container grid gap-1 px-0">
             <Link
               href="/"
               onClick={closeMenu}
-              className="rounded-lg px-4 py-3 text-sm font-semibold text-gray-800 transition-colors hover:bg-gray-100 focus-visible:ring-2 focus-visible:ring-black focus-visible:outline-none"
+              className="rounded-xl px-4 py-3 text-sm font-semibold text-slate-800 transition-colors hover:bg-violet-50 hover:text-violet-700 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none"
             >
               {t("home")}
             </Link>
             <Link
               href={"/#categories" as never}
               onClick={closeMenu}
-              className="rounded-lg px-4 py-3 text-sm font-semibold text-gray-800 transition-colors hover:bg-gray-100 focus-visible:ring-2 focus-visible:ring-black focus-visible:outline-none"
+              className="rounded-xl px-4 py-3 text-sm font-semibold text-slate-800 transition-colors hover:bg-violet-50 hover:text-violet-700 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none"
             >
               {t("categories")}
             </Link>
             <Link
               href={"/#featured" as never}
               onClick={closeMenu}
-              className="rounded-lg px-4 py-3 text-sm font-semibold text-gray-800 transition-colors hover:bg-gray-100 focus-visible:ring-2 focus-visible:ring-black focus-visible:outline-none"
+              className="rounded-xl px-4 py-3 text-sm font-semibold text-slate-800 transition-colors hover:bg-violet-50 hover:text-violet-700 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none"
             >
               {t("featured")}
             </Link>
             <Link
               href={"/#contact" as never}
               onClick={closeMenu}
-              className="rounded-lg px-4 py-3 text-sm font-semibold text-gray-800 transition-colors hover:bg-gray-100 focus-visible:ring-2 focus-visible:ring-black focus-visible:outline-none"
+              className="rounded-xl px-4 py-3 text-sm font-semibold text-slate-800 transition-colors hover:bg-violet-50 hover:text-violet-700 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none"
             >
               {t("contact")}
             </Link>

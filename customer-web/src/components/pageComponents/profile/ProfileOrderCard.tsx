@@ -35,32 +35,34 @@ export default function ProfileOrderCard({
   };
 
   return (
-    <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-md">
-      <div className="border-b border-gray-200 bg-gray-50 px-4 py-4 sm:px-6">
+    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-shadow duration-300 hover:shadow-lg hover:shadow-violet-950/5">
+      <div className="border-b border-slate-200 bg-slate-50 px-4 py-4 sm:px-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="grid grid-cols-2 gap-4 sm:flex sm:items-center sm:gap-6">
             <div>
-              <p className="text-xs text-gray-500 sm:text-sm">{t("orderId")}</p>
+              <p className="text-xs text-slate-500 sm:text-sm">
+                {t("orderId")}
+              </p>
               <p
-                className="font-mono text-xs font-medium text-gray-800 sm:text-sm"
+                className="font-mono text-xs font-medium text-slate-800 sm:text-sm"
                 title={order?.id}
               >
                 {order?.id.slice(0, 8)}...
               </p>
             </div>
             <div>
-              <p className="text-xs text-gray-500 sm:text-sm">
+              <p className="text-xs text-slate-500 sm:text-sm">
                 {t("orderDate")}
               </p>
-              <p className="text-xs font-medium text-gray-800 sm:text-sm">
+              <p className="text-xs font-medium text-slate-800 sm:text-sm">
                 {orderDate}
               </p>
             </div>
             <div className="col-span-2 sm:col-span-1">
-              <p className="text-xs text-gray-500 sm:text-sm">
+              <p className="text-xs text-slate-500 sm:text-sm">
                 {t("totalAmount")}
               </p>
-              <p className="text-sm font-semibold text-gray-800 sm:text-sm">
+              <p className="text-sm font-semibold text-slate-800 sm:text-sm">
                 {formatCurrency(totalAmount, settings.currencyCode, locale)}
               </p>
             </div>
@@ -142,7 +144,7 @@ export default function ProfileOrderCard({
               </p>
             ))}
         </div>
-        <h3 className="mb-3 text-sm font-semibold text-gray-800 sm:text-base">
+        <h3 className="mb-3 text-sm font-semibold text-slate-800 sm:text-base">
           {t("orderItems")}
         </h3>
         <div className="space-y-2">
@@ -151,11 +153,11 @@ export default function ProfileOrderCard({
           ))}
         </div>
       </div>
-      <div className="border-t border-gray-200 bg-gray-50 px-4 py-4 sm:px-6">
+      <div className="border-t border-slate-200 bg-slate-50 px-4 py-4 sm:px-6">
         <div className="space-y-2">
           <div className="flex justify-between text-xs sm:text-sm">
-            <span className="text-gray-600">{t("subtotal")}</span>
-            <span className="font-medium text-gray-800">
+            <span className="text-slate-600">{t("subtotal")}</span>
+            <span className="font-medium text-slate-800">
               {formatCurrency(
                 order?.productAmount,
                 settings.currencyCode,
@@ -164,8 +166,8 @@ export default function ProfileOrderCard({
             </span>
           </div>
           <div className="flex justify-between text-xs sm:text-sm">
-            <span className="text-gray-600">{t("delivery")}</span>
-            <span className="font-medium text-gray-800">
+            <span className="text-slate-600">{t("delivery")}</span>
+            <span className="font-medium text-slate-800">
               {formatCurrency(
                 order?.deliveryAmount,
                 settings.currencyCode,
@@ -173,22 +175,22 @@ export default function ProfileOrderCard({
               )}
             </span>
           </div>
-          <div className="flex justify-between border-t border-gray-200 pt-2 text-sm font-semibold sm:text-base">
-            <span className="text-gray-800">{t("total")}</span>
-            <span className="text-gray-900">
+          <div className="flex justify-between border-t border-slate-200 pt-2 text-sm font-semibold sm:text-base">
+            <span className="text-slate-800">{t("total")}</span>
+            <span className="text-slate-950">
               {formatCurrency(totalAmount, settings.currencyCode, locale)}
             </span>
           </div>
         </div>
       </div>
       {order.invoice && (
-        <div className="border-t border-gray-200 bg-white px-4 py-4 sm:px-6">
-          <p className="mb-2 text-sm font-semibold">
+        <div className="border-t border-slate-200 bg-white px-4 py-4 sm:px-6">
+          <p className="mb-2 text-sm font-semibold text-slate-950">
             {t("invoice")}: {order.invoice.invoiceNumber}
           </p>
           <button
             onClick={downloadInvoice}
-            className="rounded-md border border-blue-600 px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-50"
+            className="rounded-xl border border-violet-300 px-4 py-2 text-sm font-semibold text-violet-700 transition-colors duration-200 hover:border-violet-400 hover:bg-violet-50"
           >
             {t("downloadPdf")}
           </button>
@@ -196,15 +198,15 @@ export default function ProfileOrderCard({
       )}
       {(order?.status?.toLowerCase() === "completed" ||
         order?.status?.toLowerCase() === "pending") && (
-        <div className="border-t border-gray-200 bg-white px-4 py-4 sm:px-6">
+        <div className="border-t border-slate-200 bg-white px-4 py-4 sm:px-6">
           <div className="flex flex-col gap-3 sm:flex-row">
             {order?.status?.toLowerCase() === "completed" && (
-              <button className="w-full rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700">
+              <button className="w-full rounded-xl bg-gradient-to-r from-blue-600 via-violet-600 to-pink-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm shadow-violet-900/20 transition-all duration-200 hover:shadow-md hover:shadow-violet-800/30">
                 {t("reorder")}
               </button>
             )}
             {order?.status?.toLowerCase() === "pending" && (
-              <button className="w-full rounded-md border border-red-300 bg-white px-4 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-50">
+              <button className="w-full rounded-xl border border-red-300 bg-white px-4 py-2.5 text-sm font-semibold text-red-600 transition-colors duration-200 hover:bg-red-50">
                 {t("cancelOrder")}
               </button>
             )}

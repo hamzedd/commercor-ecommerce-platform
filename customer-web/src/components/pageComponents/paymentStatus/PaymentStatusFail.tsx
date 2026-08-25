@@ -5,11 +5,11 @@ function PaymentStatusFail({ expired = false }: { expired?: boolean }) {
   const t = useTranslations();
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50">
-      <div className="w-full max-w-md rounded-lg bg-white p-8 text-center shadow-lg">
-        <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-red-100">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-slate-50 px-4">
+      <div className="store-card-enter w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-lg shadow-red-950/5">
+        <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-red-400 to-red-600 shadow-md shadow-red-900/20">
           <svg
-            className="h-12 w-12 text-red-500"
+            className="h-10 w-10 text-white"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -22,19 +22,19 @@ function PaymentStatusFail({ expired = false }: { expired?: boolean }) {
             />
           </svg>
         </div>
-        <h2 className="mb-2 text-2xl font-semibold text-gray-800">
+        <h2 className="mb-2 text-2xl font-bold tracking-tight text-slate-950">
           {expired ? t("paymentExpired") : t("paymentFailed")}
         </h2>
-        <p className="mb-4 text-gray-600">
+        <p className="mb-6 text-slate-600">
           {expired
             ? t("paymentExpiredMessage")
             : t("paymentCouldNotBeProcessed")}
         </p>
         <div className="flex gap-3">
-          <button className="flex-1 rounded-lg bg-gray-200 px-6 py-3 font-semibold text-gray-800 transition-colors hover:bg-gray-300">
+          <button className="min-h-12 flex-1 rounded-xl border border-slate-300 font-bold text-slate-700 transition-all duration-200 hover:border-violet-300 hover:bg-violet-50 hover:text-violet-700 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none">
             {t("goBack")}
           </button>
-          <button className="flex-1 rounded-lg bg-blue-500 px-6 py-3 font-semibold text-white transition-colors hover:bg-blue-600">
+          <button className="min-h-12 flex-1 rounded-xl bg-gradient-to-r from-blue-600 via-violet-600 to-pink-600 font-bold text-white shadow-md shadow-violet-900/20 transition-all duration-200 hover:scale-[1.02] hover:shadow-lg hover:shadow-violet-800/30 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none">
             {t("tryAgain")}
           </button>
         </div>

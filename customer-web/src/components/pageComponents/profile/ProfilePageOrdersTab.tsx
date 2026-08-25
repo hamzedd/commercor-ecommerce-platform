@@ -12,11 +12,11 @@ const LoadingState = () => {
       {[1, 2, 3].map((i) => (
         <div
           key={i}
-          className="animate-pulse rounded-lg border border-gray-200 bg-white p-6 shadow-md"
+          className="animate-pulse rounded-2xl border border-slate-200 bg-white p-6 shadow-sm motion-reduce:animate-none"
         >
-          <div className="mb-4 h-6 w-1/4 rounded bg-gray-200"></div>
-          <div className="mb-2 h-4 w-1/2 rounded bg-gray-200"></div>
-          <div className="h-4 w-1/3 rounded bg-gray-200"></div>
+          <div className="mb-4 h-6 w-1/4 rounded bg-slate-200"></div>
+          <div className="mb-2 h-4 w-1/2 rounded bg-slate-200"></div>
+          <div className="h-4 w-1/3 rounded bg-slate-100"></div>
         </div>
       ))}
     </div>
@@ -27,11 +27,11 @@ function EmptyState() {
   const t = useTranslations();
 
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-6 text-center shadow-md sm:p-12">
+    <div className="rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm sm:p-12">
       <div className="mx-auto max-w-md">
-        <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-gray-100 sm:h-24 sm:w-24">
+        <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-violet-600 text-white shadow-md shadow-violet-900/20 sm:h-24 sm:w-24">
           <svg
-            className="h-10 w-10 text-gray-400 sm:h-12 sm:w-12"
+            className="h-10 w-10 sm:h-12 sm:w-12"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -44,15 +44,15 @@ function EmptyState() {
             />
           </svg>
         </div>
-        <h3 className="mb-2 text-lg font-semibold text-gray-800 sm:text-xl">
+        <h3 className="mb-2 text-lg font-bold tracking-tight text-slate-950 sm:text-xl">
           {t("noOrdersYet")}
         </h3>
-        <p className="mb-6 text-sm text-gray-600 sm:text-base">
+        <p className="mb-6 text-sm text-slate-600 sm:text-base">
           {t("noOrdersDescription")}
         </p>
         <Link
           href={"/"}
-          className="w-full rounded-lg bg-blue-600 px-6 py-3 font-medium text-white transition-colors hover:bg-blue-700 sm:w-auto"
+          className="inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-gradient-to-r from-blue-600 via-violet-600 to-pink-600 px-6 font-bold text-white shadow-md shadow-violet-900/20 transition-all duration-200 hover:scale-[1.02] hover:shadow-lg hover:shadow-violet-800/30 sm:w-auto"
         >
           {t("startShopping")}
         </Link>
@@ -72,7 +72,7 @@ function ProfilePageOrdersTab() {
 
   if (isError) {
     return (
-      <div className="rounded-lg border border-red-200 bg-red-50 p-6 text-center">
+      <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-center">
         <p className="font-medium text-red-600">{t("failedToLoadOrders")}</p>
       </div>
     );
