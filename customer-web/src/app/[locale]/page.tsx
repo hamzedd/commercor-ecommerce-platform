@@ -1,15 +1,8 @@
 import { getTranslations } from "next-intl/server";
-import {
-  CustomerServiceOutlined,
-  SafetyCertificateOutlined,
-  StarOutlined,
-  ThunderboltOutlined,
-  LockOutlined,
-  UndoOutlined,
-  CarOutlined,
-} from "@ant-design/icons";
 
 import CategoriesList from "@/src/components/pageComponents/home/categoriesList/CategoriesList";
+import HomeHeroTrustBadges from "@/src/components/pageComponents/home/HomeHeroTrustBadges";
+import HomeWhyChooseUsIcon from "@/src/components/pageComponents/home/HomeWhyChooseUsIcon";
 import CategoryProductsList from "@/src/components/pageComponents/home/categoryProductsList/CategoryProductsList";
 import FeaturedProducts from "@/src/components/pageComponents/home/featuredProducts/FeaturedProducts";
 import HomeCallToAction from "@/src/components/pageComponents/home/homeCta/HomeCallToAction";
@@ -50,28 +43,24 @@ export default async function Home({ params }: Props) {
   const benefits = [
     {
       key: "Fast",
-      Icon: ThunderboltOutlined,
       from: "from-blue-500",
       to: "to-sky-400",
       ring: "group-hover:shadow-blue-500/25",
     },
     {
       key: "Secure",
-      Icon: SafetyCertificateOutlined,
       from: "from-violet-500",
       to: "to-purple-400",
       ring: "group-hover:shadow-violet-500/25",
     },
     {
       key: "Quality",
-      Icon: StarOutlined,
       from: "from-pink-500",
       to: "to-rose-400",
       ring: "group-hover:shadow-pink-500/25",
     },
     {
       key: "Support",
-      Icon: CustomerServiceOutlined,
       from: "from-teal-500",
       to: "to-emerald-400",
       ring: "group-hover:shadow-teal-500/25",
@@ -154,20 +143,11 @@ export default async function Home({ params }: Props) {
                 </Link>
               )}
             </div>
-            <div className="mt-7 flex flex-wrap items-center gap-x-4 gap-y-2.5 sm:mt-9">
-              <span className="glass-panel flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium text-slate-200 sm:text-sm">
-                <LockOutlined aria-hidden className="text-blue-300" />
-                {t("secureCheckout")}
-              </span>
-              <span className="glass-panel flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium text-slate-200 sm:text-sm">
-                <CarOutlined aria-hidden className="text-violet-300" />
-                {t("freeShipping")}
-              </span>
-              <span className="glass-panel flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium text-slate-200 sm:text-sm">
-                <UndoOutlined aria-hidden className="text-pink-300" />
-                {t("freeReturns")}
-              </span>
-            </div>
+            <HomeHeroTrustBadges
+              secureCheckoutLabel={t("secureCheckout")}
+              freeShippingLabel={t("freeShipping")}
+              freeReturnsLabel={t("freeReturns")}
+            />
           </div>
 
           <div className="store-card-enter relative flex justify-center [animation-delay:100ms] lg:justify-end">
@@ -262,7 +242,7 @@ export default async function Home({ params }: Props) {
             </h2>
           </Reveal>
           <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {benefits.map(({ key, Icon, from, to, ring }, index) => (
+            {benefits.map(({ key, from, to, ring }, index) => (
               <Reveal key={key} delay={index * 90}>
                 <div
                   className={`group flex h-full flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-transparent hover:shadow-xl ${ring}`}
@@ -270,7 +250,7 @@ export default async function Home({ params }: Props) {
                   <span
                     className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${from} ${to} text-xl text-white shadow-md transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3`}
                   >
-                    <Icon aria-hidden />
+                    <HomeWhyChooseUsIcon name={key} />
                   </span>
                   <div>
                     <p className="font-semibold text-slate-950">

@@ -1,5 +1,7 @@
+"use client";
+
 import { ArrowRightOutlined } from "@ant-design/icons";
-import { getTranslations } from "next-intl/server";
+import { useTranslations } from "next-intl";
 import { Link } from "@/src/i18n/navigation";
 import { StoreSettingsType } from "@/src/utils/types/storeSettings.type";
 
@@ -7,8 +9,8 @@ interface Props {
   settings: StoreSettingsType;
 }
 
-async function HomeCallToAction({ settings }: Props) {
-  const t = await getTranslations();
+function HomeCallToAction({ settings }: Props) {
+  const t = useTranslations();
 
   return (
     <section className="my-container">

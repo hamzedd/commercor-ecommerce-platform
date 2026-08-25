@@ -1,3 +1,5 @@
+"use client";
+
 import { Link } from "@/src/i18n/navigation";
 import React from "react";
 import { StoreSettingsType } from "@/src/utils/types/storeSettings.type";
