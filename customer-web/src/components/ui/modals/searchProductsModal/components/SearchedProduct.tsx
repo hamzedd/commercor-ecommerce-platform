@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { ProductType } from "@/src/utils/types/product.type";
 import Image from "next/image";

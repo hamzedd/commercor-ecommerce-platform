@@ -1,3 +1,5 @@
+"use client";
+
 import { OrderType } from "@/src/utils/types/order.type";
 import ProfileOrderStatusBadge from "@/src/components/pageComponents/profile/ProfileOrderStatusBadge";
 import ProfileOrderItem from "@/src/components/pageComponents/profile/ProfileOrderItem";

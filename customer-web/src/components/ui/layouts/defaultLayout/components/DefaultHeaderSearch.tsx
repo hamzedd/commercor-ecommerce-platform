@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import SearchProductsForm from "@/src/components/ui/forms/SearchProductsForm";
 import { Form } from "antd";

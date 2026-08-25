@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { Form, FormInstance } from "antd";
 import { useSearchProductsQuery } from "@/src/service/react-query/product/query/useSearchProductsQuery";

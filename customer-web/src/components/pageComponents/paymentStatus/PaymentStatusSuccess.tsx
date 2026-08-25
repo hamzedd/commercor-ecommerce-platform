@@ -1,3 +1,5 @@
+"use client";
+
 import { Link } from "@/src/i18n/navigation";
 import React from "react";
 import { useCurrentUserQuery } from "@/src/service/react-query/user/query/useCurrentUserQuery";

@@ -1,3 +1,5 @@
+"use client";
+
 import { OrderType } from "@/src/utils/types/order.type";
 import { Link } from "@/src/i18n/navigation";
 import Image from "next/image";

@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import DefaultModal from "@/src/components/ui/modals/defaultModal/DefaultModal";
 import { Form } from "antd";
