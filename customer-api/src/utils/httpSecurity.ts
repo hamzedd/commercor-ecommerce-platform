@@ -105,6 +105,14 @@ export function rateLimiter(req: Request, res: Response, next: NextFunction) {
   next();
 }
 
+// Known-good origins that must always be allowed, regardless of whether the
+// corresponding env var has been configured on the host. This is what the
+// live Render frontend calls the API from - it must never depend on a
+// dashboard env var being set correctly, or login breaks with no way to
+// diagnose it beyond a bare CORS error in the browser.
+const PRODUCTION_ORIGINS = ['https://commercor-customer-web.onrender.com'];
+const DEV_ORIGINS = ['http://localhost:3002', 'http://localhost:5173'];
+
 export function allowedOrigins() {
   const configured = [
     process.env.CUSTOMER_WEB_ORIGIN,
@@ -113,8 +121,6 @@ export function allowedOrigins() {
   ]
     .map((value) => value?.trim())
     .filter(Boolean) as string[];
-  if (configured.length) return [...new Set(configured)];
-  return process.env.NODE_ENV === 'production'
-    ? []
-    : ['http://localhost:3002', 'http://localhost:5173'];
+  const devOrigins = process.env.NODE_ENV === 'production' ? [] : DEV_ORIGINS;
+  return [...new Set([...PRODUCTION_ORIGINS, ...configured, ...devOrigins])];
 }
