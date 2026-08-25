@@ -30,10 +30,10 @@ function SearchedProduct({ product, locale, setShow }: Props) {
       onClick={() => {
         setShow(false);
       }}
-      className="group flex w-full items-center gap-4 rounded-lg border border-gray-200 bg-white p-3 transition-all hover:border-gray-300 hover:shadow-md"
+      className="group flex w-full items-center gap-3 rounded-xl border border-slate-200 bg-white p-3 transition-all duration-200 hover:-translate-y-0.5 hover:border-transparent hover:shadow-lg hover:shadow-violet-950/10 sm:gap-4"
     >
       {/* Product Image */}
-      <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-md bg-gray-100">
+      <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg bg-slate-100 sm:h-20 sm:w-20">
         {product.images?.[0]?.name ? (
           <Image
             fill
@@ -42,34 +42,34 @@ function SearchedProduct({ product, locale, setShow }: Props) {
               bucketName: "products",
             })}
             alt={productLocale?.name || t("productImage")}
-            className="object-cover transition-transform group-hover:scale-105"
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center">
-            <span className="text-xs text-gray-400">{t("noImage")}</span>
+            <span className="text-xs text-slate-400">{t("noImage")}</span>
           </div>
         )}
       </div>
 
       {/* Product Info */}
       <div className="flex min-w-0 flex-1 flex-col gap-1">
-        <p className="line-clamp-1 text-base font-semibold text-gray-900 transition-colors group-hover:text-black md:text-lg">
+        <p className="line-clamp-2 text-sm font-semibold text-slate-900 transition-colors group-hover:text-violet-700 sm:line-clamp-1 sm:text-base md:text-lg">
           {productLocale?.name}
         </p>
-        <p className="line-clamp-2 text-sm text-gray-600">
+        <p className="line-clamp-1 hidden text-sm text-slate-600 sm:line-clamp-2 sm:block">
           {productLocale?.description}
         </p>
       </div>
 
       {/* Price */}
       <div className="flex-shrink-0 text-right">
-        <p className="text-lg font-bold text-gray-900 md:text-xl">
+        <p className="text-base font-bold text-slate-900 sm:text-lg md:text-xl">
           {formatCurrency(product.price || 0, settings.currencyCode, locale)}
         </p>
         {product.stock !== undefined && (
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-slate-500">
             {product.stock > 0 ? (
-              <span className="text-green-600">{t("inStock")}</span>
+              <span className="text-emerald-600">{t("inStock")}</span>
             ) : (
               <span className="text-red-600">{t("outOfStock")}</span>
             )}

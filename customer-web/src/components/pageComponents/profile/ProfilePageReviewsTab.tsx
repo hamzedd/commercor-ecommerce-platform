@@ -11,7 +11,9 @@ export default function ProfilePageReviewsTab() {
   const t = useTranslations(),
     [rows, setRows] = useState<ProductReview[]>([]);
   const load = () => getMyReviews().then(setRows);
-  useEffect(() => { void load(); }, []);
+  useEffect(() => {
+    void load();
+  }, []);
   return (
     <div className="space-y-3">
       {rows.length ? (
@@ -25,9 +27,9 @@ export default function ProfilePageReviewsTab() {
                   <div>
                     <Rate disabled value={r.rating} />
                   </div>
-                  <p className="text-sm text-stone-600">{r.title}</p>
+                  <p className="text-sm text-slate-600">{r.title}</p>
                   <p className="mt-1 text-sm">{r.comment}</p>
-                  <p className="mt-2 text-xs font-bold uppercase text-amber-700">
+                  <p className="mt-2 text-xs font-bold text-violet-700 uppercase">
                     {r.status}
                   </p>
                 </div>

@@ -31,20 +31,20 @@ export default function CategoryPageFiltersListItem({
   const optionsId = `filter-options-${productFilter.id}`;
 
   return (
-    <div className={`${!isLast ? "border-b border-stone-200" : ""} py-3`}>
+    <div className={`${!isLast ? "border-b border-slate-200" : ""} py-3`}>
       <button
         type="button"
         onClick={() => setIsOpen((open) => !open)}
         aria-expanded={isOpen}
         aria-controls={optionsId}
-        className="flex min-h-11 w-full items-center justify-between rounded-lg text-left transition-colors hover:text-amber-700 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none"
+        className="flex min-h-11 w-full items-center justify-between rounded-lg text-left transition-colors hover:text-violet-700 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none"
       >
         <span className="flex items-center gap-2">
-          <span className="font-semibold text-stone-900">
+          <span className="font-semibold text-slate-900">
             {filterTranslated?.name}
           </span>
           {selectedCount > 0 && (
-            <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-900">
+            <span className="rounded-full bg-gradient-to-r from-blue-100 via-violet-100 to-pink-100 px-2 py-0.5 text-xs font-bold text-violet-900">
               {selectedCount}
             </span>
           )}
@@ -72,11 +72,11 @@ export default function CategoryPageFiltersListItem({
               return (
                 <label
                   key={option.id}
-                  className="group flex min-h-11 cursor-pointer items-center gap-3 rounded-lg px-2 transition-colors hover:bg-stone-100"
+                  className="group flex min-h-11 cursor-pointer items-center gap-3 rounded-lg px-2 transition-colors hover:bg-violet-50"
                 >
                   <input
                     type="checkbox"
-                    className="h-5 w-5 cursor-pointer rounded border-2 border-stone-300 accent-stone-950 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2"
+                    className="h-5 w-5 cursor-pointer rounded border-2 border-slate-300 accent-violet-600 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2"
                     name={option.id}
                     checked={checked}
                     onChange={(event) =>
@@ -89,7 +89,7 @@ export default function CategoryPageFiltersListItem({
                       )
                     }
                   />
-                  <span className="text-sm text-stone-700 group-hover:text-stone-950">
+                  <span className="text-sm text-slate-700 group-hover:text-slate-950">
                     {optionTranslated?.name}
                   </span>
                 </label>

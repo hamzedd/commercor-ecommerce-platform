@@ -30,7 +30,7 @@ function CategoryProductsSlider({ products, lang }: Props) {
               className="min-w-0 flex-[0_0_82%] pl-4 sm:flex-[0_0_48%] md:flex-[0_0_32%] lg:flex-[0_0_24%] xl:flex-[0_0_20%]"
             >
               <ProductCard
-                className="h-full w-full focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-4 focus-visible:outline-none"
+                className="h-full w-full focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-4 focus-visible:outline-none"
                 product={product}
                 lang={lang}
               />
@@ -44,7 +44,7 @@ function CategoryProductsSlider({ products, lang }: Props) {
             type="button"
             aria-label={t("previousProducts")}
             onClick={() => emblaApi?.scrollPrev()}
-            className="flex h-11 w-11 items-center justify-center rounded-full border border-stone-300 bg-white text-stone-800 shadow-sm transition-colors hover:border-stone-950 hover:bg-stone-950 hover:text-white focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:outline-none"
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-800 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-transparent hover:bg-gradient-to-br hover:from-blue-600 hover:via-violet-600 hover:to-pink-600 hover:text-white hover:shadow-lg hover:shadow-violet-900/30 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 focus-visible:outline-none"
           >
             <LeftOutlined aria-hidden />
           </button>
@@ -52,7 +52,7 @@ function CategoryProductsSlider({ products, lang }: Props) {
             type="button"
             aria-label={t("nextProducts")}
             onClick={() => emblaApi?.scrollNext()}
-            className="flex h-11 w-11 items-center justify-center rounded-full border border-stone-300 bg-white text-stone-800 shadow-sm transition-colors hover:border-stone-950 hover:bg-stone-950 hover:text-white focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:outline-none"
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-800 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-transparent hover:bg-gradient-to-br hover:from-blue-600 hover:via-violet-600 hover:to-pink-600 hover:text-white hover:shadow-lg hover:shadow-violet-900/30 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 focus-visible:outline-none"
           >
             <RightOutlined aria-hidden />
           </button>

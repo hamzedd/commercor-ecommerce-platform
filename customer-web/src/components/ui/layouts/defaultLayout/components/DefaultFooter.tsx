@@ -2,30 +2,44 @@ import { Link } from "@/src/i18n/navigation";
 import React from "react";
 import { StoreSettingsType } from "@/src/utils/types/storeSettings.type";
 import { useTranslations } from "next-intl";
+import {
+  FacebookOutlined,
+  InstagramOutlined,
+  LinkedinOutlined,
+  LockOutlined,
+  XOutlined,
+  YoutubeOutlined,
+} from "@ant-design/icons";
 
 function DefaultFooter({ settings }: { settings: StoreSettingsType }) {
   const t = useTranslations();
   const socials = [
-    ["Facebook", settings.facebookUrl],
-    ["Instagram", settings.instagramUrl],
-    ["X / Twitter", settings.twitterUrl],
-    ["LinkedIn", settings.linkedinUrl],
-    ["YouTube", settings.youtubeUrl],
-  ].filter((item): item is [string, string] => Boolean(item[1]));
+    ["Facebook", settings.facebookUrl, FacebookOutlined],
+    ["Instagram", settings.instagramUrl, InstagramOutlined],
+    ["X", settings.twitterUrl, XOutlined],
+    ["LinkedIn", settings.linkedinUrl, LinkedinOutlined],
+    ["YouTube", settings.youtubeUrl, YoutubeOutlined],
+  ].filter((item): item is [string, string, typeof FacebookOutlined] =>
+    Boolean(item[1]),
+  );
   return (
     <footer
       id="contact"
-      className="mt-auto w-full border-t border-stone-800 bg-stone-950 text-white"
+      className="relative mt-auto w-full overflow-hidden border-t border-white/5 bg-gradient-to-b from-[#0b0821] to-[#0b1226] text-white"
     >
-      <div className="my-container grid grid-cols-1 gap-10 py-12 sm:grid-cols-2 md:py-16 lg:grid-cols-[1.4fr_0.8fr_0.8fr]">
+      <div
+        aria-hidden
+        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-blue-500 via-violet-500 to-pink-500"
+      />
+      <div className="my-container relative grid grid-cols-1 gap-10 py-12 sm:grid-cols-2 md:py-16 lg:grid-cols-[1.4fr_0.8fr_0.8fr]">
         <div className="max-w-md">
           <strong className="text-2xl tracking-tight text-white">
             {settings.storeName}
           </strong>
-          <p className="mt-3 text-sm leading-6 text-stone-400">
+          <p className="mt-3 text-sm leading-6 text-slate-400">
             {t("homeHeroDescription")}
           </p>
-          <div className="mt-6 space-y-2 text-sm text-stone-300">
+          <div className="mt-6 space-y-2 text-sm text-slate-300">
             {settings.contactEmail && (
               <a
                 className="block transition-colors hover:text-white"
@@ -49,9 +63,9 @@ function DefaultFooter({ settings }: { settings: StoreSettingsType }) {
         </div>
         <nav
           aria-label={t("mainNavigation")}
-          className="flex flex-col gap-3 text-sm text-stone-300"
+          className="flex flex-col gap-3 text-sm text-slate-300"
         >
-          <strong className="mb-2 text-xs tracking-[.14em] text-stone-500 uppercase">
+          <strong className="mb-2 text-xs tracking-[.14em] text-slate-500 uppercase">
             {t("mainNavigation")}
           </strong>
           <Link href={"/"} className="transition-colors hover:text-white">
@@ -73,28 +87,38 @@ function DefaultFooter({ settings }: { settings: StoreSettingsType }) {
         {socials.length > 0 && (
           <nav
             aria-label={t("socialMedia")}
-            className="flex flex-col gap-3 text-sm"
+            className="flex flex-col gap-4 text-sm"
           >
-            <strong className="mb-2 text-xs tracking-[.14em] text-stone-500 uppercase">
+            <strong className="text-xs tracking-[.14em] text-slate-500 uppercase">
               {t("socialMedia")}
             </strong>
-            {socials.map(([label, url]) => (
-              <a
-                key={label}
-                href={url}
-                target="_blank"
-                rel="noreferrer"
-                className="text-stone-300 transition-colors hover:text-white focus-visible:ring-2 focus-visible:ring-[var(--store-accent)] focus-visible:outline-none"
-              >
-                {label}
-              </a>
-            ))}
+            <div className="flex flex-wrap gap-2.5">
+              {socials.map(([label, url, Icon]) => (
+                <a
+                  key={label}
+                  href={url}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={label}
+                  title={label}
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-slate-300 transition-all duration-200 hover:-translate-y-0.5 hover:border-transparent hover:bg-gradient-to-br hover:from-blue-600 hover:via-violet-600 hover:to-pink-600 hover:text-white hover:shadow-lg hover:shadow-violet-900/30 focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:outline-none"
+                >
+                  <Icon aria-hidden />
+                </a>
+              ))}
+            </div>
           </nav>
         )}
       </div>
       <div className="border-t border-white/10">
-        <div className="my-container py-5 text-xs text-stone-500">
-          © {new Date().getFullYear()} {settings.storeName}
+        <div className="my-container flex flex-col-reverse items-center justify-between gap-3 py-5 text-xs text-slate-500 sm:flex-row">
+          <span>
+            © {new Date().getFullYear()} {settings.storeName}
+          </span>
+          <span className="flex items-center gap-1.5 text-slate-400">
+            <LockOutlined aria-hidden />
+            {t("securePayment")}
+          </span>
         </div>
       </div>
     </footer>

@@ -21,7 +21,7 @@ async function ProductPageBreadcrumbs({ productTranslation, product }: Props) {
     categories,
   });
   const linkClassName =
-    "rounded-sm text-stone-300 transition-colors hover:text-amber-300 focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:outline-none";
+    "rounded-sm text-slate-300 transition-colors hover:text-violet-300 focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:outline-none";
 
   return (
     <nav
@@ -31,7 +31,7 @@ async function ProductPageBreadcrumbs({ productTranslation, product }: Props) {
       <Link href="/" className={linkClassName}>
         {t("home")}
       </Link>
-      <span className="text-stone-600" aria-hidden>
+      <span className="text-slate-600" aria-hidden>
         /
       </span>
       {categoriesHierarchy.map((category) => {
@@ -52,7 +52,7 @@ async function ProductPageBreadcrumbs({ productTranslation, product }: Props) {
             >
               {categoryTranslation?.name}
             </Link>
-            <span className="text-stone-600" aria-hidden>
+            <span className="text-slate-600" aria-hidden>
               /
             </span>
           </React.Fragment>

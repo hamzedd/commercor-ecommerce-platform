@@ -47,7 +47,12 @@ export default function ProfileOrderItem({
         <h4 className="truncate text-sm font-medium text-gray-800 sm:text-base">
           {productTranslation?.name}
         </h4>
-        {item.variantDescription&&<p className="text-xs font-medium text-amber-700 sm:text-sm">{item.variantDescription}{item.variantSku?` · ${item.variantSku}`:""}</p>}
+        {item.variantDescription && (
+          <p className="text-xs font-medium text-violet-700 sm:text-sm">
+            {item.variantDescription}
+            {item.variantSku ? ` · ${item.variantSku}` : ""}
+          </p>
+        )}
         <p className="text-xs text-gray-500 sm:text-sm">
           {t("quantity")}: {item?.quantity}
         </p>

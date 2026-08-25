@@ -25,13 +25,13 @@ function CategoryPageProductsList({ products, isLoading, locale }: Props) {
         {Array.from({ length: 8 }).map((_, index) => (
           <div
             key={index}
-            className="overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm"
+            className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
           >
-            <div className="aspect-square animate-pulse bg-stone-200 motion-reduce:animate-none" />
+            <div className="aspect-square animate-pulse bg-slate-200 motion-reduce:animate-none" />
             <div className="space-y-3 p-4">
-              <div className="h-4 w-4/5 animate-pulse rounded bg-stone-200 motion-reduce:animate-none" />
-              <div className="h-3 w-full animate-pulse rounded bg-stone-100 motion-reduce:animate-none" />
-              <div className="h-6 w-2/5 animate-pulse rounded bg-stone-200 motion-reduce:animate-none" />
+              <div className="h-4 w-4/5 animate-pulse rounded bg-slate-200 motion-reduce:animate-none" />
+              <div className="h-3 w-full animate-pulse rounded bg-slate-100 motion-reduce:animate-none" />
+              <div className="h-6 w-2/5 animate-pulse rounded bg-slate-200 motion-reduce:animate-none" />
             </div>
           </div>
         ))}
@@ -41,9 +41,9 @@ function CategoryPageProductsList({ products, isLoading, locale }: Props) {
 
   if (!products?.data?.length) {
     return (
-      <div className="flex min-h-96 items-center justify-center rounded-2xl border border-stone-200 bg-white p-8 shadow-sm">
+      <div className="flex min-h-96 items-center justify-center rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
         <div className="max-w-sm text-center">
-          <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-amber-100 text-amber-800">
+          <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-violet-600 text-white shadow-md">
             <svg
               aria-hidden
               className="h-8 w-8"
@@ -59,10 +59,10 @@ function CategoryPageProductsList({ products, isLoading, locale }: Props) {
               />
             </svg>
           </div>
-          <h2 className="text-xl font-bold text-stone-950">
+          <h2 className="text-xl font-bold text-slate-950">
             {t("noProductsFound")}
           </h2>
-          <p className="mt-2 text-sm leading-6 text-stone-600">
+          <p className="mt-2 text-sm leading-6 text-slate-600">
             {t("tryAdjustingFilters")}
           </p>
         </div>
@@ -74,7 +74,7 @@ function CategoryPageProductsList({ products, isLoading, locale }: Props) {
     <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4">
       {products.data.map((product) => (
         <ProductCard
-          className="h-full focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-4 focus-visible:outline-none"
+          className="h-full focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-4 focus-visible:outline-none"
           product={product}
           lang={locale}
           titleClassName="min-h-10 leading-5 md:min-h-0 md:leading-normal"

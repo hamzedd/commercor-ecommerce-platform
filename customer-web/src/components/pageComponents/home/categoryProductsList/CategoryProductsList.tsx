@@ -25,15 +25,15 @@ async function CategoryProductsList({ category, lang }: Props) {
     <section className="my-container flex flex-col gap-7">
       <div className="flex items-end justify-between gap-4">
         <div>
-          <p className="text-sm font-bold tracking-[0.18em] text-amber-700 uppercase">
+          <p className="bg-gradient-to-r from-blue-600 via-violet-600 to-pink-600 bg-clip-text text-sm font-bold tracking-[0.18em] text-transparent uppercase">
             {t("featuredCollection")}
           </p>
-          <h2 className="mt-2 text-3xl font-bold tracking-tight text-stone-950 md:text-4xl">
+          <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-950 md:text-4xl">
             {categoryTranslation?.name}
           </h2>
         </div>
         <Link
-          className="group flex items-center gap-2 rounded-lg px-2 py-1 text-sm font-semibold text-stone-700 transition-colors hover:text-amber-700 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none md:text-base"
+          className="group flex items-center gap-2 rounded-lg px-2 py-1 text-sm font-semibold text-slate-700 transition-colors hover:text-violet-700 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none md:text-base"
           href={{
             pathname: "/categories/[slug]",
             params: { slug: categoryTranslation?.slug },

@@ -23,15 +23,15 @@ function SearchedProductsList({ form, setShow }: Props) {
         {[1, 2, 3].map((i) => (
           <div
             key={i}
-            className="flex animate-pulse items-center gap-4 rounded-lg border border-gray-200 p-3"
+            className="flex animate-pulse items-center gap-4 rounded-xl border border-slate-200 p-3 motion-reduce:animate-none"
           >
-            <div className="h-20 w-20 flex-shrink-0 rounded-md bg-gray-200"></div>
+            <div className="h-20 w-20 flex-shrink-0 rounded-lg bg-slate-200"></div>
             <div className="flex-1 space-y-2">
-              <div className="h-5 w-3/4 rounded bg-gray-200"></div>
-              <div className="h-4 w-full rounded bg-gray-200"></div>
-              <div className="h-4 w-2/3 rounded bg-gray-200"></div>
+              <div className="h-5 w-3/4 rounded bg-slate-200"></div>
+              <div className="h-4 w-full rounded bg-slate-100"></div>
+              <div className="h-4 w-2/3 rounded bg-slate-100"></div>
             </div>
-            <div className="h-6 w-16 rounded bg-gray-200"></div>
+            <div className="h-6 w-16 rounded bg-slate-200"></div>
           </div>
         ))}
       </div>
@@ -42,9 +42,9 @@ function SearchedProductsList({ form, setShow }: Props) {
   if (!search || search.trim() === "") {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
-        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
+        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-violet-600 text-white shadow-md">
           <svg
-            className="h-8 w-8 text-gray-400"
+            className="h-8 w-8"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -57,10 +57,10 @@ function SearchedProductsList({ form, setShow }: Props) {
             />
           </svg>
         </div>
-        <h3 className="mb-2 text-lg font-semibold text-gray-800">
+        <h3 className="mb-2 text-lg font-semibold text-slate-800">
           {t("searchForProducts")}
         </h3>
-        <p className="text-sm text-gray-600">{t("enterSearchTerm")}</p>
+        <p className="text-sm text-slate-600">{t("enterSearchTerm")}</p>
       </div>
     );
   }
@@ -69,9 +69,9 @@ function SearchedProductsList({ form, setShow }: Props) {
   if (!data?.data || data.data.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
-        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
+        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-pink-500 text-white shadow-md">
           <svg
-            className="h-8 w-8 text-gray-400"
+            className="h-8 w-8"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -84,10 +84,10 @@ function SearchedProductsList({ form, setShow }: Props) {
             />
           </svg>
         </div>
-        <h3 className="mb-2 text-lg font-semibold text-gray-800">
+        <h3 className="mb-2 text-lg font-semibold text-slate-800">
           {t("noResultsFound")}
         </h3>
-        <p className="text-sm text-gray-600">{t("tryDifferentKeywords")}</p>
+        <p className="text-sm text-slate-600">{t("tryDifferentKeywords")}</p>
       </div>
     );
   }
@@ -95,7 +95,7 @@ function SearchedProductsList({ form, setShow }: Props) {
   // Results
   return (
     <div className="flex w-full flex-col gap-2">
-      <p className="mb-2 text-sm font-medium text-gray-600">
+      <p className="mb-2 text-sm font-medium text-slate-600">
         {data.data.length} {data.data.length === 1 ? t("result") : t("results")}
       </p>
       <div className="max-h-[400px] space-y-2 overflow-y-auto">

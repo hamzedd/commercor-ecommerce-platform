@@ -14,33 +14,37 @@ function DefaultHeaderNav() {
   const closeMenu = () => setIsMenuOpen(false);
 
   return (
-    <div className="relative flex w-full justify-center border-b border-gray-100 bg-stone-950 text-white">
+    <div className="relative flex w-full justify-center overflow-hidden border-b border-white/5 bg-gradient-to-r from-[#0b0821] via-[#1e1147] to-[#0b1740] text-white">
+      <div
+        aria-hidden
+        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-blue-500 via-violet-500 to-pink-500"
+      />
       <nav
-        className="my-container flex min-h-10 w-full items-center justify-between"
+        className="my-container relative flex min-h-10 w-full items-center justify-between"
         aria-label={t("mainNavigation")}
       >
         <div className="hidden items-center gap-7 md:flex">
           <Link
             href="/"
-            className="rounded-sm text-xs font-semibold text-stone-300 transition-colors hover:text-white focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none"
+            className="rounded-sm text-xs font-semibold text-slate-300 transition-colors hover:text-white focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:outline-none"
           >
             {t("home")}
           </Link>
           <Link
             href={"/#categories" as never}
-            className="rounded-sm text-xs font-semibold text-stone-300 transition-colors hover:text-white focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none"
+            className="rounded-sm text-xs font-semibold text-slate-300 transition-colors hover:text-white focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:outline-none"
           >
             {t("categories")}
           </Link>
           <Link
             href={"/#featured" as never}
-            className="rounded-sm text-xs font-semibold text-stone-300 transition-colors hover:text-white focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none"
+            className="rounded-sm text-xs font-semibold text-slate-300 transition-colors hover:text-white focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:outline-none"
           >
             {t("featured")}
           </Link>
           <Link
             href={"/#contact" as never}
-            className="rounded-sm text-xs font-semibold text-stone-300 transition-colors hover:text-white focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none"
+            className="rounded-sm text-xs font-semibold text-slate-300 transition-colors hover:text-white focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:outline-none"
           >
             {t("contact")}
           </Link>

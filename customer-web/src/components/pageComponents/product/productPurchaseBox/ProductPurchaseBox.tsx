@@ -83,15 +83,15 @@ function ProductPurchaseBox({ product }: Props) {
     setQuantity((previous) => (previous > 1 ? previous - 1 : 1));
 
   return (
-    <aside className="w-full rounded-2xl border border-stone-200 bg-white p-5 shadow-sm sm:p-6">
+    <aside className="w-full rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
       <div className="mb-3 flex justify-end">
         <WishlistButton productId={product.id} />
       </div>
-      <div className="border-b border-stone-200 pb-5">
-        <p className="text-xs font-bold tracking-[0.16em] text-amber-700 uppercase">
+      <div className="border-b border-slate-200 pb-5">
+        <p className="bg-gradient-to-r from-blue-600 via-violet-600 to-pink-600 bg-clip-text text-xs font-bold tracking-[0.16em] text-transparent uppercase">
           {t("price")}
         </p>
-        <p className="mt-1 text-3xl font-bold tracking-tight text-stone-950 sm:text-4xl">
+        <p className="mt-1 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
           {formatCurrency(effectivePrice, settings.currencyCode, locale)}
         </p>
         {(product.stock !== undefined || variants.length > 0) && (
@@ -114,7 +114,7 @@ function ProductPurchaseBox({ product }: Props) {
       </div>
 
       {variants.length > 0 && (
-        <div className="space-y-4 border-b border-stone-200 py-5">
+        <div className="space-y-4 border-b border-slate-200 py-5">
           {optionGroups.map((group) => (
             <div key={group.name}>
               <p className="mb-2 text-sm font-semibold">{group.name}</p>
@@ -132,6 +132,7 @@ function ProductPurchaseBox({ product }: Props) {
                           selected[o.optionId] === o.valueId,
                       ),
                   );
+                  const isSelected = Object.values(selected).includes(valueId);
                   return (
                     <button
                       type="button"
@@ -144,7 +145,7 @@ function ProductPurchaseBox({ product }: Props) {
                         setSelected((s) => ({ ...s, [optionId]: valueId }));
                         setQuantity(1);
                       }}
-                      className={`rounded-lg border px-3 py-2 text-sm font-semibold disabled:opacity-30 ${Object.values(selected).includes(valueId) ? "border-amber-600 bg-amber-50" : "border-stone-300"}`}
+                      className={`rounded-lg border px-3 py-2 text-sm font-semibold transition-all duration-200 disabled:opacity-30 ${isSelected ? "border-violet-600 bg-violet-50 text-violet-900 shadow-sm shadow-violet-500/20" : "border-slate-300 hover:border-violet-300"}`}
                     >
                       {label}
                     </button>
@@ -157,22 +158,22 @@ function ProductPurchaseBox({ product }: Props) {
       )}
 
       <div className="py-5">
-        <p className="mb-2 text-sm font-semibold text-stone-800">
+        <p className="mb-2 text-sm font-semibold text-slate-800">
           {t("quantity")}
         </p>
-        <div className="flex w-fit items-center overflow-hidden rounded-xl border border-stone-300 bg-white">
+        <div className="flex w-fit items-center overflow-hidden rounded-xl border border-slate-300 bg-white">
           <button
             type="button"
             onClick={decreaseQuantity}
             disabled={quantity <= 1}
             aria-label={t("decreaseQuantity")}
-            className="flex h-11 w-11 items-center justify-center transition-colors hover:bg-stone-100 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none focus-visible:ring-inset disabled:cursor-not-allowed disabled:opacity-40"
+            className="flex h-11 w-11 items-center justify-center transition-colors hover:bg-violet-50 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none focus-visible:ring-inset disabled:cursor-not-allowed disabled:opacity-40"
           >
             <MinusOutlined aria-hidden />
           </button>
           <output
             aria-live="polite"
-            className="flex h-11 min-w-12 items-center justify-center border-x border-stone-300 px-3 font-bold text-stone-950"
+            className="flex h-11 min-w-12 items-center justify-center border-x border-slate-300 px-3 font-bold text-slate-950"
           >
             {quantity}
           </output>
@@ -181,7 +182,7 @@ function ProductPurchaseBox({ product }: Props) {
             onClick={increaseQuantity}
             disabled={quantity >= effectiveStock}
             aria-label={t("increaseQuantity")}
-            className="flex h-11 w-11 items-center justify-center transition-colors hover:bg-stone-100 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none focus-visible:ring-inset"
+            className="flex h-11 w-11 items-center justify-center transition-colors hover:bg-violet-50 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none focus-visible:ring-inset"
           >
             <PlusOutlined aria-hidden />
           </button>
@@ -196,7 +197,7 @@ function ProductPurchaseBox({ product }: Props) {
             (variants.length > 0 && !selectedVariant) ||
             effectiveStock < quantity
           }
-          className="flex min-h-12 items-center justify-center gap-2 rounded-xl border-2 border-stone-950 bg-white px-5 text-sm font-bold text-stone-950 transition-colors duration-200 hover:bg-stone-100 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:outline-none"
+          className="flex min-h-12 items-center justify-center gap-2 rounded-xl border-2 border-slate-950 bg-white px-5 text-sm font-bold text-slate-950 transition-all duration-200 hover:border-violet-600 hover:text-violet-700 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 focus-visible:outline-none"
         >
           <ShoppingCartOutlined aria-hidden className="text-lg" />
           {t("addToCart")}
@@ -208,18 +209,18 @@ function ProductPurchaseBox({ product }: Props) {
             (variants.length > 0 && !selectedVariant) ||
             effectiveStock < quantity
           }
-          className="checkout-primary-cta flex min-h-12 items-center justify-center gap-2 rounded-xl bg-stone-950 px-5 text-sm font-bold transition-colors duration-200 hover:bg-amber-600 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:outline-none"
+          className="checkout-primary-cta flex min-h-12 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 via-violet-600 to-pink-600 px-5 text-sm font-bold shadow-md shadow-violet-900/20 transition-all duration-200 hover:scale-[1.02] hover:shadow-lg hover:shadow-violet-800/30 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 focus-visible:outline-none"
         >
           <ThunderboltOutlined aria-hidden className="text-lg" />
           {t("buyNow")}
         </button>
       </div>
 
-      <div className="mt-6 border-t border-stone-200 pt-5">
-        <div className="flex items-center gap-3 rounded-xl bg-amber-50 p-3 text-sm text-stone-700">
+      <div className="mt-6 border-t border-slate-200 pt-5">
+        <div className="flex items-center gap-3 rounded-xl bg-gradient-to-r from-violet-50 to-blue-50 p-3 text-sm text-slate-700">
           <svg
             aria-hidden
-            className="h-5 w-5 shrink-0 text-amber-700"
+            className="h-5 w-5 shrink-0 text-violet-700"
             fill="currentColor"
             viewBox="0 0 20 20"
           >

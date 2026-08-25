@@ -25,7 +25,7 @@ function ProductImagesPreview({ images, productTranslation }: Props) {
   return (
     <section
       aria-label={t("productGallery")}
-      className="min-w-0 overflow-hidden rounded-2xl border border-stone-200 bg-white p-3 shadow-sm sm:p-5 md:flex md:gap-5"
+      className="min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white p-3 shadow-sm sm:p-5 md:flex md:gap-5"
     >
       <div className="order-2 mt-3 flex gap-2 overflow-x-auto pb-1 md:order-1 md:mt-0 md:max-h-[560px] md:w-20 md:shrink-0 md:flex-col md:overflow-y-auto md:pb-0">
         {images.map((image, index) => {
@@ -37,7 +37,7 @@ function ProductImagesPreview({ images, productTranslation }: Props) {
               aria-label={t("selectProductImage", { index: index + 1 })}
               aria-pressed={isSelected}
               onClick={() => setSelectedImageId(image.id)}
-              className={`relative h-16 w-16 shrink-0 overflow-hidden rounded-xl border-2 bg-stone-50 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:outline-none md:h-20 md:w-20 ${isSelected ? "border-amber-500" : "border-stone-200 hover:border-stone-400"}`}
+              className={`relative h-16 w-16 shrink-0 overflow-hidden rounded-xl border-2 bg-slate-50 transition-all duration-200 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 focus-visible:outline-none md:h-20 md:w-20 ${isSelected ? "border-violet-500 shadow-md shadow-violet-500/20" : "border-slate-200 hover:border-violet-300"}`}
             >
               <Image
                 fill
@@ -54,7 +54,7 @@ function ProductImagesPreview({ images, productTranslation }: Props) {
         })}
       </div>
 
-      <div className="order-1 flex min-h-[320px] min-w-0 flex-1 items-center justify-center overflow-hidden rounded-xl bg-stone-100 p-3 sm:min-h-[420px] sm:p-6 md:order-2 lg:min-h-[560px]">
+      <div className="order-1 flex min-h-[320px] min-w-0 flex-1 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-slate-50 via-white to-violet-50 p-3 sm:min-h-[420px] sm:p-6 md:order-2 lg:min-h-[560px]">
         {selectedImage ? (
           <ImageMagnifier
             src={getImageSrcByBucketAndFileNames({
@@ -67,7 +67,7 @@ function ProductImagesPreview({ images, productTranslation }: Props) {
             height={620}
           />
         ) : (
-          <div className="flex flex-col items-center gap-3 text-center text-stone-500">
+          <div className="flex flex-col items-center gap-3 text-center text-slate-500">
             <svg
               aria-hidden
               className="h-10 w-10"

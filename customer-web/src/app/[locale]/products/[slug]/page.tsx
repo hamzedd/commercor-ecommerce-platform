@@ -7,8 +7,8 @@ import ProductImagesPreview from "@/src/components/pageComponents/product/produc
 import ProductPurchaseBox from "@/src/components/pageComponents/product/productPurchaseBox/ProductPurchaseBox";
 import { fetchProduct } from "@/src/service/apiServices/product.service";
 import ProductReviews from "@/src/components/pageComponents/product/ProductReviews";
-import type { LocaleType } from '@/src/i18n/config';
-import { selectTranslation } from '@/src/utils/i18n/selectTranslation';
+import type { LocaleType } from "@/src/i18n/config";
+import { selectTranslation } from "@/src/utils/i18n/selectTranslation";
 
 interface Props {
   params: Promise<{ locale: string; slug: string }>;
@@ -33,7 +33,7 @@ async function Page(props: Props) {
   const productTranslation = selectTranslation(product.translations, locale)!;
 
   return (
-    <main className="min-h-screen bg-stone-50 pb-16 text-stone-950">
+    <main className="min-h-screen bg-slate-50 pb-16 text-slate-950">
       <ProductPageHeader
         productTranslation={productTranslation}
         product={product}
@@ -48,10 +48,15 @@ async function Page(props: Props) {
         <div className="lg:col-span-2">
           <ProductDescription productTranslation={productTranslation} />
         </div>
-        <div className="lg:col-span-2"><ProductReviews productId={product.id}/></div>
+        <div className="lg:col-span-2">
+          <ProductReviews productId={product.id} />
+        </div>
       </div>
 
-      <ProductPageSimilarProducts product={product} lang={locale as LocaleType} />
+      <ProductPageSimilarProducts
+        product={product}
+        lang={locale as LocaleType}
+      />
     </main>
   );
 }

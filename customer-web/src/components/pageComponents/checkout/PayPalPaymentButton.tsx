@@ -88,11 +88,11 @@ export default function PayPalPaymentButton({
   }, [initialization, onCompleted, onError, paymentId]);
 
   return (
-    <div className="mt-6 rounded-xl border border-stone-200 bg-stone-50 p-4">
-      <p className="mb-3 text-sm font-semibold text-stone-800">
+    <div className="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-4">
+      <p className="mb-3 text-sm font-semibold text-slate-800">
         Complete payment securely with PayPal
       </p>
-      {loading && <p className="text-sm text-stone-500">Loading PayPal…</p>}
+      {loading && <p className="text-sm text-slate-500">Loading PayPal…</p>}
       <div ref={container} />
     </div>
   );

@@ -165,18 +165,18 @@ function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
   }, 0);
 
   return (
-    <aside className="rounded-2xl border border-stone-200 bg-white p-5 shadow-sm sm:p-6 lg:sticky lg:top-28">
-      <p className="text-xs font-bold tracking-[0.16em] text-amber-700 uppercase">
+    <aside className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 lg:sticky lg:top-28">
+      <p className="bg-gradient-to-r from-blue-600 via-violet-600 to-pink-600 bg-clip-text text-xs font-bold tracking-[0.16em] text-transparent uppercase">
         {t("secureCheckout")}
       </p>
-      <h2 className="mt-2 text-2xl font-bold tracking-tight text-stone-950">
+      <h2 className="mt-2 text-2xl font-bold tracking-tight text-slate-950">
         {t("orderSummary")}
       </h2>
 
-      <dl className="mt-6 border-y border-stone-200 py-4">
+      <dl className="mt-6 border-y border-slate-200 py-4">
         <div className="flex items-center justify-between gap-4">
-          <dt className="text-sm text-stone-600">{t("subtotal")}</dt>
-          <dd className="text-base font-semibold text-stone-950">
+          <dt className="text-sm text-slate-600">{t("subtotal")}</dt>
+          <dd className="text-base font-semibold text-slate-950">
             {formatCurrency(
               quote?.subtotal ?? totalPrice,
               settings.currencyCode,
@@ -247,8 +247,8 @@ function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
           </div>
         )}
         <div className="mt-3 flex items-center justify-between gap-4">
-          <dt className="text-sm text-stone-600">{t("shipping")}</dt>
-          <dd className="font-semibold text-stone-950">
+          <dt className="text-sm text-slate-600">{t("shipping")}</dt>
+          <dd className="font-semibold text-slate-950">
             {quoteLoading
               ? t("recalculating")
               : quote
@@ -261,8 +261,8 @@ function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
           </dd>
         </div>
         <div className="mt-3 flex items-center justify-between gap-4">
-          <dt className="text-sm text-stone-600">{t("tax")}</dt>
-          <dd className="font-semibold text-stone-950">
+          <dt className="text-sm text-slate-600">{t("tax")}</dt>
+          <dd className="font-semibold text-slate-950">
             {quoteLoading
               ? t("recalculating")
               : quote
@@ -270,9 +270,9 @@ function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
                 : "--"}
           </dd>
         </div>
-        <div className="mt-3 flex items-center justify-between gap-4 border-t border-stone-100 pt-3">
-          <dt className="font-bold text-stone-950">{t("total")}</dt>
-          <dd className="text-2xl font-bold tracking-tight text-stone-950">
+        <div className="mt-3 flex items-center justify-between gap-4 border-t border-slate-100 pt-3">
+          <dt className="font-bold text-slate-950">{t("total")}</dt>
+          <dd className="text-2xl font-bold tracking-tight text-slate-950">
             {quoteLoading
               ? t("recalculating")
               : formatCurrency(
@@ -283,7 +283,7 @@ function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
           </dd>
         </div>
       </dl>
-      <div className="mt-5 rounded-xl bg-stone-50 p-4">
+      <div className="mt-5 rounded-xl bg-gradient-to-br from-violet-50 via-slate-50 to-blue-50 p-4">
         <label className="text-sm font-semibold" htmlFor="coupon-code">
           {t("couponCode")}
         </label>
@@ -296,7 +296,7 @@ function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
           />
           <button
             type="button"
-            className="rounded-lg bg-stone-900 px-4 text-sm font-bold text-white disabled:bg-stone-300"
+            className="rounded-lg bg-gradient-to-r from-blue-600 to-violet-600 px-4 text-sm font-bold text-white transition-shadow hover:shadow-md hover:shadow-violet-900/20 disabled:from-slate-300 disabled:to-slate-300 disabled:shadow-none"
             disabled={!couponInput.trim() || couponInput.trim() === couponCode}
             onClick={() => {
               const code = couponInput.trim().toUpperCase();
@@ -322,11 +322,11 @@ function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
         )}
       </div>
       {rewards && (rewards.pointsEnabled || rewards.cashbackEnabled) && (
-        <div className="mt-5 space-y-3 rounded-xl bg-stone-50 p-4">
+        <div className="mt-5 space-y-3 rounded-xl bg-gradient-to-br from-violet-50 via-slate-50 to-blue-50 p-4">
           {rewards.pointsEnabled && rewards.pointsBalance > 0 && (
             <label className="block text-sm font-semibold">
               Use points{" "}
-              <span className="font-normal text-stone-500">
+              <span className="font-normal text-slate-500">
                 ({rewards.pointsBalance.toLocaleString(lang)} {t("available")})
               </span>
               <InputNumber
@@ -342,7 +342,7 @@ function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
           {rewards.cashbackEnabled && rewards.cashbackBalance > 0 && (
             <label className="block text-sm font-semibold">
               Use cashback{" "}
-              <span className="font-normal text-stone-500">
+              <span className="font-normal text-slate-500">
                 (
                 {formatCurrency(
                   rewards.cashbackBalance,
@@ -373,7 +373,7 @@ function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
       )}
 
       {pendingPaymentId && (
-        <div className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-stone-800">
+        <div className="mt-5 rounded-xl border border-violet-200 bg-violet-50 p-4 text-sm text-slate-800">
           <p className="font-semibold">{t("checkoutInProgress")}</p>
           <p className="mt-1 leading-6">{t("pendingCheckoutMessage")}</p>
           <Link
@@ -381,7 +381,7 @@ function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
               pathname: "/payment-status/[id]",
               params: { id: pendingPaymentId },
             }}
-            className="checkout-primary-cta mt-4 inline-flex min-h-10 items-center justify-center rounded-lg bg-stone-950 px-4 font-bold"
+            className="checkout-primary-cta mt-4 inline-flex min-h-10 items-center justify-center rounded-lg bg-gradient-to-r from-blue-600 via-violet-600 to-pink-600 px-4 font-bold shadow-sm shadow-violet-900/20 transition-all hover:shadow-md hover:shadow-violet-800/30"
           >
             {t("continueCheckout")}
           </Link>
@@ -406,7 +406,7 @@ function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
             quoteLoading ||
             submitting
           }
-          className="checkout-primary-cta mt-6 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-stone-950 px-5 text-sm font-bold transition-colors duration-200 hover:bg-amber-600 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-stone-300 disabled:!text-stone-600"
+          className="checkout-primary-cta mt-6 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 via-violet-600 to-pink-600 px-5 text-sm font-bold shadow-md shadow-violet-900/20 transition-all duration-200 hover:scale-[1.02] hover:shadow-lg hover:shadow-violet-800/30 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 focus-visible:outline-none disabled:scale-100 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:bg-none disabled:!text-slate-600 disabled:shadow-none"
         >
           <LockOutlined aria-hidden />
           {submitting ? t("processingPayment") : t("proceedToCheckout")}
@@ -424,13 +424,16 @@ function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
         />
       )}
 
-      <div className="mt-4 grid gap-2 text-xs font-medium text-stone-500 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+      <div className="mt-4 grid gap-2 text-xs font-medium text-slate-500 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
         <p className="flex items-center gap-2">
-          <SafetyCertificateOutlined className="text-amber-700" aria-hidden />
+          <SafetyCertificateOutlined className="text-violet-700" aria-hidden />
           {t("secureCheckout")}
         </p>
         <p className="flex items-center gap-2">
-          <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-amber-600" />
+          <span
+            aria-hidden
+            className="h-1.5 w-1.5 rounded-full bg-gradient-to-r from-blue-500 to-violet-500"
+          />
           {t("freeReturns")}
         </p>
       </div>

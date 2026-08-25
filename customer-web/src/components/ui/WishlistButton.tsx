@@ -41,7 +41,7 @@ export default function WishlistButton({
         else add.mutate({ productId });
       }}
       disabled={pending}
-      className={`flex h-10 w-10 items-center justify-center rounded-full border border-stone-200 bg-white/95 text-lg shadow-sm backdrop-blur transition duration-200 hover:scale-105 hover:shadow-md disabled:opacity-50 ${active ? "store-pop text-red-600" : "text-stone-700"} ${className}`}
+      className={`flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white/95 text-lg shadow-sm backdrop-blur transition duration-200 hover:scale-105 hover:shadow-md disabled:opacity-50 ${active ? "store-pop text-red-600" : "text-slate-700"} ${className}`}
     >
       {active ? <HeartFilled /> : <HeartOutlined />}
     </button>

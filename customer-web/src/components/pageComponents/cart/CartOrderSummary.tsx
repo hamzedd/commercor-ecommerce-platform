@@ -36,23 +36,23 @@ function CartOrderSummary({ cart, productPrices }: Props) {
   );
 
   return (
-    <aside className="rounded-2xl border border-stone-200 bg-white p-5 shadow-sm sm:p-6 lg:sticky lg:top-28">
-      <p className="text-xs font-bold tracking-[0.16em] text-amber-700 uppercase">
+    <aside className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 lg:sticky lg:top-28">
+      <p className="bg-gradient-to-r from-blue-600 via-violet-600 to-pink-600 bg-clip-text text-xs font-bold tracking-[0.16em] text-transparent uppercase">
         {t("cartSummary")}
       </p>
-      <h2 className="mt-2 text-2xl font-bold tracking-tight text-stone-950">
+      <h2 className="mt-2 text-2xl font-bold tracking-tight text-slate-950">
         {t("orderSummary")}
       </h2>
 
-      <dl className="mt-6 border-y border-stone-200 py-4">
+      <dl className="mt-6 border-y border-slate-200 py-4">
         <div className="flex items-center justify-between gap-4">
-          <dt className="text-sm text-stone-600">{t("subtotal")}</dt>
-          <dd className="text-xl font-bold text-stone-950">
+          <dt className="text-sm text-slate-600">{t("subtotal")}</dt>
+          <dd className="text-xl font-bold text-slate-950">
             {formatCurrency(subtotal, settings.currencyCode, locale)}
           </dd>
         </div>
       </dl>
-      <div className="mt-5 rounded-xl bg-stone-50 p-4">
+      <div className="mt-5 rounded-xl bg-gradient-to-br from-violet-50 via-slate-50 to-blue-50 p-4">
         <label htmlFor="cart-coupon" className="text-sm font-semibold">
           {t("couponCode")}
         </label>
@@ -62,7 +62,7 @@ function CartOrderSummary({ cart, productPrices }: Props) {
             value={couponCode}
             onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
             placeholder={t("couponCode")}
-            className="min-w-0 flex-1 rounded-lg border border-stone-300 px-3 py-2 text-sm"
+            className="min-w-0 flex-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 focus:outline-none"
           />
           <button
             type="button"
@@ -72,7 +72,7 @@ function CartOrderSummary({ cart, productPrices }: Props) {
                 couponCode.trim().toUpperCase(),
               )
             }
-            className="rounded-lg bg-stone-900 px-3 text-sm font-bold text-white"
+            className="rounded-lg bg-gradient-to-r from-blue-600 to-violet-600 px-3 text-sm font-bold text-white transition-shadow hover:shadow-md hover:shadow-violet-900/20"
           >
             {t("applyCoupon")}
           </button>
@@ -89,25 +89,25 @@ function CartOrderSummary({ cart, productPrices }: Props) {
             {t("removeCoupon")}
           </button>
         )}
-        <p className="mt-2 text-xs text-stone-500">
+        <p className="mt-2 text-xs text-slate-500">
           {t("couponValidatedAtCheckout")}
         </p>
       </div>
 
       <Link
         href="/checkout"
-        className="checkout-primary-cta mt-5 flex min-h-12 w-full items-center justify-center rounded-xl bg-stone-950 px-5 text-sm font-bold transition-colors duration-200 hover:bg-amber-600 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:outline-none"
+        className="checkout-primary-cta mt-5 flex min-h-12 w-full items-center justify-center rounded-xl bg-gradient-to-r from-blue-600 via-violet-600 to-pink-600 px-5 text-sm font-bold shadow-md shadow-violet-900/20 transition-all duration-200 hover:scale-[1.02] hover:shadow-lg hover:shadow-violet-800/30 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 focus-visible:outline-none"
       >
         {t("proceedToCheckout")}
       </Link>
 
-      <div className="mt-4 flex items-center justify-center gap-2 text-xs font-medium text-stone-500">
+      <div className="mt-4 flex items-center justify-center gap-2 text-xs font-medium text-slate-500">
         <LockOutlined aria-hidden />
         {t("secureCheckout")}
       </div>
       <Link
         href="/"
-        className="mt-4 flex min-h-11 items-center justify-center rounded-xl text-sm font-semibold text-stone-700 transition-colors hover:bg-stone-100 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none"
+        className="mt-4 flex min-h-11 items-center justify-center rounded-xl text-sm font-semibold text-slate-700 transition-colors hover:bg-violet-50 hover:text-violet-700 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none"
       >
         {t("continueShopping")}
       </Link>

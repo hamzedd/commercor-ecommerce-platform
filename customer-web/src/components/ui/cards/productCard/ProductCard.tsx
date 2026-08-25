@@ -18,9 +18,16 @@ interface Props {
   lang: LocaleType;
   className?: string;
   titleClassName?: string;
+  style?: React.CSSProperties;
 }
 
-function ProductCard({ product, lang, className, titleClassName }: Props) {
+function ProductCard({
+  product,
+  lang,
+  className,
+  titleClassName,
+  style,
+}: Props) {
   const t = useTranslations();
   const settings = useStoreSettings();
 
@@ -36,8 +43,13 @@ function ProductCard({ product, lang, className, titleClassName }: Props) {
         params: { slug: productTranslation.slug },
       }}
       key={product.id}
-      className={`store-card-enter group relative flex w-full flex-col overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-stone-300 hover:shadow-xl ${className}`}
+      style={style}
+      className={`store-card-enter group relative flex w-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-transparent hover:shadow-2xl hover:shadow-violet-950/15 ${className}`}
     >
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-10 rounded-2xl opacity-0 shadow-[inset_0_0_0_1.5px] shadow-violet-400/60 transition-opacity duration-300 group-hover:opacity-100"
+      />
       <WishlistButton
         productId={product.id}
         className="absolute end-3 top-3 z-20"
@@ -54,14 +66,14 @@ function ProductCard({ product, lang, className, titleClassName }: Props) {
             width={300}
             height={300}
             className={
-              "h-full w-full object-contain p-3 transition-transform duration-500 group-hover:scale-[1.045] motion-reduce:transition-none"
+              "h-full w-full object-contain p-3 transition-transform duration-500 group-hover:scale-[1.06] motion-reduce:transition-none"
             }
           />
         )}
 
         {/* Quick View Overlay - appears on hover */}
         <div className="absolute inset-x-3 bottom-3 flex justify-center opacity-0 transition-all duration-200 group-hover:opacity-100 group-focus-visible:opacity-100">
-          <span className="translate-y-2 rounded-xl bg-white/95 px-4 py-2 text-xs font-semibold text-stone-900 shadow-lg backdrop-blur transition-transform duration-200 group-hover:translate-y-0">
+          <span className="translate-y-2 rounded-xl bg-white/95 px-4 py-2 text-xs font-semibold text-slate-900 shadow-lg backdrop-blur transition-transform duration-200 group-hover:translate-y-0">
             {t("viewDetails")}
           </span>
         </div>
@@ -82,22 +94,22 @@ function ProductCard({ product, lang, className, titleClassName }: Props) {
           {productTranslation?.description}
         </p>
         {(product.reviewCount || 0) > 0 && (
-          <p className="mb-2 text-sm font-semibold text-amber-700">
+          <p className="mb-2 text-sm font-semibold text-violet-700">
             ★ {product.averageRating?.toFixed(1)}{" "}
-            <span className="font-normal text-stone-500">
+            <span className="font-normal text-slate-500">
               ({product.reviewCount})
             </span>
           </p>
         )}
 
         {/* Price */}
-        <div className="flex items-center justify-between border-t border-stone-100 pt-3">
+        <div className="flex items-center justify-between border-t border-slate-100 pt-3">
           <p className={"text-lg font-bold text-gray-900 md:text-xl"}>
             {formatCurrency(product.price || 0, settings.currencyCode, lang)}
           </p>
           <div
             data-directional-icon="true"
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--store-primary)] text-white opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100 md:h-9 md:w-9"
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 via-violet-600 to-pink-600 text-white opacity-0 shadow-md transition-all duration-200 group-hover:scale-110 group-hover:opacity-100 group-focus-visible:opacity-100 md:h-9 md:w-9"
           >
             <svg
               className="h-4 w-4 md:h-5 md:w-5"

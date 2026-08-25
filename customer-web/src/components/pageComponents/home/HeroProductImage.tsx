@@ -14,7 +14,7 @@ function HeroProductImage({ alt, fallback, src }: Props) {
 
   if (hasError) {
     return (
-      <div className="flex min-h-[330px] items-center justify-center px-8 text-center text-stone-500 sm:min-h-[390px]">
+      <div className="flex min-h-[330px] items-center justify-center px-8 text-center text-slate-500 sm:min-h-[390px]">
         {fallback}
       </div>
     );
