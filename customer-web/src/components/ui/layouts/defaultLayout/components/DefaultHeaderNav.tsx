@@ -14,7 +14,7 @@ function DefaultHeaderNav() {
   const closeMenu = () => setIsMenuOpen(false);
 
   return (
-    <div className="relative flex w-full justify-center overflow-hidden border-b border-white/5 bg-gradient-to-r from-[#0b0821] via-[#1e1147] to-[#0b1740] text-white">
+    <div className="relative flex w-full justify-center overflow-hidden border-b border-white/5 bg-gradient-to-r from-indigo-900 via-violet-900 to-blue-950 text-white">
       <div
         aria-hidden
         className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-blue-500 via-violet-500 to-pink-500"

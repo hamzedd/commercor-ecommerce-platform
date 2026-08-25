@@ -14,10 +14,10 @@ async function ProductPageHeader({ productTranslation, product }: Props) {
   const t = await getTranslations();
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-[#0b0821] via-[#1e1147] to-[#0b1740] text-white">
+    <section className="relative overflow-hidden bg-gradient-to-br from-indigo-900 via-violet-900 to-blue-950 text-white">
       <div
         aria-hidden
-        className="animate-blob-pulse animate-float-slow absolute -top-20 -right-16 h-72 w-72 rounded-full bg-violet-600/30 blur-[100px]"
+        className="animate-blob-pulse animate-float-slow absolute -top-20 -right-16 h-72 w-72 rounded-full bg-fuchsia-400/20 blur-[100px]"
       />
       <div
         aria-hidden
