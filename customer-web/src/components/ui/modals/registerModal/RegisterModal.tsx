@@ -16,16 +16,19 @@ interface Props {
 function RegisterModal({ show, setShow, handleOpenLoginModal }: Props) {
   const t = useTranslations();
   const [loading, setLoading] = useState(false);
+  const [shake, setShake] = useState(false);
   const [form] = Form.useForm();
 
   const handleSubmit = async (values: RegisterCustomerRequestType) => {
     try {
       setLoading(true);
+      setShake(false);
       await registerCustomerService(values);
       setShow(false);
       form.resetFields();
     } catch (error) {
       console.error("Registration failed:", error);
+      setShake(true);
     } finally {
       setLoading(false);
     }
@@ -38,9 +41,10 @@ function RegisterModal({ show, setShow, handleOpenLoginModal }: Props) {
     >
       <RegisterForm
         onFinish={handleSubmit}
-        className={"w-full max-w-[500px]"}
+        className={`w-full max-w-[500px] ${shake ? "animate-shake" : ""}`}
         form={form}
         disabled={loading}
+        submitting={loading}
       />
       <div className="flex w-full items-center justify-center gap-5">
         <div className={"h-[1px] w-full grow bg-slate-200"}></div>
@@ -56,7 +60,7 @@ function RegisterModal({ show, setShow, handleOpenLoginModal }: Props) {
       <button
         type={"button"}
         className={
-          "w-full max-w-[500px] rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-center font-semibold text-slate-700 transition-all duration-200 hover:border-violet-300 hover:bg-violet-50 hover:text-violet-700 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none"
+          "btn-press w-full max-w-[500px] rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-center font-semibold text-slate-700 transition-all duration-200 hover:border-violet-300 hover:bg-violet-50 hover:text-violet-700 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none"
         }
         onClick={handleOpenLoginModal}
       >

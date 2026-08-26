@@ -366,7 +366,7 @@ function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
       {quoteError && (
         <p
           role="alert"
-          className="mt-4 rounded-xl border border-red-200 bg-red-50 p-3 text-sm font-medium text-red-700"
+          className="animate-shake mt-4 rounded-xl border border-red-200 bg-red-50 p-3 text-sm font-medium text-red-700"
         >
           {quoteError}
         </p>
@@ -406,9 +406,16 @@ function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
             quoteLoading ||
             submitting
           }
-          className="checkout-primary-cta mt-6 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 via-violet-600 to-pink-600 px-5 text-sm font-bold shadow-md shadow-violet-900/20 transition-all duration-200 hover:scale-[1.02] hover:shadow-lg hover:shadow-violet-800/30 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 focus-visible:outline-none disabled:scale-100 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:bg-none disabled:!text-slate-600 disabled:shadow-none"
+          className="checkout-primary-cta btn-shimmer mt-6 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 via-violet-600 to-pink-600 px-5 text-sm font-bold shadow-md shadow-violet-900/20 transition-all duration-200 hover:scale-[1.02] hover:shadow-lg hover:shadow-violet-800/30 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 focus-visible:outline-none disabled:scale-100 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:bg-none disabled:!text-slate-600 disabled:shadow-none"
         >
-          <LockOutlined aria-hidden />
+          {submitting ? (
+            <span
+              aria-hidden
+              className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+            />
+          ) : (
+            <LockOutlined aria-hidden />
+          )}
           {submitting ? t("processingPayment") : t("proceedToCheckout")}
         </button>
       )}

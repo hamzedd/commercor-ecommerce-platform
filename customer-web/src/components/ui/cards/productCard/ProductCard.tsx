@@ -46,7 +46,7 @@ function ProductCard({
       }}
       key={product.id}
       style={style}
-      className={`store-card-enter group relative flex w-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-transparent hover:shadow-2xl hover:shadow-violet-950/15 ${className}`}
+      className={`store-card-enter group relative flex w-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-transparent hover:shadow-2xl hover:shadow-violet-950/15 active:scale-[0.99] ${className}`}
     >
       <div
         aria-hidden

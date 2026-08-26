@@ -22,7 +22,7 @@ function SearchProductsForm(props: FormProps) {
           <button
             type="submit"
             aria-label={t("search")}
-            className="flex items-center gap-2 bg-gradient-to-r from-blue-600 via-violet-600 to-pink-600 px-4 text-sm font-semibold text-white transition-all duration-200 hover:shadow-md hover:shadow-violet-900/20 md:px-5"
+            className="btn-press flex items-center gap-2 bg-gradient-to-r from-blue-600 via-violet-600 to-pink-600 px-4 text-sm font-semibold text-white transition-all duration-200 hover:shadow-md hover:shadow-violet-900/20 md:px-5"
           >
             <SearchOutlined className="text-base md:text-lg" />
             <span className="hidden sm:inline">{t("search")}</span>

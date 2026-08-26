@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Button, Input, Rate } from "antd";
 import { useTranslations } from "next-intl";
+import Reveal from "@/src/components/ui/utis/reveal/Reveal";
 import {
   createReview,
   deleteReview,
@@ -60,7 +61,10 @@ export default function ProductReviews({ productId }: { productId: string }) {
   };
 
   return (
-    <section className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-7">
+    <Reveal
+      as="section"
+      className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-7"
+    >
       <h2 className="text-2xl font-bold tracking-tight text-slate-950">
         {t("reviews")}
       </h2>
@@ -115,7 +119,9 @@ export default function ProductReviews({ productId }: { productId: string }) {
             )}
           </div>
           {notice && (
-            <p className="mt-3 font-medium text-violet-700">{notice}</p>
+            <p className="animate-fade-scale-in mt-3 font-medium text-violet-700">
+              {notice}
+            </p>
           )}
           {eligibility.review?.status && (
             <p className="mt-2 text-sm text-slate-500">
@@ -153,6 +159,6 @@ export default function ProductReviews({ productId }: { productId: string }) {
           <p className="text-slate-500">{t("noReviewsYet")}</p>
         )}
       </div>
-    </section>
+    </Reveal>
   );
 }

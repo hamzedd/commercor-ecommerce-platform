@@ -55,14 +55,19 @@ function ProfilePageAddressesTab() {
         setShow={setEditAddressModal}
       />
       <div className={"flex flex-col gap-4"}>
-        {data?.map((address) => (
-          <ProfilePageAddressItem
-            data={address}
+        {data?.map((address, index) => (
+          <div
             key={address.id}
-            openUpdateAddressForm={openUpdateAddressForm}
-            deleteAddress={deleteAddress}
-            loading={loading || isLoading}
-          ></ProfilePageAddressItem>
+            className="store-card-enter"
+            style={{ animationDelay: `${Math.min(index, 6) * 60}ms` }}
+          >
+            <ProfilePageAddressItem
+              data={address}
+              openUpdateAddressForm={openUpdateAddressForm}
+              deleteAddress={deleteAddress}
+              loading={loading || isLoading}
+            ></ProfilePageAddressItem>
+          </div>
         ))}
       </div>
     </div>

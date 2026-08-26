@@ -3,7 +3,11 @@ import { Button, Form, FormProps } from "antd";
 import TextInput from "@/src/components/ui/inputs/TextInput";
 import { useTranslations } from "next-intl";
 
-function RegisterForm(props: FormProps) {
+interface Props extends FormProps {
+  submitting?: boolean;
+}
+
+function RegisterForm({ submitting, ...props }: Props) {
   const t = useTranslations();
   return (
     <Form layout={"vertical"} {...props}>
@@ -31,6 +35,7 @@ function RegisterForm(props: FormProps) {
         <Button
           htmlType={"submit"}
           block
+          loading={submitting}
           className="!h-11 !rounded-xl !border-0 !bg-gradient-to-r !from-blue-600 !via-violet-600 !to-pink-600 !font-bold !text-white !shadow-md !shadow-violet-900/20 transition-transform duration-200 hover:!scale-[1.02] focus-visible:!ring-2 focus-visible:!ring-violet-500 focus-visible:!ring-offset-2"
         >
           {t("register")}

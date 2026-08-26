@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 
 import CartItem from "@/src/components/pageComponents/cart/CartItem";
 import CartOrderSummary from "@/src/components/pageComponents/cart/CartOrderSummary";
+import Reveal from "@/src/components/ui/utis/reveal/Reveal";
 import { Link } from "@/src/i18n/navigation";
 import {
   CART_UPDATED_EVENT,
@@ -104,7 +105,7 @@ function CartPage() {
               aria-label={t("cartItems")}
               className="min-w-0 space-y-3 sm:space-y-4"
             >
-              {cart.map((item) => (
+              {cart.map((item, index) => (
                 <CartItem
                   key={`${item.productId}:${item.variantId || ""}`}
                   productId={item.productId}
@@ -113,10 +114,13 @@ function CartPage() {
                   lang={locale}
                   onCartUpdate={refreshCart}
                   setProductPrices={setProductPrices}
+                  style={{ animationDelay: `${Math.min(index, 6) * 60}ms` }}
                 />
               ))}
             </section>
-            <CartOrderSummary cart={cart} productPrices={productPrices} />
+            <Reveal delay={120}>
+              <CartOrderSummary cart={cart} productPrices={productPrices} />
+            </Reveal>
           </div>
         )}
       </div>

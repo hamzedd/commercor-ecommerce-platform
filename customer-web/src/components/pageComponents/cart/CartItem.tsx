@@ -26,6 +26,7 @@ interface Props {
   setProductPrices: Dispatch<
     SetStateAction<Record<string, string | undefined>>
   >;
+  style?: React.CSSProperties;
 }
 
 function CartItem({
@@ -35,6 +36,7 @@ function CartItem({
   lang,
   onCartUpdate,
   setProductPrices,
+  style,
 }: Props) {
   const t = useTranslations();
   const settings = useStoreSettings();
@@ -90,7 +92,10 @@ function CartItem({
   const totalPrice = unitPrice * quantity;
 
   return (
-    <article className="group rounded-2xl border border-slate-200 bg-white p-3 shadow-sm transition-all duration-300 hover:border-transparent hover:shadow-lg hover:shadow-violet-950/10 sm:p-4">
+    <article
+      style={style}
+      className="store-card-enter group rounded-2xl border border-slate-200 bg-white p-3 shadow-sm transition-all duration-300 hover:border-transparent hover:shadow-lg hover:shadow-violet-950/10 sm:p-4"
+    >
       <div className="flex min-w-0 gap-3 sm:gap-4">
         <Link
           href={{
@@ -155,11 +160,14 @@ function CartItem({
                   aria-label={t("decreaseQuantity")}
                   disabled={quantity <= 1}
                   onClick={() => handleQuantityChange(quantity - 1)}
-                  className="flex h-11 w-11 items-center justify-center transition-colors hover:bg-violet-50 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none focus-visible:ring-inset disabled:cursor-not-allowed disabled:opacity-40"
+                  className="btn-press flex h-11 w-11 items-center justify-center transition-colors hover:bg-violet-50 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none focus-visible:ring-inset disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   <MinusOutlined aria-hidden />
                 </button>
-                <output className="flex h-11 min-w-10 items-center justify-center border-x border-slate-300 px-2 text-sm font-bold">
+                <output
+                  key={quantity}
+                  className="store-pop flex h-11 min-w-10 items-center justify-center border-x border-slate-300 px-2 text-sm font-bold"
+                >
                   {quantity}
                 </output>
                 <button
@@ -167,7 +175,7 @@ function CartItem({
                   aria-label={t("increaseQuantity")}
                   disabled={quantity >= (variant?.stock ?? data.stock ?? 0)}
                   onClick={() => handleQuantityChange(quantity + 1)}
-                  className="flex h-11 w-11 items-center justify-center transition-colors hover:bg-violet-50 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none focus-visible:ring-inset disabled:cursor-not-allowed disabled:opacity-40"
+                  className="btn-press flex h-11 w-11 items-center justify-center transition-colors hover:bg-violet-50 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none focus-visible:ring-inset disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   <PlusOutlined aria-hidden />
                 </button>
@@ -176,7 +184,7 @@ function CartItem({
             <button
               type="button"
               onClick={handleRemove}
-              className="flex min-h-11 items-center gap-2 rounded-xl px-3 text-sm font-semibold text-red-700 transition-colors hover:bg-red-50 focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:outline-none"
+              className="btn-press flex min-h-11 items-center gap-2 rounded-xl px-3 text-sm font-semibold text-red-700 transition-colors hover:bg-red-50 focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:outline-none"
             >
               <DeleteOutlined aria-hidden />
               {t("remove")}

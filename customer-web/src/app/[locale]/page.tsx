@@ -93,64 +93,75 @@ export default async function Home({ params }: Props) {
         />
 
         <div className="my-container relative grid items-center gap-8 py-14 sm:gap-10 sm:py-16 md:min-h-[660px] lg:grid-cols-[1.08fr_0.92fr] lg:gap-16 lg:py-24">
-          <div className="store-card-enter flex max-w-3xl flex-col items-start text-white">
-            <span className="animate-badge-glow glass-panel mb-4 inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-[11px] font-semibold tracking-[0.16em] text-violet-200 uppercase sm:mb-6 sm:px-4 sm:py-2 sm:text-xs sm:tracking-[0.18em]">
-              <span className="h-1.5 w-1.5 rounded-full bg-gradient-to-r from-blue-400 via-violet-400 to-pink-400" />
-              {t("homeEyebrow")}
-            </span>
-            <h1 className="max-w-3xl text-[2.125rem] leading-[1.08] font-bold tracking-[-0.035em] min-[430px]:text-4xl sm:text-5xl lg:text-6xl xl:text-7xl">
-              {t("homeHeroTitle")
-                .split(" ")
-                .map((word, index, arr) => (
-                  <span
-                    key={index}
-                    className={
-                      index >= arr.length - 2
-                        ? "text-gradient-brand animate-gradient-pan"
-                        : undefined
-                    }
-                  >
-                    {word}
-                    {index < arr.length - 1 ? " " : ""}
-                  </span>
-                ))}
-            </h1>
-            <p className="mt-4 max-w-2xl text-[15px] leading-6 text-slate-300 sm:mt-6 sm:text-lg sm:leading-7">
-              {t("homeHeroDescription")}
-            </p>
-            <div className="mt-6 w-full max-w-2xl sm:mt-8">
-              <HomeHeroSearch />
-              <p className="mt-3 hidden text-sm text-slate-400 sm:block">
-                {t("homeSearchHint")}
+          <div className="flex max-w-3xl flex-col items-start text-white">
+            <Reveal>
+              <span className="animate-badge-glow glass-panel mb-4 inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-[11px] font-semibold tracking-[0.16em] text-violet-200 uppercase sm:mb-6 sm:px-4 sm:py-2 sm:text-xs sm:tracking-[0.18em]">
+                <span className="h-1.5 w-1.5 rounded-full bg-gradient-to-r from-blue-400 via-violet-400 to-pink-400" />
+                {t("homeEyebrow")}
+              </span>
+            </Reveal>
+            <Reveal delay={90}>
+              <h1 className="max-w-3xl text-[2.125rem] leading-[1.08] font-bold tracking-[-0.035em] min-[430px]:text-4xl sm:text-5xl lg:text-6xl xl:text-7xl">
+                {t("homeHeroTitle")
+                  .split(" ")
+                  .map((word, index, arr) => (
+                    <span
+                      key={index}
+                      className={
+                        index >= arr.length - 2
+                          ? "text-gradient-brand animate-gradient-pan"
+                          : undefined
+                      }
+                    >
+                      {word}
+                      {index < arr.length - 1 ? " " : ""}
+                    </span>
+                  ))}
+              </h1>
+            </Reveal>
+            <Reveal delay={180} className="w-full">
+              <p className="mt-4 max-w-2xl text-[15px] leading-6 text-slate-300 sm:mt-6 sm:text-lg sm:leading-7">
+                {t("homeHeroDescription")}
               </p>
-            </div>
-            <div className="mt-5 flex flex-wrap items-center gap-2.5 sm:mt-7 sm:gap-3">
-              <a
-                href="#categories"
-                className="group relative inline-flex items-center overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 via-violet-600 to-pink-600 bg-[length:200%_auto] bg-[position:0%_50%] px-4 py-3 text-sm font-bold text-white shadow-lg shadow-violet-900/40 transition-all duration-200 hover:scale-[1.02] hover:bg-[position:100%_50%] hover:shadow-xl hover:shadow-violet-800/50 focus-visible:ring-2 focus-visible:ring-violet-300 focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-900 focus-visible:outline-none sm:px-5"
-              >
-                {t("browseCategories")}
-              </a>
-              {featuredTranslation?.slug && (
-                <Link
-                  href={{
-                    pathname: "/products/[slug]",
-                    params: { slug: featuredTranslation.slug },
-                  }}
-                  className="glass-panel rounded-xl px-4 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-white/15 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-900 focus-visible:outline-none sm:px-5"
+              <div className="mt-6 w-full max-w-2xl sm:mt-8">
+                <HomeHeroSearch />
+                <p className="mt-3 hidden text-sm text-slate-400 sm:block">
+                  {t("homeSearchHint")}
+                </p>
+              </div>
+            </Reveal>
+            <Reveal delay={270} className="w-full">
+              <div className="mt-5 flex flex-wrap items-center gap-2.5 sm:mt-7 sm:gap-3">
+                <a
+                  href="#categories"
+                  className="btn-shimmer group relative inline-flex items-center overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 via-violet-600 to-pink-600 bg-[length:200%_auto] bg-[position:0%_50%] px-4 py-3 text-sm font-bold text-white shadow-lg shadow-violet-900/40 transition-all duration-200 hover:scale-[1.02] hover:bg-[position:100%_50%] hover:shadow-xl hover:shadow-violet-800/50 focus-visible:ring-2 focus-visible:ring-violet-300 focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-900 focus-visible:outline-none sm:px-5"
                 >
-                  {t("shopFeatured")}
-                </Link>
-              )}
-            </div>
-            <HomeHeroTrustBadges
-              secureCheckoutLabel={t("secureCheckout")}
-              freeShippingLabel={t("freeShipping")}
-              freeReturnsLabel={t("freeReturns")}
-            />
+                  {t("browseCategories")}
+                </a>
+                {featuredTranslation?.slug && (
+                  <Link
+                    href={{
+                      pathname: "/products/[slug]",
+                      params: { slug: featuredTranslation.slug },
+                    }}
+                    className="glass-panel rounded-xl px-4 py-3 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/15 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-900 focus-visible:outline-none sm:px-5"
+                  >
+                    {t("shopFeatured")}
+                  </Link>
+                )}
+              </div>
+              <HomeHeroTrustBadges
+                secureCheckoutLabel={t("secureCheckout")}
+                freeShippingLabel={t("freeShipping")}
+                freeReturnsLabel={t("freeReturns")}
+              />
+            </Reveal>
           </div>
 
-          <div className="store-card-enter relative flex justify-center [animation-delay:100ms] lg:justify-end">
+          <Reveal
+            delay={150}
+            className="relative flex justify-center lg:justify-end"
+          >
             <div
               aria-hidden
               className="animate-float-slow absolute -top-8 -left-4 h-16 w-16 rounded-2xl border border-white/10 bg-gradient-to-br from-blue-500/40 to-transparent backdrop-blur-sm sm:-left-8"
@@ -159,7 +170,7 @@ export default async function Home({ params }: Props) {
               aria-hidden
               className="animate-float-slower absolute -right-2 -bottom-6 h-20 w-20 rounded-full border border-white/10 bg-gradient-to-br from-pink-500/40 to-transparent backdrop-blur-sm sm:-right-6"
             />
-            <div className="relative w-full max-w-[470px] overflow-hidden rounded-[2rem] bg-gradient-to-br from-blue-500/60 via-violet-500/60 to-pink-500/60 p-[1.5px] shadow-2xl shadow-violet-950/50">
+            <div className="animate-product-float relative w-full max-w-[470px] overflow-hidden rounded-[2rem] bg-gradient-to-br from-blue-500/60 via-violet-500/60 to-pink-500/60 p-[1.5px] shadow-2xl shadow-violet-950/50 motion-reduce:animate-none">
               <div className="glass-panel rounded-[calc(2rem-1.5px)] border-0 p-4 sm:p-6">
                 {featuredImage ? (
                   <div className="relative overflow-hidden rounded-2xl bg-white">
@@ -216,7 +227,7 @@ export default async function Home({ params }: Props) {
                 )}
               </div>
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
@@ -269,12 +280,7 @@ export default async function Home({ params }: Props) {
 
       <div className="flex flex-col gap-20 bg-gradient-to-b from-slate-50 via-white to-slate-50 py-16 sm:py-20 lg:gap-24">
         <section id="categories">
-          <Reveal>
-            <CategoriesList
-              categories={categories}
-              lang={locale as LocaleType}
-            />
-          </Reveal>
+          <CategoriesList categories={categories} lang={locale as LocaleType} />
         </section>
         <Reveal>
           <FeaturedProducts lang={locale as LocaleType} />

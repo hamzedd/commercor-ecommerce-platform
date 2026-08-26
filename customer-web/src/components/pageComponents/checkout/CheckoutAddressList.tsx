@@ -91,13 +91,13 @@ function CheckoutAddressList({ onAddressSelect, selectedAddressId }: Props) {
                 onClick={() => onAddressSelect(address.id)}
                 className={`w-full rounded-xl border p-4 text-left transition-all duration-200 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 focus-visible:outline-none ${
                   isSelected
-                    ? "border-violet-600 bg-violet-50 shadow-sm shadow-violet-500/10"
+                    ? "scale-[1.01] border-violet-600 bg-violet-50 shadow-sm shadow-violet-500/10"
                     : "border-slate-200 bg-white hover:border-violet-300 hover:bg-violet-50/40"
                 }`}
               >
                 <div className="flex items-start gap-3">
                   <span
-                    className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border ${isSelected ? "border-violet-600 text-violet-700" : "border-slate-300 text-transparent"}`}
+                    className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-transform duration-200 ${isSelected ? "store-pop scale-110 border-violet-600 text-violet-700" : "border-slate-300 text-transparent"}`}
                   >
                     <CheckCircleFilled aria-hidden />
                   </span>

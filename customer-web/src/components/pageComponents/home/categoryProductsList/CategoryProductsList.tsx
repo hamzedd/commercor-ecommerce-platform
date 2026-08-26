@@ -4,6 +4,7 @@ import { LocaleType } from "@/src/i18n/config";
 import { Link } from "@/src/i18n/navigation";
 import { fetchProducts } from "@/src/service/apiServices/product.service";
 import { CategoryType } from "@/src/utils/types/category.type";
+import Reveal from "@/src/components/ui/utis/reveal/Reveal";
 
 interface Props {
   category: CategoryType;
@@ -23,7 +24,7 @@ async function CategoryProductsList({ category, lang }: Props) {
 
   return (
     <section className="my-container flex flex-col gap-7">
-      <div className="flex items-end justify-between gap-4">
+      <Reveal className="flex items-end justify-between gap-4">
         <div>
           <p className="bg-gradient-to-r from-blue-600 via-violet-600 to-pink-600 bg-clip-text text-sm font-bold tracking-[0.18em] text-transparent uppercase">
             {t("featuredCollection")}
@@ -44,8 +45,10 @@ async function CategoryProductsList({ category, lang }: Props) {
             &rarr;
           </span>
         </Link>
-      </div>
-      <CategoryProductsSlider products={products.data} lang={lang} />
+      </Reveal>
+      <Reveal delay={80}>
+        <CategoryProductsSlider products={products.data} lang={lang} />
+      </Reveal>
     </section>
   );
 }

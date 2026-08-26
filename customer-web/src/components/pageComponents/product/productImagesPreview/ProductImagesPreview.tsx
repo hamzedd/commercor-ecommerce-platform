@@ -37,7 +37,7 @@ function ProductImagesPreview({ images, productTranslation }: Props) {
               aria-label={t("selectProductImage", { index: index + 1 })}
               aria-pressed={isSelected}
               onClick={() => setSelectedImageId(image.id)}
-              className={`relative h-16 w-16 shrink-0 overflow-hidden rounded-xl border-2 bg-slate-50 transition-all duration-200 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 focus-visible:outline-none md:h-20 md:w-20 ${isSelected ? "border-violet-500 shadow-md shadow-violet-500/20" : "border-slate-200 hover:border-violet-300"}`}
+              className={`relative h-16 w-16 shrink-0 overflow-hidden rounded-xl border-2 bg-slate-50 transition-all duration-200 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 focus-visible:outline-none md:h-20 md:w-20 ${isSelected ? "scale-105 border-violet-500 shadow-md shadow-violet-500/20" : "border-slate-200 hover:scale-105 hover:border-violet-300"}`}
             >
               <Image
                 fill
@@ -56,16 +56,21 @@ function ProductImagesPreview({ images, productTranslation }: Props) {
 
       <div className="order-1 flex min-h-[320px] min-w-0 flex-1 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-slate-50 via-white to-violet-50 p-3 sm:min-h-[420px] sm:p-6 md:order-2 lg:min-h-[560px]">
         {selectedImage ? (
-          <ImageMagnifier
-            src={getImageSrcByBucketAndFileNames({
-              bucketName: "products",
-              fileName: selectedImage.name,
-            })}
-            className="h-auto max-h-[520px] w-full max-w-[620px] rounded-lg object-contain"
-            alt={productName}
-            width={620}
-            height={620}
-          />
+          <div
+            key={selectedImage.id}
+            className="animate-fade-scale-in h-auto max-h-[520px] w-full max-w-[620px]"
+          >
+            <ImageMagnifier
+              src={getImageSrcByBucketAndFileNames({
+                bucketName: "products",
+                fileName: selectedImage.name,
+              })}
+              className="h-auto max-h-[520px] w-full max-w-[620px] rounded-lg object-contain"
+              alt={productName}
+              width={620}
+              height={620}
+            />
+          </div>
         ) : (
           <div className="flex flex-col items-center gap-3 text-center text-slate-500">
             <svg

@@ -1,13 +1,14 @@
 "use client";
 
 import {
+  CheckOutlined,
   MinusOutlined,
   PlusOutlined,
   ShoppingCartOutlined,
   ThunderboltOutlined,
 } from "@ant-design/icons";
 import { useLocale, useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useModalStore } from "@/src/components/providers/modalStoreProvider";
 import { useRouter } from "@/src/i18n/navigation";
 import { useCurrentUserQuery } from "@/src/service/react-query/user/query/useCurrentUserQuery";
@@ -16,6 +17,7 @@ import { ProductType } from "@/src/utils/types/product.type";
 import { useStoreSettings } from "@/src/components/providers/StoreSettingsProvider";
 import formatCurrency from "@/src/utils/functions/formatCurrency";
 import WishlistButton from "@/src/components/ui/WishlistButton";
+import Reveal from "@/src/components/ui/utis/reveal/Reveal";
 
 interface Props {
   product: ProductType;
@@ -30,6 +32,12 @@ function ProductPurchaseBox({ product }: Props) {
   const toggleLogin = useModalStore((state) => state.toggleLogin);
   const [quantity, setQuantity] = useState(1);
   const [selected, setSelected] = useState<Record<string, string>>({});
+  const [addingToCart, setAddingToCart] = useState(false);
+  const [justAdded, setJustAdded] = useState(false);
+  const [buying, setBuying] = useState(false);
+  const justAddedTimeout = useRef<number | undefined>(undefined);
+
+  useEffect(() => () => window.clearTimeout(justAddedTimeout.current), []);
   const variants = product.variants || [];
   const optionGroups = Array.from(
     new Map(
@@ -73,9 +81,28 @@ function ProductPurchaseBox({ product }: Props) {
     }
   };
 
-  const handlePurchase = async () => {
+  const handleAddToCartClick = async () => {
+    setAddingToCart(true);
     const added = await handleAddInCard();
-    if (user && added) router.push("/checkout");
+    setAddingToCart(false);
+    if (added) {
+      setJustAdded(true);
+      window.clearTimeout(justAddedTimeout.current);
+      justAddedTimeout.current = window.setTimeout(
+        () => setJustAdded(false),
+        1800,
+      );
+    }
+  };
+
+  const handlePurchase = async () => {
+    setBuying(true);
+    const added = await handleAddInCard();
+    if (user && added) {
+      router.push("/checkout");
+      return;
+    }
+    setBuying(false);
   };
 
   const increaseQuantity = () => setQuantity((previous) => previous + 1);
@@ -87,7 +114,7 @@ function ProductPurchaseBox({ product }: Props) {
       <div className="mb-3 flex justify-end">
         <WishlistButton productId={product.id} />
       </div>
-      <div className="border-b border-slate-200 pb-5">
+      <Reveal className="border-b border-slate-200 pb-5">
         <p className="bg-gradient-to-r from-blue-600 via-violet-600 to-pink-600 bg-clip-text text-xs font-bold tracking-[0.16em] text-transparent uppercase">
           {t("price")}
         </p>
@@ -98,7 +125,7 @@ function ProductPurchaseBox({ product }: Props) {
           <div className="mt-3 flex items-center gap-2 text-sm">
             <span
               aria-hidden
-              className={`h-2.5 w-2.5 rounded-full ${effectiveStock > 0 ? "bg-emerald-500" : "bg-red-500"}`}
+              className={`h-2.5 w-2.5 rounded-full ${effectiveStock > 0 ? "animate-pulse bg-emerald-500" : "bg-red-500"} motion-reduce:animate-none`}
             />
             <span
               className={`font-semibold ${effectiveStock > 0 ? "text-emerald-700" : "text-red-700"}`}
@@ -111,7 +138,7 @@ function ProductPurchaseBox({ product }: Props) {
             </span>
           </div>
         )}
-      </div>
+      </Reveal>
 
       {variants.length > 0 && (
         <div className="space-y-4 border-b border-slate-200 py-5">
@@ -167,13 +194,14 @@ function ProductPurchaseBox({ product }: Props) {
             onClick={decreaseQuantity}
             disabled={quantity <= 1}
             aria-label={t("decreaseQuantity")}
-            className="flex h-11 w-11 items-center justify-center transition-colors hover:bg-violet-50 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none focus-visible:ring-inset disabled:cursor-not-allowed disabled:opacity-40"
+            className="btn-press flex h-11 w-11 items-center justify-center transition-colors hover:bg-violet-50 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none focus-visible:ring-inset disabled:cursor-not-allowed disabled:opacity-40"
           >
             <MinusOutlined aria-hidden />
           </button>
           <output
+            key={quantity}
             aria-live="polite"
-            className="flex h-11 min-w-12 items-center justify-center border-x border-slate-300 px-3 font-bold text-slate-950"
+            className="store-pop flex h-11 min-w-12 items-center justify-center border-x border-slate-300 px-3 font-bold text-slate-950"
           >
             {quantity}
           </output>
@@ -182,7 +210,7 @@ function ProductPurchaseBox({ product }: Props) {
             onClick={increaseQuantity}
             disabled={quantity >= effectiveStock}
             aria-label={t("increaseQuantity")}
-            className="flex h-11 w-11 items-center justify-center transition-colors hover:bg-violet-50 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none focus-visible:ring-inset"
+            className="btn-press flex h-11 w-11 items-center justify-center transition-colors hover:bg-violet-50 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none focus-visible:ring-inset"
           >
             <PlusOutlined aria-hidden />
           </button>
@@ -192,26 +220,51 @@ function ProductPurchaseBox({ product }: Props) {
       <div className="grid gap-3">
         <button
           type="button"
-          onClick={handleAddInCard}
+          onClick={handleAddToCartClick}
           disabled={
+            addingToCart ||
             (variants.length > 0 && !selectedVariant) ||
             effectiveStock < quantity
           }
-          className="flex min-h-12 items-center justify-center gap-2 rounded-xl border-2 border-slate-950 bg-white px-5 text-sm font-bold text-slate-950 transition-all duration-200 hover:border-violet-600 hover:text-violet-700 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 focus-visible:outline-none"
+          className={`flex min-h-12 items-center justify-center gap-2 rounded-xl border-2 px-5 text-sm font-bold transition-all duration-200 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed ${
+            justAdded
+              ? "store-pop border-emerald-600 bg-emerald-50 text-emerald-700"
+              : "border-slate-950 bg-white text-slate-950 hover:border-violet-600 hover:text-violet-700 disabled:opacity-60"
+          }`}
         >
-          <ShoppingCartOutlined aria-hidden className="text-lg" />
+          {addingToCart ? (
+            <span
+              aria-hidden
+              className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+            />
+          ) : justAdded ? (
+            <CheckOutlined
+              aria-hidden
+              className="animate-success-check text-lg"
+            />
+          ) : (
+            <ShoppingCartOutlined aria-hidden className="text-lg" />
+          )}
           {t("addToCart")}
         </button>
         <button
           type="button"
           onClick={handlePurchase}
           disabled={
+            buying ||
             (variants.length > 0 && !selectedVariant) ||
             effectiveStock < quantity
           }
-          className="checkout-primary-cta flex min-h-12 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 via-violet-600 to-pink-600 px-5 text-sm font-bold shadow-md shadow-violet-900/20 transition-all duration-200 hover:scale-[1.02] hover:shadow-lg hover:shadow-violet-800/30 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 focus-visible:outline-none"
+          className="checkout-primary-cta btn-shimmer flex min-h-12 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 via-violet-600 to-pink-600 px-5 text-sm font-bold shadow-md shadow-violet-900/20 transition-all duration-200 hover:scale-[1.02] hover:shadow-lg hover:shadow-violet-800/30 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-70"
         >
-          <ThunderboltOutlined aria-hidden className="text-lg" />
+          {buying ? (
+            <span
+              aria-hidden
+              className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+            />
+          ) : (
+            <ThunderboltOutlined aria-hidden className="text-lg" />
+          )}
           {t("buyNow")}
         </button>
       </div>

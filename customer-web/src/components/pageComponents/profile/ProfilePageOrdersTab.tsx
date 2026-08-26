@@ -84,8 +84,14 @@ function ProfilePageOrdersTab() {
 
   return (
     <div className="flex flex-col gap-5">
-      {data.map((order: OrderType) => (
-        <ProfileOrderCard key={order.id} order={order} locale={locale} />
+      {data.map((order: OrderType, index: number) => (
+        <div
+          key={order.id}
+          className="store-card-enter"
+          style={{ animationDelay: `${Math.min(index, 6) * 60}ms` }}
+        >
+          <ProfileOrderCard order={order} locale={locale} />
+        </div>
       ))}
     </div>
   );

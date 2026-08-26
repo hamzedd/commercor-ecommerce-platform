@@ -29,7 +29,7 @@ function DefaultModal({ show, onClose, title, children, ...props }: Props) {
           <button
             type={"button"}
             onClick={onClose}
-            className="flex h-9 w-9 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-violet-50 hover:text-violet-700 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none"
+            className="btn-press flex h-9 w-9 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-violet-50 hover:text-violet-700 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none"
           >
             <CloseOutlined style={{ fontSize: 20 }} />
           </button>

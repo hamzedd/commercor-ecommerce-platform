@@ -96,7 +96,7 @@ function SearchedProductsList({ form, setShow }: Props) {
 
   // Results
   return (
-    <div className="flex w-full flex-col gap-2">
+    <div className="animate-fade-scale-in flex w-full flex-col gap-2">
       <p className="mb-2 text-sm font-medium text-slate-600">
         {data.data.length} {data.data.length === 1 ? t("result") : t("results")}
       </p>

@@ -62,7 +62,10 @@ function DefaultHeader({ settings }: Props) {
   };
 
   const cartBadge = cartCount > 0 && (
-    <span className="absolute -end-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-[var(--store-accent)] px-1 text-[10px] font-bold text-white shadow-sm">
+    <span
+      key={cartCount}
+      className="store-pop absolute -end-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-[var(--store-accent)] px-1 text-[10px] font-bold text-white shadow-sm"
+    >
       {cartCount > 99 ? "99+" : cartCount}
     </span>
   );
@@ -118,7 +121,7 @@ function DefaultHeader({ settings }: Props) {
             {userData?.id && (
               <Link
                 href="/profile"
-                className="group hidden h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white transition-all duration-200 hover:-translate-y-0.5 hover:border-violet-300 hover:bg-violet-50 hover:shadow-sm hover:shadow-violet-500/10 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none sm:flex"
+                className="group btn-press hidden h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white transition-all duration-200 hover:-translate-y-0.5 hover:border-violet-300 hover:bg-violet-50 hover:shadow-sm hover:shadow-violet-500/10 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none sm:flex"
                 aria-label={t("wishlist")}
               >
                 <HeartOutlined className="text-base text-slate-700 transition-colors group-hover:text-violet-700" />
@@ -128,7 +131,7 @@ function DefaultHeader({ settings }: Props) {
             {userData?.id ? (
               <Link
                 href="/cart"
-                className="group relative flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white transition-all duration-200 hover:-translate-y-0.5 hover:border-violet-300 hover:bg-violet-50 hover:shadow-sm hover:shadow-violet-500/10 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none"
+                className="group btn-press relative flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white transition-all duration-200 hover:-translate-y-0.5 hover:border-violet-300 hover:bg-violet-50 hover:shadow-sm hover:shadow-violet-500/10 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none"
                 aria-label={t("cart")}
               >
                 <ShoppingCartOutlined className="text-base text-slate-700 transition-colors group-hover:text-violet-700 md:text-lg" />
@@ -138,7 +141,7 @@ function DefaultHeader({ settings }: Props) {
               <button
                 type="button"
                 onClick={() => toggleLogin()}
-                className="group relative flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white transition-all duration-200 hover:-translate-y-0.5 hover:border-violet-300 hover:bg-violet-50 hover:shadow-sm hover:shadow-violet-500/10 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none"
+                className="group btn-press relative flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white transition-all duration-200 hover:-translate-y-0.5 hover:border-violet-300 hover:bg-violet-50 hover:shadow-sm hover:shadow-violet-500/10 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none"
                 aria-label={t("cart")}
               >
                 <ShoppingCartOutlined className="text-base text-slate-700 transition-colors group-hover:text-violet-700 md:text-lg" />
@@ -150,7 +153,7 @@ function DefaultHeader({ settings }: Props) {
             {userData?.id ? (
               <Link
                 href="/profile"
-                className="group flex h-11 w-11 items-center justify-center gap-2 rounded-full border border-slate-200 bg-white transition-all duration-200 hover:-translate-y-0.5 hover:border-violet-300 hover:bg-violet-50 hover:shadow-sm hover:shadow-violet-500/10 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none md:w-auto md:px-4"
+                className="group btn-press flex h-11 w-11 items-center justify-center gap-2 rounded-full border border-slate-200 bg-white transition-all duration-200 hover:-translate-y-0.5 hover:border-violet-300 hover:bg-violet-50 hover:shadow-sm hover:shadow-violet-500/10 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none md:w-auto md:px-4"
               >
                 <UserOutlined className="text-base text-slate-700 transition-colors group-hover:text-violet-700 md:text-lg" />
 
@@ -162,7 +165,7 @@ function DefaultHeader({ settings }: Props) {
               <button
                 type="button"
                 onClick={() => toggleLogin()}
-                className="group flex h-11 w-11 items-center justify-center gap-2 rounded-full border border-slate-200 bg-white transition-all duration-200 hover:-translate-y-0.5 hover:border-violet-300 hover:bg-violet-50 hover:shadow-sm hover:shadow-violet-500/10 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none md:w-auto md:px-4"
+                className="group btn-press flex h-11 w-11 items-center justify-center gap-2 rounded-full border border-slate-200 bg-white transition-all duration-200 hover:-translate-y-0.5 hover:border-violet-300 hover:bg-violet-50 hover:shadow-sm hover:shadow-violet-500/10 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none md:w-auto md:px-4"
                 aria-label={t("login")}
               >
                 <UserOutlined className="text-base text-slate-700 transition-colors group-hover:text-violet-700 md:text-lg" />

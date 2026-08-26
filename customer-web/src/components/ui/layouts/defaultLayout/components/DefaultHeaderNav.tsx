@@ -26,25 +26,25 @@ function DefaultHeaderNav() {
         <div className="hidden items-center gap-7 md:flex">
           <Link
             href="/"
-            className="rounded-sm text-xs font-semibold text-slate-300 transition-colors hover:text-white focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:outline-none"
+            className="nav-link-underline rounded-sm text-xs font-semibold text-slate-300 transition-colors hover:text-white focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:outline-none"
           >
             {t("home")}
           </Link>
           <Link
             href={"/#categories" as never}
-            className="rounded-sm text-xs font-semibold text-slate-300 transition-colors hover:text-white focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:outline-none"
+            className="nav-link-underline rounded-sm text-xs font-semibold text-slate-300 transition-colors hover:text-white focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:outline-none"
           >
             {t("categories")}
           </Link>
           <Link
             href={"/#featured" as never}
-            className="rounded-sm text-xs font-semibold text-slate-300 transition-colors hover:text-white focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:outline-none"
+            className="nav-link-underline rounded-sm text-xs font-semibold text-slate-300 transition-colors hover:text-white focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:outline-none"
           >
             {t("featured")}
           </Link>
           <Link
             href={"/#contact" as never}
-            className="rounded-sm text-xs font-semibold text-slate-300 transition-colors hover:text-white focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:outline-none"
+            className="nav-link-underline rounded-sm text-xs font-semibold text-slate-300 transition-colors hover:text-white focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:outline-none"
           >
             {t("contact")}
           </Link>
