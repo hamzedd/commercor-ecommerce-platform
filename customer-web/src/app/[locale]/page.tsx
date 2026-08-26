@@ -70,10 +70,10 @@ export default async function Home({ params }: Props) {
   return (
     <main className="flex flex-col overflow-hidden bg-slate-50 text-slate-950">
       {/* HERO */}
-      <section className="relative isolate overflow-hidden bg-indigo-950">
+      <section className="relative isolate overflow-hidden bg-[#0b0821]">
         <div
           aria-hidden
-          className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-violet-900 to-blue-950"
+          className="absolute inset-0 bg-gradient-to-br from-[#0b0821] via-[#1e1147] to-[#0b1740]"
         />
         <div
           aria-hidden
@@ -134,7 +134,7 @@ export default async function Home({ params }: Props) {
               <div className="mt-5 flex flex-wrap items-center gap-2.5 sm:mt-7 sm:gap-3">
                 <a
                   href="#categories"
-                  className="btn-shimmer group relative inline-flex items-center overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 via-violet-600 to-pink-600 bg-[length:200%_auto] bg-[position:0%_50%] px-4 py-3 text-sm font-bold text-white shadow-lg shadow-violet-900/40 transition-all duration-200 hover:scale-[1.02] hover:bg-[position:100%_50%] hover:shadow-xl hover:shadow-violet-800/50 focus-visible:ring-2 focus-visible:ring-violet-300 focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-900 focus-visible:outline-none sm:px-5"
+                  className="btn-shimmer group relative inline-flex items-center overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 via-violet-600 to-pink-600 bg-[length:200%_auto] bg-[position:0%_50%] px-4 py-3 text-sm font-bold text-white shadow-lg shadow-violet-900/40 transition-all duration-200 hover:scale-[1.02] hover:bg-[position:100%_50%] hover:shadow-xl hover:shadow-violet-800/50 focus-visible:ring-2 focus-visible:ring-violet-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b0821] focus-visible:outline-none sm:px-5"
                 >
                   {t("browseCategories")}
                 </a>
@@ -144,7 +144,7 @@ export default async function Home({ params }: Props) {
                       pathname: "/products/[slug]",
                       params: { slug: featuredTranslation.slug },
                     }}
-                    className="glass-panel rounded-xl px-4 py-3 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/15 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-900 focus-visible:outline-none sm:px-5"
+                    className="glass-panel rounded-xl px-4 py-3 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/15 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b0821] focus-visible:outline-none sm:px-5"
                   >
                     {t("shopFeatured")}
                   </Link>
