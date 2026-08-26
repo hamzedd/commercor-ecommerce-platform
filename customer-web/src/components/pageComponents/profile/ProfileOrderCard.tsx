@@ -102,7 +102,7 @@ export default function ProfileOrderCard({
         <div className="border-t border-gray-200 bg-white px-4 py-4 sm:px-6">
           <div className="flex flex-col gap-3 sm:flex-row">
             {order?.status?.toLowerCase() === "completed" && (
-              <button className="w-full rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700">
+              <button className="w-full rounded-md bg-[var(--store-accent)] px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90">
                 {t("reorder")}
               </button>
             )}

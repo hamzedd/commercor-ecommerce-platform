@@ -65,7 +65,7 @@ function DefaultHeader({ settings }: Props) {
 
   return (
     <>
-      <header className="sticky top-0 z-40 w-full border-b border-gray-100 bg-white shadow-sm">
+      <header className="sticky top-0 z-40 w-full border-b border-gray-200 bg-white">
         <div className="my-container flex flex-row flex-wrap items-center justify-between gap-2 py-2 md:flex-nowrap md:gap-4 md:py-3">
           {/* Brand */}
           <Link
@@ -86,7 +86,7 @@ function DefaultHeader({ settings }: Props) {
               />
             ) : (
               <div className="flex items-center gap-2">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-black text-base font-bold text-white md:h-10 md:w-10 md:text-lg">
+                <div className="flex h-9 w-9 items-center justify-center rounded-md bg-[var(--store-primary)] text-base font-bold text-white md:h-10 md:w-10 md:text-lg">
                   C
                 </div>
 
@@ -114,7 +114,7 @@ function DefaultHeader({ settings }: Props) {
             {userData?.id ? (
               <Link
                 href="/cart"
-                className="group relative flex h-11 w-11 items-center justify-center rounded-full border-2 border-gray-200 bg-white transition-all hover:border-black hover:bg-black focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:outline-none"
+                className="group relative flex h-11 w-11 items-center justify-center rounded-full border-2 border-gray-200 bg-white transition-all hover:border-[var(--store-primary)] hover:bg-[var(--store-primary)] focus-visible:ring-2 focus-visible:ring-[var(--store-primary)] focus-visible:ring-offset-2 focus-visible:outline-none"
                 aria-label={t("cart")}
               >
                 <ShoppingCartOutlined className="text-base text-gray-700 transition-colors group-hover:text-white md:text-lg" />
@@ -124,7 +124,7 @@ function DefaultHeader({ settings }: Props) {
               <button
                 type="button"
                 onClick={() => toggleLogin()}
-                className="group relative flex h-11 w-11 items-center justify-center rounded-full border-2 border-gray-200 bg-white transition-all hover:border-black hover:bg-black focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:outline-none"
+                className="group relative flex h-11 w-11 items-center justify-center rounded-full border-2 border-gray-200 bg-white transition-all hover:border-[var(--store-primary)] hover:bg-[var(--store-primary)] focus-visible:ring-2 focus-visible:ring-[var(--store-primary)] focus-visible:ring-offset-2 focus-visible:outline-none"
                 aria-label={t("cart")}
               >
                 <ShoppingCartOutlined className="text-base text-gray-700 transition-colors group-hover:text-white md:text-lg" />
@@ -136,7 +136,7 @@ function DefaultHeader({ settings }: Props) {
             {userData?.id ? (
               <Link
                 href="/profile"
-                className="group flex h-11 w-11 items-center justify-center gap-2 rounded-full border-2 border-gray-200 bg-white transition-all hover:border-black hover:bg-black focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:outline-none md:w-auto md:px-4"
+                className="group flex h-11 w-11 items-center justify-center gap-2 rounded-full border-2 border-gray-200 bg-white transition-all hover:border-[var(--store-primary)] hover:bg-[var(--store-primary)] focus-visible:ring-2 focus-visible:ring-[var(--store-primary)] focus-visible:ring-offset-2 focus-visible:outline-none md:w-auto md:px-4"
               >
                 <UserOutlined className="text-base text-gray-700 transition-colors group-hover:text-white md:text-lg" />
 
@@ -148,7 +148,7 @@ function DefaultHeader({ settings }: Props) {
               <button
                 type="button"
                 onClick={() => toggleLogin()}
-                className="group flex h-11 w-11 items-center justify-center gap-2 rounded-full border-2 border-gray-200 bg-white transition-all hover:border-black hover:bg-black focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:outline-none md:w-auto md:px-4"
+                className="group flex h-11 w-11 items-center justify-center gap-2 rounded-full border-2 border-gray-200 bg-white transition-all hover:border-[var(--store-primary)] hover:bg-[var(--store-primary)] focus-visible:ring-2 focus-visible:ring-[var(--store-primary)] focus-visible:ring-offset-2 focus-visible:outline-none md:w-auto md:px-4"
                 aria-label={t("login")}
               >
                 <UserOutlined className="text-base text-gray-700 transition-colors group-hover:text-white md:text-lg" />

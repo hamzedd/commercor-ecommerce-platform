@@ -36,9 +36,9 @@ function CartPage() {
 
   return (
     <main className="min-h-screen bg-stone-50 pb-16 text-stone-950">
-      <section className="border-b border-white/10 bg-stone-950 text-white">
+      <section className="border-b border-stone-200 bg-white text-stone-950">
         <div className="my-container py-8 sm:py-10 lg:py-12">
-          <p className="text-xs font-bold tracking-[0.18em] text-amber-300 uppercase">
+          <p className="text-xs font-bold tracking-[0.18em] text-[var(--store-accent)] uppercase">
             {t("yourSelection")}
           </p>
           <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -46,14 +46,14 @@ function CartPage() {
               <h1 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
                 {t("shoppingCart")}
               </h1>
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-stone-300 sm:text-base">
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-stone-600 sm:text-base">
                 {t("cartDescription")}
               </p>
             </div>
             {itemCount > 0 && (
               <p
                 aria-live="polite"
-                className="w-fit rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-sm font-semibold"
+                className="w-fit rounded-full border border-stone-200 bg-stone-50 px-3 py-1.5 text-sm font-semibold"
               >
                 {t("cartItemCount", { count: itemCount })}
               </p>

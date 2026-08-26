@@ -31,8 +31,8 @@ const settingFields: Record<string, StoreSettingKey> = {
 
 const defaults = {
   storeName: 'Commercor',
-  primaryColor: '#1c1917',
-  accentColor: '#d97706',
+  primaryColor: '#171717',
+  accentColor: '#0071e3',
   currencyCode: 'USD',
   defaultLocale: 'en',
 };

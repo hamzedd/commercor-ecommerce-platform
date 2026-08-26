@@ -64,16 +64,16 @@ function CategoryPage({ products, category, productFilters }: Props) {
 
   return (
     <main className="min-h-screen bg-stone-50 pb-16 text-stone-950">
-      <section className="border-b border-white/10 bg-stone-950 text-white">
+      <section className="border-b border-stone-200 bg-white text-stone-950">
         <div className="my-container py-8 sm:py-10 lg:py-12">
-          <p className="text-xs font-bold tracking-[0.18em] text-amber-300 uppercase">
+          <p className="text-xs font-bold tracking-[0.18em] text-[var(--store-accent)] uppercase">
             {t("categoryCollection")}
           </p>
           <h1 className="mt-3 text-3xl leading-tight font-bold tracking-tight sm:text-4xl lg:text-5xl">
             {categoryTranslated?.name}
           </h1>
           {categoryTranslated?.description && (
-            <p className="mt-3 max-w-2xl text-sm leading-6 text-stone-300 sm:text-base">
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-stone-600 sm:text-base">
               {categoryTranslated.description}
             </p>
           )}
@@ -90,7 +90,7 @@ function CategoryPage({ products, category, productFilters }: Props) {
               {t("productsFound")}
             </p>
             {activeFiltersCount > 0 && (
-              <span className="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-bold text-amber-900 sm:hidden">
+              <span className="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-bold text-[var(--store-accent)] sm:hidden">
                 {t("activeFilters", { count: activeFiltersCount })}
               </span>
             )}

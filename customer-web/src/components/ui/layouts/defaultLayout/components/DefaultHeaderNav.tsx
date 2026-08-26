@@ -67,7 +67,7 @@ function DefaultHeaderNav() {
       {isMenuOpen && (
         <div
           id="mobile-navigation"
-          className="absolute top-full right-0 left-0 z-50 border-b border-gray-200 bg-white p-3 shadow-lg md:hidden"
+          className="absolute top-full right-0 left-0 z-50 border-b border-gray-200 bg-white p-3 md:hidden"
         >
           <div className="my-container grid gap-1 px-0">
             <Link

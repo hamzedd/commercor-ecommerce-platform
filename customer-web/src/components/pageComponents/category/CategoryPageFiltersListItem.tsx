@@ -44,7 +44,7 @@ export default function CategoryPageFiltersListItem({
             {filterTranslated?.name}
           </span>
           {selectedCount > 0 && (
-            <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-900">
+            <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold text-[var(--store-accent)]">
               {selectedCount}
             </span>
           )}

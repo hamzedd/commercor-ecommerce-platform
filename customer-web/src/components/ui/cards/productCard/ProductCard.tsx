@@ -34,7 +34,7 @@ function ProductCard({ product, lang, className, titleClassName }: Props) {
         params: { slug: productTranslation.slug },
       }}
       key={product.id}
-      className={`group relative flex w-full flex-col overflow-hidden rounded-xl bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${className}`}
+      className={`group relative flex w-full flex-col overflow-hidden rounded-md border border-gray-200 bg-white transition-colors duration-300 hover:border-gray-400 ${className}`}
     >
       {/* Image Container */}
       <div className="relative aspect-square overflow-hidden bg-gray-50">
@@ -55,7 +55,7 @@ function ProductCard({ product, lang, className, titleClassName }: Props) {
 
         {/* Quick View Overlay - appears on hover */}
         <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all duration-300 group-hover:bg-black/10 group-hover:opacity-100">
-          <span className="translate-y-4 rounded-full bg-white px-4 py-2 text-sm font-medium shadow-lg transition-transform duration-300 group-hover:translate-y-0">
+          <span className="translate-y-4 rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium transition-transform duration-300 group-hover:translate-y-0">
             {t("viewDetails")}
           </span>
         </div>
@@ -81,7 +81,7 @@ function ProductCard({ product, lang, className, titleClassName }: Props) {
           <p className={"text-lg font-bold text-gray-900 md:text-xl"}>
             {formatCurrency(product.price || 0, settings.currencyCode, lang)}
           </p>
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-black text-white opacity-0 transition-opacity group-hover:opacity-100 md:h-9 md:w-9">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--store-primary)] text-white opacity-0 transition-opacity group-hover:opacity-100 md:h-9 md:w-9">
             <svg
               className="h-4 w-4 md:h-5 md:w-5"
               fill="none"

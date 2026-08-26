@@ -133,7 +133,7 @@ function ProductPurchaseBox({ product }: Props) {
       </div>
 
       <div className="mt-6 border-t border-stone-200 pt-5">
-        <div className="flex items-center gap-3 rounded-xl bg-amber-50 p-3 text-sm text-stone-700">
+        <div className="flex items-center gap-3 rounded-xl bg-stone-50 p-3 text-sm text-stone-700">
           <svg
             aria-hidden
             className="h-5 w-5 shrink-0 text-amber-700"

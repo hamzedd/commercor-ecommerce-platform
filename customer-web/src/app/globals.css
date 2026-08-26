@@ -18,8 +18,8 @@
 
 @layer base {
   :root {
-    --store-primary: #1c1917;
-    --store-accent: #d97706;
+    --store-primary: #171717;
+    --store-accent: #0071e3;
   }
   a,
   button {

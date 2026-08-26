@@ -1,4 +1,4 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import "../globals.css";
 import DefaultLayout from "@/src/components/ui/layouts/defaultLayout/DefaultLayout";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
@@ -12,13 +12,8 @@ import getImageSrcByBucketAndFileNames from "@/src/utils/functions/getImageSrcBy
 import { StoreSettingsProvider } from "@/src/components/providers/StoreSettingsProvider";
 import type { CSSProperties } from "react";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
@@ -79,9 +74,7 @@ export default async function RootLayout({
         } as CSSProperties
       }
     >
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} bg-[#f0f2f5] antialiased`}
-      >
+      <body className={`${inter.variable} bg-white antialiased`}>
         <AntdRegistry>
           <ReactQueryProvider>
             <ModalStoreProvider>

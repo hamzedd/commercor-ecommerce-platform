@@ -30,7 +30,7 @@ function PaymentStatusFail() {
           <button className="flex-1 rounded-lg bg-gray-200 px-6 py-3 font-semibold text-gray-800 transition-colors hover:bg-gray-300">
             {t("goBack")}
           </button>
-          <button className="flex-1 rounded-lg bg-blue-500 px-6 py-3 font-semibold text-white transition-colors hover:bg-blue-600">
+          <button className="flex-1 rounded-lg bg-[var(--store-accent)] px-6 py-3 font-semibold text-white transition-opacity hover:opacity-90">
             {t("tryAgain")}
           </button>
         </div>

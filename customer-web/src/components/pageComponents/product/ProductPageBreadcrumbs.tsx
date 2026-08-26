@@ -21,7 +21,7 @@ async function ProductPageBreadcrumbs({ productTranslation, product }: Props) {
     categories,
   });
   const linkClassName =
-    "rounded-sm text-stone-300 transition-colors hover:text-amber-300 focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:outline-none";
+    "rounded-sm text-stone-500 transition-colors hover:text-[var(--store-accent)] focus-visible:ring-2 focus-visible:ring-[var(--store-accent)] focus-visible:outline-none";
 
   return (
     <nav
@@ -58,7 +58,7 @@ async function ProductPageBreadcrumbs({ productTranslation, product }: Props) {
           </React.Fragment>
         );
       })}
-      <span className="truncate font-semibold text-white">
+      <span className="truncate font-semibold text-stone-950">
         {productTranslation.name}
       </span>
     </nav>
