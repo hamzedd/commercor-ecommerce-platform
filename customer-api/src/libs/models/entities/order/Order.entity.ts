@@ -27,10 +27,10 @@ export class OrderEntity extends BaseEntity {
   @Column()
   addressId: string;
 
-  @Column()
+  @Column({ type: 'decimal', precision: 12, scale: 2 })
   productAmount: number;
 
-  @Column()
+  @Column({ type: 'decimal', precision: 12, scale: 2 })
   deliveryAmount: number;
 
   @Column()
