@@ -19,6 +19,7 @@ import { useMemo, useState } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router";
 import { useAuth } from "../../../contexts/userContext/userContext.ts";
 import defaultLayoutLinksList from "./componets/defaultLayoutLinksList.tsx";
+import AssistantWidget from "../../assistant/AssistantWidget.tsx";
 
 const { Content, Sider } = Layout;
 
@@ -194,6 +195,7 @@ function DefaultLayout() {
           <Outlet />
         </Content>
       </Layout>
+      <AssistantWidget />
     </Layout>
   );
 }

@@ -20,5 +20,6 @@ import { ProductTranslationEntity } from '@/src/libs/models/entities/product/Pro
   ],
   controllers: [ProductsController],
   providers: [ProductsService],
+  exports: [ProductsService],
 })
 export class ProductsModule {}

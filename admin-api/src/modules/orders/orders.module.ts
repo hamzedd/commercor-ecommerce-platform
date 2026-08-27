@@ -9,5 +9,6 @@ import { OrderItemEntity } from '@/src/libs/models/entities/order/OrderItem.enti
   imports: [TypeOrmModule.forFeature([OrderEntity, OrderItemEntity])],
   controllers: [OrdersController],
   providers: [OrdersService],
+  exports: [OrdersService],
 })
 export class OrdersModule {}

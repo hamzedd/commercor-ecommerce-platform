@@ -24,6 +24,7 @@
     "seed:admin": "dotenv -e .env -- ts-node -r tsconfig-paths/register scripts/create-admin.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.121.0",
     "@nestjs/common": "11.0.16",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.1.8",
