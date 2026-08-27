@@ -18,5 +18,6 @@ import { ProductFilterOptionEntity } from '@/src/libs/models/entities/productFil
   ],
   controllers: [ProductsController],
   providers: [ProductsService],
+  exports: [ProductsService],
 })
 export class ProductsModule {}

@@ -165,5 +165,13 @@
   "noResultsFound": "Результаты не найдены",
   "tryDifferentKeywords": "Попробуйте другие ключевые слова или проверьте правописание",
   "result": "результат",
-  "results": "результатов"
+  "results": "результатов",
+  "assistantWidgetTitle": "Ассистент Commercor",
+  "assistantWidgetGreeting": "Привет! Я помогу найти товары, сравнить варианты или проверить заказ. Что вы ищете?",
+  "assistantInputPlaceholder": "Спросите о товарах, заказах...",
+  "assistantThinking": "Думаю...",
+  "assistantOpenLabel": "Чат с ассистентом",
+  "assistantCloseLabel": "Закрыть ассистента",
+  "assistantErrorMessage": "Извините, что-то пошло не так. Попробуйте снова.",
+  "assistantAddedToCart": "Добавлено в корзину."
 }

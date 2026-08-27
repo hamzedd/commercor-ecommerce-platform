@@ -25,3 +25,15 @@ export function notifyCartUpdated() {
 export function getCartItemsCount(): number {
   return getCart().reduce((total, item) => total + item.quantity, 0);
 }
+
+export function addToCart(productId: string, quantity: number) {
+  const cart = getCart();
+  const indexOfProduct = cart.findIndex((item) => item.productId === productId);
+  if (indexOfProduct >= 0) {
+    cart[indexOfProduct].quantity += quantity;
+  } else {
+    cart.push({ productId, quantity });
+  }
+  localStorage.setItem("cart", JSON.stringify(cart));
+  notifyCartUpdated();
+}

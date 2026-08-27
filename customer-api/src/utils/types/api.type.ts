@@ -3,3 +3,7 @@ import { CustomerEntity } from '@/src/libs/models/entities/customer/Customer.ent
 export type GuardedApiResponse = {
   user: CustomerEntity;
 } & Request;
+
+export type OptionallyGuardedApiResponse = {
+  user?: CustomerEntity;
+} & Request;

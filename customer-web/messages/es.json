@@ -165,5 +165,13 @@
   "noResultsFound": "No se encontraron resultados",
   "tryDifferentKeywords": "Intenta con diferentes palabras clave o verifica la ortografía",
   "result": "resultado",
-  "results": "resultados"
+  "results": "resultados",
+  "assistantWidgetTitle": "Asistente de Commercor",
+  "assistantWidgetGreeting": "¡Hola! Puedo ayudarte a encontrar productos, comparar opciones o revisar un pedido. ¿Qué estás buscando?",
+  "assistantInputPlaceholder": "Pregunta sobre productos, pedidos...",
+  "assistantThinking": "Pensando...",
+  "assistantOpenLabel": "Chatear con el asistente",
+  "assistantCloseLabel": "Cerrar asistente",
+  "assistantErrorMessage": "Lo sentimos, algo salió mal. Inténtalo de nuevo.",
+  "assistantAddedToCart": "Se añadió a tu carrito."
 }

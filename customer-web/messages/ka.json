@@ -165,5 +165,13 @@
   "noResultsFound": "შედეგები ვერ მოიძებნა",
   "tryDifferentKeywords": "სცადეთ სხვა საძიებო სიტყვები ან შეამოწმეთ მართლწერა",
   "result": "შედეგი",
-  "results": "შედეგები"
+  "results": "შედეგები",
+  "assistantWidgetTitle": "Commercor-ის ასისტენტი",
+  "assistantWidgetGreeting": "გამარჯობა! დაგეხმარებით პროდუქტების პოვნაში, შედარებაში ან შეკვეთის სტატუსის შემოწმებაში. რას ეძებთ?",
+  "assistantInputPlaceholder": "იკითხეთ პროდუქტების ან შეკვეთების შესახებ...",
+  "assistantThinking": "ფიქრობს...",
+  "assistantOpenLabel": "ჩატი ასისტენტთან",
+  "assistantCloseLabel": "ასისტენტის დახურვა",
+  "assistantErrorMessage": "უკაცრავად, რაღაც შეცდომა მოხდა. სცადეთ თავიდან.",
+  "assistantAddedToCart": "დაემატა თქვენს კალათას."
 }

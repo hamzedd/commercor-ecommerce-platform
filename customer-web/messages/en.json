@@ -165,5 +165,13 @@
   "noResultsFound": "No results found",
   "tryDifferentKeywords": "Try different keywords or check your spelling",
   "result": "result",
-  "results": "results"
+  "results": "results",
+  "assistantWidgetTitle": "Commercor Assistant",
+  "assistantWidgetGreeting": "Hi! I can help you find products, compare options, or check an order. What are you looking for?",
+  "assistantInputPlaceholder": "Ask about products, orders...",
+  "assistantThinking": "Thinking...",
+  "assistantOpenLabel": "Chat with assistant",
+  "assistantCloseLabel": "Close assistant",
+  "assistantErrorMessage": "Sorry, something went wrong. Please try again.",
+  "assistantAddedToCart": "Added to your cart."
 }

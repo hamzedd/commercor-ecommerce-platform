@@ -11,5 +11,6 @@ import { CategoryTranslationsEntity } from '@/src/libs/models/entities/category/
   ],
   controllers: [CategoriesController],
   providers: [CategoriesService],
+  exports: [CategoriesService],
 })
 export class CategoriesModule {}

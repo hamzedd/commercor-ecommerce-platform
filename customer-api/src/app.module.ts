@@ -19,6 +19,7 @@ import { OrdersModule } from './modules/orders/orders.module';
 import { AddressesModule } from './modules/addresses/addresses.module';
 import { PaymentsModule } from '@/src/modules/payments/payments.module';
 import { CompanyDetailsModule } from '@/src/modules/companyDetails/companyDetails.module';
+import { AssistantModule } from '@/src/modules/assistant/assistant.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { CompanyDetailsModule } from '@/src/modules/companyDetails/companyDetail
     AddressesModule,
     PaymentsModule,
     CompanyDetailsModule,
+    AssistantModule,
   ],
   controllers: [],
   providers: [],
