@@ -25,5 +25,6 @@ import {PromotionEntity}from'@/src/libs/models/entities/promotion/Promotion.enti
   ],
   controllers: [OrdersController],
   providers: [OrdersService, PricingService],
+  exports: [OrdersService],
 })
 export class OrdersModule {}

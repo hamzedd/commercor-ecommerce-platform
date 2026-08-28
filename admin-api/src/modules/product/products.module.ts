@@ -28,5 +28,6 @@ import { RoleGuard } from '@/src/libs/guards/role.guard';
   ],
   controllers: [ProductsController],
   providers: [ProductsService, ProductVariantsService, AuthGuard, RoleGuard],
+  exports: [ProductsService],
 })
 export class ProductsModule {}

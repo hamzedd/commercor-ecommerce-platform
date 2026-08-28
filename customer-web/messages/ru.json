@@ -1,4 +1,12 @@
 {
+  "assistantWidgetTitle": "Ассистент Commercor",
+  "assistantWidgetGreeting": "Привет! Я помогу найти товары, сравнить варианты или проверить заказ. Что вы ищете?",
+  "assistantInputPlaceholder": "Спросите о товарах, заказах...",
+  "assistantThinking": "Думаю...",
+  "assistantOpenLabel": "Чат с ассистентом",
+  "assistantCloseLabel": "Закрыть ассистента",
+  "assistantErrorMessage": "Извините, что-то пошло не так. Попробуйте снова.",
+  "assistantAddedToCart": "Добавлено в корзину.",
   "yourSelection": "Ваш выбор",
   "shoppingCart": "Корзина",
   "cartDescription": "Проверьте товары и количество перед переходом к оформлению.",

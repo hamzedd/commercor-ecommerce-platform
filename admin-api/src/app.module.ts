@@ -36,6 +36,7 @@ import { PromotionsModule } from '@/src/modules/promotions/promotions.module';
 import { AnalyticsModule } from '@/src/modules/analytics/analytics.module';
 import { HealthController } from './health.controller';
 import { SystemModule } from './modules/system/system.module';
+import { AssistantModule } from './modules/assistant/assistant.module';
 
 @Module({
   imports: [
@@ -81,6 +82,7 @@ import { SystemModule } from './modules/system/system.module';
     PromotionsModule,
     AnalyticsModule,
     SystemModule,
+    AssistantModule,
   ],
   controllers: [HealthController],
   providers: [],

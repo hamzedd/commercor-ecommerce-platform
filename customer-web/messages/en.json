@@ -1,4 +1,12 @@
 {
+  "assistantWidgetTitle": "Commercor Assistant",
+  "assistantWidgetGreeting": "Hi! I can help you find products, compare options, or check an order. What are you looking for?",
+  "assistantInputPlaceholder": "Ask about products, orders...",
+  "assistantThinking": "Thinking...",
+  "assistantOpenLabel": "Chat with assistant",
+  "assistantCloseLabel": "Close assistant",
+  "assistantErrorMessage": "Sorry, something went wrong. Please try again.",
+  "assistantAddedToCart": "Added to your cart.",
   "yourSelection": "Your selection",
   "shoppingCart": "Shopping cart",
   "cartDescription": "Review your products and quantities before continuing to checkout.",

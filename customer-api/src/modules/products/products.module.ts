@@ -21,5 +21,6 @@ import {ProductReviewEntity}from'@/src/libs/models/entities/review/ProductReview
   ],
   controllers: [ProductsController],
   providers: [ProductsService,ProductReviewsService,AuthGuard],
+  exports: [ProductsService],
 })
 export class ProductsModule {}

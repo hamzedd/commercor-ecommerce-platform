@@ -29,6 +29,7 @@ import { InvoicesModule } from '@/src/modules/invoices/invoices.module';
 import { InventoryModule } from '@/src/modules/inventory/inventory.module';
 import { CartModule } from '@/src/modules/cart/cart.module';
 import { HealthController } from './health.controller';
+import { AssistantModule } from '@/src/modules/assistant/assistant.module';
 
 @Module({
   imports: [
@@ -67,6 +68,7 @@ import { HealthController } from './health.controller';
     InvoicesModule,
     InventoryModule,
     CartModule,
+    AssistantModule,
   ],
   controllers: [HealthController],
   providers: [],

@@ -3,6 +3,7 @@ import DefaultHeader from "@/src/components/ui/layouts/defaultLayout/components/
 import DefaultHeaderNav from "@/src/components/ui/layouts/defaultLayout/components/DefaultHeaderNav";
 import DefaultFooter from "@/src/components/ui/layouts/defaultLayout/components/DefaultFooter";
 import { StoreSettingsType } from "@/src/utils/types/storeSettings.type";
+import AssistantWidget from "@/src/components/ui/assistant/AssistantWidget";
 
 async function DefaultLayout({
   children,
@@ -19,6 +20,7 @@ async function DefaultLayout({
       </div>
       <div className="store-page">{children}</div>
       <DefaultFooter settings={settings} />
+      <AssistantWidget />
     </div>
   );
 }

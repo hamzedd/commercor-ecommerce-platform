@@ -33,5 +33,6 @@ import { CustomerEntity } from '@/src/libs/models/entities/customer/Customer.ent
   ],
   controllers: [OrdersController],
   providers: [OrdersService, FulfillmentService, AuthGuard, RoleGuard],
+  exports: [OrdersService],
 })
 export class OrdersModule {}

@@ -10,5 +10,6 @@ import{JwtModule}from'@nestjs/jwt';import{JWT_SECRET}from'@/src/utils/environmen
   imports: [JwtModule.register({secret:JWT_SECRET}),TypeOrmModule.forFeature([CustomerEntity, UserEntity,CustomerCrmProfileEntity,CustomerTagEntity,CustomerTagAssignmentEntity,CustomerCrmNoteEntity])],
   controllers: [CustomersController,CustomerTagsController],
   providers: [CustomersService,CustomerCrmService,AuthGuard,RoleGuard],
+  exports: [CustomersService],
 })
 export class CustomersModule {}

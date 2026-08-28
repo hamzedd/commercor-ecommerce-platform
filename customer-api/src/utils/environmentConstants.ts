@@ -97,6 +97,8 @@ if (PAYPAL_ENV === 'live' && process.env.PAYPAL_ALLOW_LIVE !== 'true') {
 export const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID || '';
 export const PAYPAL_CLIENT_SECRET = process.env.PAYPAL_CLIENT_SECRET || '';
 export const PAYPAL_WEBHOOK_ID = process.env.PAYPAL_WEBHOOK_ID || '';
+export const GROQ_API_KEY = process.env.GROQ_API_KEY;
+export const GROQ_MODEL = process.env.GROQ_MODEL || 'openai/gpt-oss-20b';
 
 const required = [
   'DB_HOST',
