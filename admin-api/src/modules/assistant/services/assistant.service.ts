@@ -1,10 +1,12 @@
 import { Injectable, ServiceUnavailableException } from '@nestjs/common';
-import Anthropic from '@anthropic-ai/sdk';
-import {
-  ANTHROPIC_API_KEY,
-  ANTHROPIC_MODEL,
-} from '@/src/utils/environmentConstants';
+import OpenAI from 'openai';
+import { GROQ_API_KEY, GROQ_MODEL } from '@/src/utils/environmentConstants';
 import { ASSISTANT_TOOLS } from '../assistant.tools';
+import {
+  AssistantContentBlock,
+  AssistantMessage,
+  AssistantToolUseBlock,
+} from '../assistant.types';
 import { AssistantToolsService } from './assistantTools.service';
 
 const SYSTEM_PROMPT = `You are the Commercor admin assistant, embedded in the staff dashboard.
@@ -16,11 +18,15 @@ const SYSTEM_PROMPT = `You are the Commercor admin assistant, embedded in the st
 - Keep replies short and to the point, formatted for a chat panel.`;
 
 const MAX_TOOL_ITERATIONS = 6;
+type GroqMessage = OpenAI.Chat.Completions.ChatCompletionMessageParam;
 
 @Injectable()
 export class AssistantService {
-  private readonly client: Anthropic | null = ANTHROPIC_API_KEY
-    ? new Anthropic({ apiKey: ANTHROPIC_API_KEY })
+  private readonly client: OpenAI | null = GROQ_API_KEY
+    ? new OpenAI({
+        apiKey: GROQ_API_KEY,
+        baseURL: 'https://api.groq.com/openai/v1',
+      })
     : null;
 
   constructor(private readonly tools: AssistantToolsService) {}
@@ -29,44 +35,55 @@ export class AssistantService {
     messages,
     userRole,
   }: {
-    messages: Anthropic.MessageParam[];
+    messages: AssistantMessage[];
     userRole?: string;
-  }): Promise<{ content: Anthropic.ContentBlock[] }> {
+  }): Promise<{ content: AssistantContentBlock[] }> {
     if (!this.client) {
       throw new ServiceUnavailableException('The assistant is not configured.');
     }
+    const conversation: GroqMessage[] = [
+      { role: 'system', content: SYSTEM_PROMPT },
+      ...this.toGroqMessages(messages),
+    ];
 
-    const conversation: Anthropic.MessageParam[] = [...messages];
+    try {
+      for (let iteration = 0; iteration < MAX_TOOL_ITERATIONS; iteration++) {
+        const response = await this.client.chat.completions.create({
+          model: GROQ_MODEL,
+          max_tokens: 4096,
+          tools: ASSISTANT_TOOLS.map((tool) => ({
+            type: 'function' as const,
+            function: {
+              name: tool.name,
+              description: tool.description,
+              parameters: tool.input_schema,
+            },
+          })),
+          tool_choice: 'auto',
+          parallel_tool_calls: false,
+          messages: conversation,
+        });
+        const choice = response.choices[0];
+        if (!choice) throw new Error('Groq returned no completion choice');
+        const toolCalls = choice.message.tool_calls || [];
+        if (toolCalls.length === 0) {
+          return { content: this.toContentBlocks(choice.message) };
+        }
 
-    for (let iteration = 0; iteration < MAX_TOOL_ITERATIONS; iteration++) {
-      const response = await this.client.messages.create({
-        model: ANTHROPIC_MODEL,
-        max_tokens: 4096,
-        system: SYSTEM_PROMPT,
-        tools: ASSISTANT_TOOLS,
-        output_config: { effort: 'medium' },
-        messages: conversation,
-      });
-
-      if (response.stop_reason !== 'tool_use') {
-        return { content: response.content };
+        conversation.push(choice.message);
+        for (const call of toolCalls) {
+          const block = this.toToolUseBlock(call);
+          conversation.push({
+            role: 'tool',
+            tool_call_id: call.id,
+            content: JSON.stringify(await this.executeTool(block, userRole)),
+          });
+        }
       }
-
-      const toolUseBlocks = response.content.filter(
-        (block): block is Anthropic.ToolUseBlock => block.type === 'tool_use',
+    } catch {
+      throw new ServiceUnavailableException(
+        'The assistant is temporarily unavailable. Please try again.',
       );
-
-      conversation.push({ role: 'assistant', content: response.content });
-
-      const toolResults: Anthropic.ToolResultBlockParam[] = await Promise.all(
-        toolUseBlocks.map(async (block) => ({
-          type: 'tool_result' as const,
-          tool_use_id: block.id,
-          content: JSON.stringify(await this.executeTool(block, userRole)),
-        })),
-      );
-
-      conversation.push({ role: 'user', content: toolResults });
     }
 
     throw new ServiceUnavailableException(
@@ -74,8 +91,39 @@ export class AssistantService {
     );
   }
 
-  private async executeTool(block: Anthropic.ToolUseBlock, userRole?: string) {
-    const input = block.input as Record<string, unknown>;
+  private toGroqMessages(messages: AssistantMessage[]): GroqMessage[] {
+    return messages.map((message) => ({
+      role: message.role,
+      content:
+        typeof message.content === 'string'
+          ? message.content
+          : message.content
+              .filter((block) => block.type === 'text')
+              .map((block) => (block.type === 'text' ? block.text : ''))
+              .join('\n'),
+    }));
+  }
+
+  private toContentBlocks(
+    message: OpenAI.Chat.Completions.ChatCompletionMessage,
+  ): AssistantContentBlock[] {
+    return message.content ? [{ type: 'text', text: message.content }] : [];
+  }
+
+  private toToolUseBlock(
+    call: OpenAI.Chat.Completions.ChatCompletionMessageToolCall,
+  ): AssistantToolUseBlock {
+    let input: Record<string, unknown> = {};
+    try {
+      input = JSON.parse(call.function.arguments) as Record<string, unknown>;
+    } catch {
+      input = {};
+    }
+    return { type: 'tool_use', id: call.id, name: call.function.name, input };
+  }
+
+  private async executeTool(block: AssistantToolUseBlock, userRole?: string) {
+    const input = block.input;
     switch (block.name) {
       case 'search_products':
         return this.tools.searchProducts({

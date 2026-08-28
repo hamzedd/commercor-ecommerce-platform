@@ -11,5 +11,5 @@ export const MINIO_ENDPOINT = process.env.MINIO_ENDPOINT;
 export const MINIO_PORT = process.env.MINIO_PORT;
 export const MINIO_ACCESS_KEY = process.env.MINIO_ACCESS_KEY;
 export const MINIO_SECRET_KEY = process.env.MINIO_SECRET_KEY;
-export const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
-export const ANTHROPIC_MODEL = process.env.ANTHROPIC_MODEL || 'claude-opus-5';
+export const GROQ_API_KEY = process.env.GROQ_API_KEY;
+export const GROQ_MODEL = process.env.GROQ_MODEL || 'openai/gpt-oss-20b';

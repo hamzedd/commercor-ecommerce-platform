@@ -1,15 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsOptional, IsString } from 'class-validator';
-import type Anthropic from '@anthropic-ai/sdk';
+import type { AssistantMessage } from '../assistant.types';
 
 export class AssistantChatDto {
   @ApiProperty({
     description:
-      'Full conversation history, in Anthropic Messages API format (role + content blocks). ' +
+      'Full conversation history (role + content blocks). ' +
       'The client should resend the entire history on every call and append the previous response before the next turn.',
   })
   @IsArray()
-  messages: Anthropic.MessageParam[];
+  messages: AssistantMessage[];
 
   @ApiProperty({
     required: false,

@@ -1,4 +1,4 @@
-import type Anthropic from '@anthropic-ai/sdk';
+import type { AssistantTool } from './assistant.types';
 
 /**
  * Tools the assistant can call. Server tools (read data) are executed here in
@@ -13,7 +13,7 @@ export const CLIENT_TOOL_NAMES = new Set([
   'view_category',
 ]);
 
-export const ASSISTANT_TOOLS: Anthropic.Tool[] = [
+export const ASSISTANT_TOOLS: AssistantTool[] = [
   {
     name: 'search_products',
     description:

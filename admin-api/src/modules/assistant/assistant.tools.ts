@@ -1,11 +1,11 @@
-import type Anthropic from '@anthropic-ai/sdk';
+import type { AssistantTool } from './assistant.types';
 
 /**
  * All tools here are executed server-side (unlike the customer-web
  * assistant, the admin dashboard has no client-only state to hand tool
  * calls back to) - see assistantTools.service.ts for the implementations.
  */
-export const ASSISTANT_TOOLS: Anthropic.Tool[] = [
+export const ASSISTANT_TOOLS: AssistantTool[] = [
   {
     name: 'search_products',
     description: 'Search the product catalog by name.',

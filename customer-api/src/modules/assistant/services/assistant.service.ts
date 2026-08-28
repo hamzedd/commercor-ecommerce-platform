@@ -1,10 +1,12 @@
 import { Injectable, ServiceUnavailableException } from '@nestjs/common';
-import Anthropic from '@anthropic-ai/sdk';
-import {
-  ANTHROPIC_API_KEY,
-  ANTHROPIC_MODEL,
-} from '@/src/utils/environmentConstants';
+import OpenAI from 'openai';
+import { GROQ_API_KEY, GROQ_MODEL } from '@/src/utils/environmentConstants';
 import { ASSISTANT_TOOLS, CLIENT_TOOL_NAMES } from '../assistant.tools';
+import {
+  AssistantContentBlock,
+  AssistantMessage,
+  AssistantToolUseBlock,
+} from '../assistant.types';
 import { AssistantToolsService } from './assistantTools.service';
 
 const SYSTEM_PROMPT = `You are the Commercor shopping assistant, embedded in the storefront chat widget.
@@ -16,16 +18,20 @@ const SYSTEM_PROMPT = `You are the Commercor shopping assistant, embedded in the
 - If get_order_status returns a "not_authenticated" error, tell the customer to sign in instead of guessing.`;
 
 const MAX_TOOL_ITERATIONS = 6;
+type GroqMessage = OpenAI.Chat.Completions.ChatCompletionMessageParam;
 
 export type AssistantChatResult = {
-  content: Anthropic.ContentBlock[];
-  stopReason: Anthropic.Message['stop_reason'];
+  content: AssistantContentBlock[];
+  stopReason: string | null;
 };
 
 @Injectable()
 export class AssistantService {
-  private readonly client: Anthropic | null = ANTHROPIC_API_KEY
-    ? new Anthropic({ apiKey: ANTHROPIC_API_KEY })
+  private readonly client: OpenAI | null = GROQ_API_KEY
+    ? new OpenAI({
+        apiKey: GROQ_API_KEY,
+        baseURL: 'https://api.groq.com/openai/v1',
+      })
     : null;
 
   constructor(private readonly tools: AssistantToolsService) {}
@@ -35,7 +41,7 @@ export class AssistantService {
     locale,
     customerId,
   }: {
-    messages: Anthropic.MessageParam[];
+    messages: AssistantMessage[];
     locale?: string;
     customerId?: string;
   }): Promise<AssistantChatResult> {
@@ -43,51 +49,62 @@ export class AssistantService {
       throw new ServiceUnavailableException('The assistant is not configured.');
     }
 
-    const conversation: Anthropic.MessageParam[] = [...messages];
     const system = locale
       ? `${SYSTEM_PROMPT}\n\nRespond in the customer's locale: ${locale}.`
       : SYSTEM_PROMPT;
+    const conversation: GroqMessage[] = [
+      { role: 'system', content: system },
+      ...this.toGroqMessages(messages),
+    ];
 
-    for (let iteration = 0; iteration < MAX_TOOL_ITERATIONS; iteration++) {
-      const response = await this.client.messages.create({
-        model: ANTHROPIC_MODEL,
-        max_tokens: 4096,
-        system,
-        tools: ASSISTANT_TOOLS,
-        output_config: { effort: 'medium' },
-        messages: conversation,
-      });
+    try {
+      for (let iteration = 0; iteration < MAX_TOOL_ITERATIONS; iteration++) {
+        const response = await this.client.chat.completions.create({
+          model: GROQ_MODEL,
+          max_tokens: 4096,
+          tools: ASSISTANT_TOOLS.map((tool) => ({
+            type: 'function' as const,
+            function: {
+              name: tool.name,
+              description: tool.description,
+              parameters: tool.input_schema,
+            },
+          })),
+          tool_choice: 'auto',
+          parallel_tool_calls: false,
+          messages: conversation,
+        });
+        const choice = response.choices[0];
+        if (!choice) throw new Error('Groq returned no completion choice');
 
-      if (response.stop_reason !== 'tool_use') {
-        return { content: response.content, stopReason: response.stop_reason };
+        const content = this.toContentBlocks(choice.message);
+        const toolCalls = choice.message.tool_calls || [];
+        if (toolCalls.length === 0) {
+          return { content, stopReason: choice.finish_reason };
+        }
+
+        if (
+          toolCalls.some((call) => CLIENT_TOOL_NAMES.has(call.function.name))
+        ) {
+          return { content, stopReason: 'tool_use' };
+        }
+
+        conversation.push(choice.message);
+        for (const call of toolCalls) {
+          const block = this.toToolUseBlock(call);
+          conversation.push({
+            role: 'tool',
+            tool_call_id: call.id,
+            content: JSON.stringify(
+              await this.executeServerTool(block, locale, customerId),
+            ),
+          });
+        }
       }
-
-      const toolUseBlocks = response.content.filter(
-        (block): block is Anthropic.ToolUseBlock => block.type === 'tool_use',
+    } catch {
+      throw new ServiceUnavailableException(
+        'The assistant is temporarily unavailable. Please try again.',
       );
-
-      const hasClientTool = toolUseBlocks.some((block) =>
-        CLIENT_TOOL_NAMES.has(block.name),
-      );
-      if (hasClientTool) {
-        // Hand the turn back to the frontend to execute the client-side
-        // tool(s); it will resend the conversation with the tool_result(s).
-        return { content: response.content, stopReason: response.stop_reason };
-      }
-
-      conversation.push({ role: 'assistant', content: response.content });
-
-      const toolResults: Anthropic.ToolResultBlockParam[] = await Promise.all(
-        toolUseBlocks.map(async (block) => ({
-          type: 'tool_result' as const,
-          tool_use_id: block.id,
-          content: JSON.stringify(
-            await this.executeServerTool(block, locale, customerId),
-          ),
-        })),
-      );
-
-      conversation.push({ role: 'user', content: toolResults });
     }
 
     throw new ServiceUnavailableException(
@@ -95,12 +112,78 @@ export class AssistantService {
     );
   }
 
+  private toGroqMessages(messages: AssistantMessage[]): GroqMessage[] {
+    const result: GroqMessage[] = [];
+    for (const message of messages) {
+      if (typeof message.content === 'string') {
+        result.push({ role: message.role, content: message.content });
+        continue;
+      }
+      const text = message.content
+        .filter((block) => block.type === 'text')
+        .map((block) => (block.type === 'text' ? block.text : ''))
+        .join('\n');
+      const toolUses = message.content.filter(
+        (block): block is AssistantToolUseBlock => block.type === 'tool_use',
+      );
+      if (message.role === 'assistant') {
+        result.push({
+          role: 'assistant',
+          content: text || null,
+          tool_calls: toolUses.map((block) => ({
+            id: block.id,
+            type: 'function' as const,
+            function: {
+              name: block.name,
+              arguments: JSON.stringify(block.input),
+            },
+          })),
+        });
+      } else {
+        if (text) result.push({ role: 'user', content: text });
+        for (const block of message.content) {
+          if (block.type === 'tool_result') {
+            result.push({
+              role: 'tool',
+              tool_call_id: block.tool_use_id,
+              content: block.content,
+            });
+          }
+        }
+      }
+    }
+    return result;
+  }
+
+  private toContentBlocks(
+    message: OpenAI.Chat.Completions.ChatCompletionMessage,
+  ): AssistantContentBlock[] {
+    const content: AssistantContentBlock[] = [];
+    if (message.content) content.push({ type: 'text', text: message.content });
+    for (const call of message.tool_calls || []) {
+      content.push(this.toToolUseBlock(call));
+    }
+    return content;
+  }
+
+  private toToolUseBlock(
+    call: OpenAI.Chat.Completions.ChatCompletionMessageToolCall,
+  ): AssistantToolUseBlock {
+    let input: Record<string, unknown> = {};
+    try {
+      input = JSON.parse(call.function.arguments) as Record<string, unknown>;
+    } catch {
+      input = {};
+    }
+    return { type: 'tool_use', id: call.id, name: call.function.name, input };
+  }
+
   private async executeServerTool(
-    block: Anthropic.ToolUseBlock,
+    block: AssistantToolUseBlock,
     locale?: string,
     customerId?: string,
   ) {
-    const input = block.input as Record<string, unknown>;
+    const input = block.input;
     switch (block.name) {
       case 'search_products':
         return this.tools.searchProducts(
