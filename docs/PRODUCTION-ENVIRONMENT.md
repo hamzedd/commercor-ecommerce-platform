@@ -76,6 +76,13 @@ The API fails startup when PayPal is selected without complete credentials. Do n
 | `ABANDONED_CART_MINUTES` | no | `60` | Inactivity threshold. |
 | `ABANDONED_CART_EMAIL_COOLDOWN_HOURS` | no | `24` | Recovery-email cooldown. |
 
+## AI assistants (Groq)
+
+| Variable | Required | Example format | Purpose and security notes |
+|---|---:|---|---|
+| `GROQ_API_KEY` | no | Groq API key | Server-only. Powers both the admin and customer chat assistants; each API disables its assistant (503 response) rather than failing startup when unset. Never expose through `VITE_` or `NEXT_PUBLIC_*`. |
+| `GROQ_MODEL` | no | `openai/gpt-oss-20b` | Groq model id; defaults to `openai/gpt-oss-20b` when unset. |
+
 ## CRM and first administrator
 
 `CRM_NEW_CUSTOMER_DAYS`, `CRM_ACTIVE_DAYS`, `CRM_AT_RISK_DAYS`, `CRM_INACTIVE_DAYS`, `CRM_VIP_MIN_SPEND`, and `CRM_VIP_MIN_ORDERS` tune segmentation; defaults are documented in `.env.production.example`.

@@ -38,9 +38,11 @@ export class AssistantService {
   async chat({
     messages,
     userRole,
+    userId,
   }: {
     messages: AssistantMessage[];
     userRole?: string;
+    userId?: string;
   }): Promise<{ content: AssistantContentBlock[] }> {
     if (!GROQ_API_KEY) {
       throw new ServiceUnavailableException('The assistant is not configured.');
@@ -80,7 +82,9 @@ export class AssistantService {
           conversation.push({
             role: 'tool',
             tool_call_id: call.id,
-            content: JSON.stringify(await this.executeTool(block, userRole)),
+            content: JSON.stringify(
+              await this.executeTool(block, userRole, userId),
+            ),
           });
         }
       }
@@ -122,7 +126,11 @@ export class AssistantService {
     return { type: 'tool_use', id: call.id, name: call.function.name, input };
   }
 
-  private async executeTool(block: AssistantToolUseBlock, userRole?: string) {
+  private async executeTool(
+    block: AssistantToolUseBlock,
+    userRole?: string,
+    userId?: string,
+  ) {
     const input = block.input;
     switch (block.name) {
       case 'search_products':
@@ -136,21 +144,28 @@ export class AssistantService {
         return this.tools.updateProductStock(
           { id: input.id as string, stock: input.stock as number },
           userRole,
+          userId,
         );
       case 'list_orders':
-        return this.tools.listOrders({
-          status: input.status as string | undefined,
-          limit: input.limit as number | undefined,
-        });
+        return this.tools.listOrders(
+          {
+            status: input.status as string | undefined,
+            limit: input.limit as number | undefined,
+          },
+          userRole,
+        );
       case 'get_order_details':
-        return this.tools.getOrderDetails({ id: input.id as string });
+        return this.tools.getOrderDetails({ id: input.id as string }, userRole);
       case 'get_sales_summary':
-        return this.tools.getSalesSummary();
+        return this.tools.getSalesSummary(userRole);
       case 'search_customers':
-        return this.tools.searchCustomers({
-          query: input.query as string,
-          limit: input.limit as number | undefined,
-        });
+        return this.tools.searchCustomers(
+          {
+            query: input.query as string,
+            limit: input.limit as number | undefined,
+          },
+          userRole,
+        );
       default:
         return {
           error: 'unknown_tool',

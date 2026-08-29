@@ -19,6 +19,7 @@ export class AssistantController {
     return this.assistantService.chat({
       messages: data.messages,
       userRole: req?.user?.role,
+      userId: req?.user?.id,
     });
   }
 }

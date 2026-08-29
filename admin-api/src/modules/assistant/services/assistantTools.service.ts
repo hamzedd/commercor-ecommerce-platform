@@ -1,20 +1,39 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Like, Repository } from 'typeorm';
 import { ProductEntity } from '@/src/libs/models/entities/product/Product.entity';
 import { ProductsService } from '@/src/modules/product/services/products.service';
 import { OrdersService } from '@/src/modules/orders/services/orders.service';
 import { CustomersService } from '@/src/modules/customers/services/customers.service';
+import { InventoryService } from '@/src/modules/inventory/inventory.service';
 import { UserRoleEnum } from '@/src/utils/enums/UserEnums';
-
-const STOCK_MANAGER_ROLES: string[] = [
-  UserRoleEnum.ADMIN,
-  UserRoleEnum.STOCK_MANAGER,
-];
 
 function clampLimit(limit: number | undefined, fallback = 10, max = 25) {
   return Math.min(Math.max(limit ?? fallback, 1), max);
 }
+
+// Mirrors the @Role(...) restrictions on the equivalent REST endpoints
+// (OrdersController, CustomersController, AnalyticsController/DashboardController)
+// so the assistant can never surface data a staff member's role couldn't
+// already reach through the normal dashboard.
+const ORDER_READ_ROLES: string[] = [UserRoleEnum.ADMIN, UserRoleEnum.SALES];
+const CUSTOMER_SEARCH_ROLES: string[] = [
+  UserRoleEnum.ADMIN,
+  UserRoleEnum.SALES,
+  UserRoleEnum.COMPANY,
+];
+const FORBIDDEN_ORDERS = {
+  error: 'forbidden',
+  message: 'Only ADMIN or SALES staff can view orders.',
+};
+const FORBIDDEN_CUSTOMERS = {
+  error: 'forbidden',
+  message: 'Only ADMIN, SALES, or COMPANY staff can search customers.',
+};
+const FORBIDDEN_SALES_SUMMARY = {
+  error: 'forbidden',
+  message: 'Only ADMIN staff can view the sales summary.',
+};
 
 @Injectable()
 export class AssistantToolsService {
@@ -24,6 +43,7 @@ export class AssistantToolsService {
     private readonly productsService: ProductsService,
     private readonly ordersService: OrdersService,
     private readonly customersService: CustomersService,
+    private readonly inventoryService: InventoryService,
   ) {}
 
   async searchProducts(input: { query: string; limit?: number }) {
@@ -66,26 +86,41 @@ export class AssistantToolsService {
   async updateProductStock(
     input: { id: string; stock: number },
     role?: string,
+    userId?: string,
   ) {
-    if (!role || !STOCK_MANAGER_ROLES.includes(role)) {
+    if (role !== UserRoleEnum.ADMIN) {
       return {
         error: 'forbidden',
-        message: 'Only ADMIN or STOCK_MANAGER staff can update stock.',
+        message: 'Only ADMIN staff can update stock.',
       };
     }
-    const result = await this.productRepository.update(input.id, {
-      stock: input.stock,
-    });
-    if (!result.affected) {
-      return {
-        error: 'not_found',
-        message: `No product found with id "${input.id}".`,
-      };
+    try {
+      const result = await this.inventoryService.adjust(
+        userId as string,
+        {
+          productId: input.id,
+          stock: input.stock,
+          reason: 'Updated via Commercor admin AI assistant',
+        },
+        true,
+      );
+      return { success: true, id: input.id, stock: result.stock };
+    } catch (err) {
+      if (err instanceof BadRequestException) {
+        const message = err.message;
+        return {
+          error: message.includes('not found')
+            ? 'not_found'
+            : 'invalid_request',
+          message,
+        };
+      }
+      throw err;
     }
-    return { success: true, id: input.id, stock: input.stock };
   }
 
-  async listOrders(input: { status?: string; limit?: number }) {
+  async listOrders(input: { status?: string; limit?: number }, role?: string) {
+    if (!role || !ORDER_READ_ROLES.includes(role)) return FORBIDDEN_ORDERS;
     const orders = await this.ordersService.getAllOrders();
     const filtered = input.status
       ? orders.filter((order) => order.status === input.status)
@@ -107,7 +142,8 @@ export class AssistantToolsService {
     };
   }
 
-  async getOrderDetails(input: { id: string }) {
+  async getOrderDetails(input: { id: string }, role?: string) {
+    if (!role || !ORDER_READ_ROLES.includes(role)) return FORBIDDEN_ORDERS;
     try {
       const order = await this.ordersService.getOrderById(input.id);
       return {
@@ -135,7 +171,8 @@ export class AssistantToolsService {
     }
   }
 
-  async getSalesSummary() {
+  async getSalesSummary(role?: string) {
+    if (role !== UserRoleEnum.ADMIN) return FORBIDDEN_SALES_SUMMARY;
     const orders = await this.ordersService.getAllOrders();
     const revenue = orders.reduce(
       (sum, order) =>
@@ -156,7 +193,12 @@ export class AssistantToolsService {
     };
   }
 
-  async searchCustomers(input: { query: string; limit?: number }) {
+  async searchCustomers(
+    input: { query: string; limit?: number },
+    role?: string,
+  ) {
+    if (!role || !CUSTOMER_SEARCH_ROLES.includes(role))
+      return FORBIDDEN_CUSTOMERS;
     const customers = await this.customersService.getCustomers();
     const query = input.query.toLowerCase();
     const matches = customers.filter(

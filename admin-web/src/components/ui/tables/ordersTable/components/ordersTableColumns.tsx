@@ -12,8 +12,10 @@ export default [
     title: "Address",
     dataIndex: ["address"],
     key: "address",
-    render: (address: AddressType) =>
-      address.country + ", " + address.city + ", " + address.street,
+    render: (address: AddressType | undefined | null) =>
+      address
+        ? `${address.country}, ${address.city}, ${address.street}`
+        : "Not available",
   },
   {
     title: "Status",

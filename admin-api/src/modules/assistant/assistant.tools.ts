@@ -35,7 +35,7 @@ export const ASSISTANT_TOOLS: AssistantTool[] = [
   {
     name: 'update_product_stock',
     description:
-      "Set a product's stock quantity. Only call this once the staff member has clearly confirmed the product and the new quantity. Restricted to ADMIN and STOCK_MANAGER roles.",
+      "Set a product's stock quantity. Only call this once the staff member has clearly confirmed the product and the new quantity. Restricted to the ADMIN role, same as the inventory management page.",
     input_schema: {
       type: 'object',
       properties: {

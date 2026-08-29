@@ -128,13 +128,15 @@ function OrderPage() {
         <Card title="Customer Information" bordered={false}>
           <Descriptions column={{ xs: 1, sm: 2 }}>
             <Descriptions.Item label="Name">
-              {orderData.customer.firstName} {orderData.customer.lastName}
+              {orderData.customer
+                ? `${orderData.customer.firstName} ${orderData.customer.lastName}`
+                : "Not available"}
             </Descriptions.Item>
             <Descriptions.Item label="Email">
-              {orderData.customer.email}
+              {orderData.customer?.email || "Not available"}
             </Descriptions.Item>
             <Descriptions.Item label="Username">
-              {orderData.customer.username}
+              {orderData.customer?.username || "Not available"}
             </Descriptions.Item>
           </Descriptions>
         </Card>
@@ -143,19 +145,19 @@ function OrderPage() {
         <Card title="Delivery Address" bordered={false}>
           <Descriptions column={{ xs: 1, sm: 2 }}>
             <Descriptions.Item label="Country">
-              {orderData.address.country}
+              {orderData.address?.country || "Not available"}
             </Descriptions.Item>
             <Descriptions.Item label="City">
-              {orderData.address.city}
+              {orderData.address?.city || "Not available"}
             </Descriptions.Item>
             <Descriptions.Item label="Street">
-              {orderData.address.street}
+              {orderData.address?.street || "Not available"}
             </Descriptions.Item>
             <Descriptions.Item label="Details">
-              {orderData.address.detail}
+              {orderData.address?.detail}
             </Descriptions.Item>
             <Descriptions.Item label="Contact Phone">
-              {orderData.address.phoneNumber}
+              {orderData.address?.phoneNumber || "Not available"}
             </Descriptions.Item>
           </Descriptions>
         </Card>
@@ -164,40 +166,44 @@ function OrderPage() {
         <Card title="Payment Information" bordered={false}>
           <Descriptions column={{ xs: 1, sm: 2 }}>
             <Descriptions.Item label="Payment ID">
-              {orderData.payment.id}
+              {orderData.payment?.id || "Not available"}
             </Descriptions.Item>
             <Descriptions.Item label="Status">
-              <Tag color={getPaymentStatusColor(orderData.payment.status)}>
-                {orderData.payment.status.toUpperCase()}
-              </Tag>
+              {orderData.payment ? (
+                <Tag color={getPaymentStatusColor(orderData.payment.status)}>
+                  {orderData.payment.status.toUpperCase()}
+                </Tag>
+              ) : (
+                "Not available"
+              )}
             </Descriptions.Item>
             <Descriptions.Item label="Expected Amount">
-              {orderData.payment.totalAmount.toFixed(2)}
+              {orderData.payment?.totalAmount.toFixed(2) ?? "Not available"}
             </Descriptions.Item>
             <Descriptions.Item label="Paid Amount">
-              {orderData.payment.paidAmount == null
+              {orderData.payment?.paidAmount == null
                 ? "Not paid"
                 : `${orderData.payment.paidAmount.toFixed(2)} ${orderData.payment.currencyCode || ""}`}
             </Descriptions.Item>
             <Descriptions.Item label="Refunded Amount">
-              {orderData.payment.refundedAmount.toFixed(2)}
+              {orderData.payment?.refundedAmount.toFixed(2) ?? "Not available"}
             </Descriptions.Item>
             <Descriptions.Item label="Provider">
-              {orderData.payment.provider || "Not assigned"}
+              {orderData.payment?.provider || "Not assigned"}
             </Descriptions.Item>
             <Descriptions.Item label="Transaction Reference">
-              {orderData.payment.externalTransactionId || "Not available"}
+              {orderData.payment?.externalTransactionId || "Not available"}
             </Descriptions.Item>
             <Descriptions.Item label="Provider Order Reference">
-              {orderData.payment.providerPaymentId || "Not available"}
+              {orderData.payment?.providerPaymentId || "Not available"}
             </Descriptions.Item>
             <Descriptions.Item label="Expires At">
-              {orderData.payment.expiresAt || "Not applicable"}
+              {orderData.payment?.expiresAt || "Not applicable"}
             </Descriptions.Item>
             <Descriptions.Item label="Cancellation / Failure Reason">
-              {orderData.payment.cancellationReason || "Not available"}
+              {orderData.payment?.cancellationReason || "Not available"}
             </Descriptions.Item>
-            {orderData.payment.createdAt && (
+            {orderData.payment?.createdAt && (
               <Descriptions.Item label="Payment Date">
                 {orderData.payment.createdAt}
               </Descriptions.Item>

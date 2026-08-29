@@ -33,8 +33,12 @@ export default function ProductReviews({ productId }: { productId: string }) {
   const [notice, setNotice] = useState("");
 
   const load = () => {
-    getReviews(productId).then((r) => setReviews(r.data));
-    getReviewSummary(productId).then(setSummary);
+    getReviews(productId)
+      .then((r) => setReviews(r.data))
+      .catch(() => {});
+    getReviewSummary(productId)
+      .then(setSummary)
+      .catch(() => {});
     getReviewEligibility(productId)
       .then((result) => {
         setEligibility(result);

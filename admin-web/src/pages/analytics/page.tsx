@@ -67,15 +67,27 @@ function Kpi({ title, m }: { title: string; m?: Metric }) {
 export default function AnalyticsPage() {
   const [preset, setPreset] = useState("last_30_days"),
     [dates, setDates] = useState<any>(),
-    [data, setData] = useState<Analytics>();
+    [data, setData] = useState<Analytics>(),
+    [error, setError] = useState(false);
   useEffect(() => {
     const params = {
       preset,
       start: dates?.[0]?.format("YYYY-MM-DD"),
       end: dates?.[1]?.format("YYYY-MM-DD"),
     };
-    getAnalytics(params).then(setData);
+    setError(false);
+    getAnalytics(params)
+      .then(setData)
+      .catch(() => setError(true));
   }, [preset, dates]);
+  if (error)
+    return (
+      <Card>
+        <Typography.Text type="danger">
+          Failed to load analytics. Please try again.
+        </Typography.Text>
+      </Card>
+    );
   if (!data) return <Card loading />;
   return (
     <div className="flex min-w-0 w-full max-w-full flex-col gap-6 overflow-hidden">

@@ -10,7 +10,10 @@ import type { ProductReview } from "@/src/utils/types/product.type";
 export default function ProfilePageReviewsTab() {
   const t = useTranslations(),
     [rows, setRows] = useState<ProductReview[]>([]);
-  const load = () => getMyReviews().then(setRows);
+  const load = () =>
+    getMyReviews()
+      .then(setRows)
+      .catch(() => {});
   useEffect(() => {
     void load();
   }, []);

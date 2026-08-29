@@ -44,23 +44,29 @@ export class AddressesController {
     return this.addressService.findAllAddresses(request.user.id);
   }
 
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
   @Get('detail/:id')
-  findOneAddress(@Param('id') id: string) {
-    return this.addressService.findOneAddress(id);
+  findOneAddress(@Req() request: AuthRequest, @Param('id') id: string) {
+    return this.addressService.findOneAddress(id, request.user.id);
   }
 
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
   @ApiBody({ type: AddressDto })
   @Put(':id')
-  updateAddress(@Param('id') id: string, @Body() dto: Partial<AddressDto>) {
-    return this.addressService.updateAddress(id, dto);
+  updateAddress(
+    @Req() request: AuthRequest,
+    @Param('id') id: string,
+    @Body() dto: Partial<AddressDto>,
+  ) {
+    return this.addressService.updateAddress(id, request.user.id, dto);
   }
 
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
   @Delete(':id')
-  removeAddress(@Param('id') id: string) {
-    return this.addressService.removeAddress(id);
+  removeAddress(@Req() request: AuthRequest, @Param('id') id: string) {
+    return this.addressService.removeAddress(id, request.user.id);
   }
 }

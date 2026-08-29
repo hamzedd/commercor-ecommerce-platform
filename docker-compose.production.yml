@@ -73,6 +73,8 @@ services:
       CRM_INACTIVE_DAYS: ${CRM_INACTIVE_DAYS:-180}
       CRM_VIP_MIN_SPEND: ${CRM_VIP_MIN_SPEND:-1000}
       CRM_VIP_MIN_ORDERS: ${CRM_VIP_MIN_ORDERS:-10}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      GROQ_MODEL: ${GROQ_MODEL:-openai/gpt-oss-20b}
     depends_on:
       postgres: { condition: service_healthy }
       minio: { condition: service_healthy }
@@ -110,6 +112,8 @@ services:
       PASSWORD_RESET_EXPIRY_MINUTES: ${PASSWORD_RESET_EXPIRY_MINUTES:-30}
       ABANDONED_CART_MINUTES: ${ABANDONED_CART_MINUTES:-60}
       ABANDONED_CART_EMAIL_COOLDOWN_HOURS: ${ABANDONED_CART_EMAIL_COOLDOWN_HOURS:-24}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      GROQ_MODEL: ${GROQ_MODEL:-openai/gpt-oss-20b}
     depends_on:
       postgres: { condition: service_healthy }
     healthcheck:

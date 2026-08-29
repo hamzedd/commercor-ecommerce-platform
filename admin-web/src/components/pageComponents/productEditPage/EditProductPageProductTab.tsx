@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router";
-import { Form, message, Spin } from "antd";
+import { Alert, Form, message, Spin } from "antd";
 import { useEffect, useState } from "react";
 import type { ProductType } from "../../../utils/types/productTypes.ts";
 import {
@@ -17,6 +17,7 @@ function EditProductPageProductTab({ productId }: Props) {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [initialValues, setInitialValues] = useState<ProductType>();
+  const [loadError, setLoadError] = useState(false);
 
   const onFinish = async () => {
     setLoading(true);
@@ -44,11 +45,21 @@ function EditProductPageProductTab({ productId }: Props) {
   useEffect(() => {
     const fetchProduct = async () => {
       if (!productId) return;
-      const productData = await getProductService(productId);
-      setInitialValues(productData);
+      setLoadError(false);
+      try {
+        const productData = await getProductService(productId);
+        setInitialValues(productData);
+      } catch {
+        setLoadError(true);
+      }
     };
     fetchProduct();
   }, [productId]);
+
+  if (loadError)
+    return (
+      <Alert type="error" message="Failed to load product. Please try again." />
+    );
 
   return initialValues ? (
     <ProductForm
