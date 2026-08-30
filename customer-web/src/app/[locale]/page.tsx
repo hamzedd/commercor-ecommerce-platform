@@ -7,7 +7,7 @@ import CategoryProductsList from "@/src/components/pageComponents/home/categoryP
 import FeaturedProducts from "@/src/components/pageComponents/home/featuredProducts/FeaturedProducts";
 import HomeCallToAction from "@/src/components/pageComponents/home/homeCta/HomeCallToAction";
 import HomeHeroSearch from "@/src/components/pageComponents/home/HomeHeroSearch";
-import HeroProductImage from "@/src/components/pageComponents/home/HeroProductImage";
+import HeroFeaturedMedia from "@/src/components/pageComponents/home/HeroFeaturedMedia";
 import Reveal from "@/src/components/ui/utis/reveal/Reveal";
 import { LocaleType } from "@/src/i18n/config";
 import { Link } from "@/src/i18n/navigation";
@@ -181,8 +181,9 @@ export default async function Home({ params }: Props) {
                     <span className="absolute top-3 left-3 z-10 rounded-full bg-gradient-to-r from-pink-500 to-violet-500 px-3 py-1 text-[11px] font-bold tracking-wide text-white uppercase shadow-lg">
                       {t("featured")}
                     </span>
-                    <HeroProductImage
-                      src={featuredImage}
+                    <HeroFeaturedMedia
+                      videoSrc="/videos/iphone-featured.mp4"
+                      imageSrc={featuredImage}
                       alt={featuredTranslation?.name || t("featuredProduct")}
                       fallback={t("featuredProduct")}
                     />
