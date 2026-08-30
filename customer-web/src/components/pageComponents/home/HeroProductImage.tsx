@@ -21,17 +21,19 @@ function HeroProductImage({ alt, fallback, src }: Props) {
   }
 
   return (
-    <Image
-      src={src}
-      alt={alt}
-      width={720}
-      height={720}
-      priority
-      loading="eager"
-      unoptimized
-      onError={() => setHasError(true)}
-      className="h-[330px] w-full object-contain p-8 sm:h-[390px]"
-    />
+    <div className="flex h-[330px] items-center justify-center p-6 sm:h-[390px] sm:p-10">
+      <Image
+        src={src}
+        alt={alt}
+        width={720}
+        height={720}
+        priority
+        loading="eager"
+        unoptimized
+        onError={() => setHasError(true)}
+        className="h-full w-full object-contain drop-shadow-md"
+      />
+    </div>
   );
 }
 

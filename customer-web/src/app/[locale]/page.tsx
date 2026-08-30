@@ -134,7 +134,7 @@ export default async function Home({ params }: Props) {
               <div className="mt-5 flex flex-wrap items-center gap-2.5 sm:mt-7 sm:gap-3">
                 <a
                   href="#categories"
-                  className="btn-shimmer group relative inline-flex items-center overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 via-violet-600 to-pink-600 bg-[length:200%_auto] bg-[position:0%_50%] px-4 py-3 text-sm font-bold text-white shadow-lg shadow-violet-900/40 transition-all duration-200 hover:scale-[1.02] hover:bg-[position:100%_50%] hover:shadow-xl hover:shadow-violet-800/50 focus-visible:ring-2 focus-visible:ring-violet-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b0821] focus-visible:outline-none sm:px-5"
+                  className="btn-shimmer group relative inline-flex items-center overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 via-violet-600 to-pink-600 bg-[length:200%_auto] bg-[position:0%_50%] px-4 py-3 text-sm font-semibold !text-white shadow-lg shadow-violet-900/40 transition-all duration-200 hover:scale-[1.02] hover:bg-[position:100%_50%] hover:shadow-xl hover:shadow-violet-800/50 focus-visible:ring-2 focus-visible:ring-violet-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b0821] focus-visible:outline-none sm:px-5"
                 >
                   {t("browseCategories")}
                 </a>
@@ -144,7 +144,7 @@ export default async function Home({ params }: Props) {
                       pathname: "/products/[slug]",
                       params: { slug: featuredTranslation.slug },
                     }}
-                    className="glass-panel rounded-xl px-4 py-3 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/15 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b0821] focus-visible:outline-none sm:px-5"
+                    className="glass-panel rounded-xl px-4 py-3 text-sm font-semibold !text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/15 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b0821] focus-visible:outline-none sm:px-5"
                   >
                     {t("shopFeatured")}
                   </Link>
@@ -173,7 +173,7 @@ export default async function Home({ params }: Props) {
             <div className="animate-product-float relative w-full max-w-[470px] overflow-hidden rounded-[2rem] bg-gradient-to-br from-blue-500/60 via-violet-500/60 to-pink-500/60 p-[1.5px] shadow-2xl shadow-violet-950/50 motion-reduce:animate-none">
               <div className="glass-panel rounded-[calc(2rem-1.5px)] border-0 p-4 sm:p-6">
                 {featuredImage ? (
-                  <div className="relative overflow-hidden rounded-2xl bg-white">
+                  <div className="relative overflow-hidden rounded-2xl bg-gradient-to-b from-white to-slate-50 shadow-inner ring-1 ring-black/5">
                     <span className="absolute top-3 left-3 z-10 rounded-full bg-gradient-to-r from-pink-500 to-violet-500 px-3 py-1 text-[11px] font-bold tracking-wide text-white uppercase shadow-lg">
                       {t("featured")}
                     </span>
