@@ -173,7 +173,7 @@ export default async function Home({ params }: Props) {
             <div className="animate-product-float relative w-full max-w-[470px] overflow-hidden rounded-[2rem] bg-gradient-to-br from-blue-500/60 via-violet-500/60 to-pink-500/60 p-[1.5px] shadow-2xl shadow-violet-950/50 motion-reduce:animate-none">
               <div className="glass-panel rounded-[calc(2rem-1.5px)] border-0 p-4 sm:p-6">
                 {featuredImage ? (
-                  <div className="relative overflow-hidden rounded-2xl bg-gradient-to-b from-white to-slate-50 shadow-inner ring-1 ring-black/5">
+                  <div className="relative">
                     <span className="absolute top-3 left-3 z-10 rounded-full bg-gradient-to-r from-pink-500 to-violet-500 px-3 py-1 text-[11px] font-bold tracking-wide text-white uppercase shadow-lg">
                       {t("featured")}
                     </span>
