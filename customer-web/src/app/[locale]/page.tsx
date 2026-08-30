@@ -181,12 +181,7 @@ export default async function Home({ params }: Props) {
                     <span className="absolute top-3 left-3 z-10 rounded-full bg-gradient-to-r from-pink-500 to-violet-500 px-3 py-1 text-[11px] font-bold tracking-wide text-white uppercase shadow-lg">
                       {t("featured")}
                     </span>
-                    <HeroFeaturedMedia
-                      videoSrc="/videos/iphone-featured.mp4"
-                      imageSrc={featuredImage}
-                      alt={featuredTranslation?.name || t("featuredProduct")}
-                      fallback={t("featuredProduct")}
-                    />
+                    <HeroFeaturedMedia />
                   </div>
                 ) : (
                   <div className="flex aspect-square items-center justify-center rounded-2xl bg-white/5">
