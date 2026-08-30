@@ -1,4 +1,4 @@
-import api from "@/src/service/apis/api";
+import fetchApi from "@/src/service/apis/fetchApi";
 import {
   defaultStoreSettings,
   StoreSettingsType,
@@ -6,7 +6,12 @@ import {
 
 export async function getStoreSettingsService(): Promise<StoreSettingsType> {
   try {
-    const { data } = await api.get<StoreSettingsType>("/store-settings");
+    const data = await fetchApi<StoreSettingsType>("/store-settings", {
+      next: {
+        revalidate: 60 * 5, // Revalidate every 5 minutes
+        tags: ["store-settings"],
+      },
+    });
     return { ...defaultStoreSettings, ...data };
   } catch {
     return defaultStoreSettings;

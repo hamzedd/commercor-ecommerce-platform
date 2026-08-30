@@ -32,6 +32,8 @@ Keep the production environment file on the deployment host with owner-only perm
 | `RATE_LIMIT_MAX` | no | `300` | General requests per resolved client IP/window. |
 | `AUTH_RATE_LIMIT_MAX` | no | `10` | Admin authentication limit. |
 | `SENSITIVE_RATE_LIMIT_MAX` | no | `20` | Customer auth/reset/payment-sensitive limit. |
+| `PUBLIC_READ_RATE_LIMIT_MAX` | no | `6000` | Customer API public storefront reads (categories, products, brands, store-settings, ...). SSR traffic funnels through one shared upstream IP for every visitor combined, so this must stay well above `RATE_LIMIT_MAX`. |
+| `ASSISTANT_RATE_LIMIT_MAX` | no | `20` | Customer API AI assistant chat limit, independent of the generic write bucket. |
 
 ## Object storage and uploads
 

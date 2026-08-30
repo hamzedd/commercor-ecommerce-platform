@@ -18,7 +18,7 @@ Payment amounts and currencies come from persisted orders/payments, never browse
 
 Both APIs use DTO transformation and property whitelisting; the customer API rejects unknown properties. APIs emit nosniff, frame-denial, referrer, cross-origin, and permissions-policy headers. CSP is intentionally deferred because Next.js, Vite, and PayPal script/connect requirements need a deployment-specific tested policy.
 
-Rate limits are per proxy-resolved IP and in-memory per API process. Configure `RATE_LIMIT_WINDOW_MS`, `RATE_LIMIT_MAX`, `AUTH_RATE_LIMIT_MAX`, and `SENSITIVE_RATE_LIMIT_MAX`. Multi-instance production deployments should replace the in-memory store with a shared Redis-backed limiter.
+Rate limits are per proxy-resolved IP and in-memory per API process. Configure `RATE_LIMIT_WINDOW_MS`, `RATE_LIMIT_MAX`, `AUTH_RATE_LIMIT_MAX`, and `SENSITIVE_RATE_LIMIT_MAX`. The customer API additionally separates two tiers from the generic bucket: `PUBLIC_READ_RATE_LIMIT_MAX` for unauthenticated storefront reads (categories, products, brands, store-settings) - which all funnel through customer-web's shared SSR upstream IP and need much more headroom than a single client - and `ASSISTANT_RATE_LIMIT_MAX` for the AI assistant chat endpoint, kept independent since each turn can trigger several Groq API calls. Multi-instance production deployments should replace the in-memory store with a shared Redis-backed limiter.
 
 ## Production environment
 

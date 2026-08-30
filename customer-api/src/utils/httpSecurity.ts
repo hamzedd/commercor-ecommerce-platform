@@ -28,8 +28,11 @@ export function securityHeaders(
 // GET routes that only ever serve public, non-personalized storefront data.
 // These are hit on every SSR page render (home, category, product, search),
 // and since customer-web's SSR fetches all originate from the same upstream
-// service, they land on customer-api under one shared IP for every visitor
-// combined - so they need a much larger allowance than a single real client.
+// service - often a Render egress IP shared with other tenants, not a
+// distinct address per visitor - they land on customer-api under one
+// shared bucket for every visitor combined, with several calls fired per
+// page render. That combination needs a much larger allowance than a
+// single real client would ever need, or ordinary browsing trips 429s.
 const PUBLIC_READ_GET_PATTERNS = [
   /\/categories(\/[^/]+)?$/,
   /\/company-details(\/[^/]+)?$/,
@@ -64,18 +67,29 @@ export function rateLimiter(req: Request, res: Response, next: NextFunction) {
       /\/customers\/?$/.test(path) ||
       /\/payments\/[^/]+\/(initialize|paypal\/capture)$/.test(path) ||
       /\/(coupon|promotion)/.test(path));
-  const publicRead = !sensitive && isPublicReadRequest(req);
+  // The AI assistant gets its own tier rather than sharing the generic
+  // bucket with other authenticated writes (cart, wishlist, orders,
+  // reviews) - each chat turn can trigger several Groq API calls, so it
+  // needs a stricter, independent ceiling instead of either starving or
+  // being starved by unrelated storefront actions.
+  const isAssistant =
+    !sensitive && req.method === 'POST' && /\/assistant\/chat$/.test(path);
+  const publicRead = !sensitive && !isAssistant && isPublicReadRequest(req);
   const windowMs = positiveInt('RATE_LIMIT_WINDOW_MS', 60_000);
   const limit = sensitive
     ? positiveInt('SENSITIVE_RATE_LIMIT_MAX', 20)
-    : publicRead
-      ? positiveInt('PUBLIC_READ_RATE_LIMIT_MAX', 1200)
-      : positiveInt('RATE_LIMIT_MAX', 300);
+    : isAssistant
+      ? positiveInt('ASSISTANT_RATE_LIMIT_MAX', 20)
+      : publicRead
+        ? positiveInt('PUBLIC_READ_RATE_LIMIT_MAX', 6000)
+        : positiveInt('RATE_LIMIT_MAX', 300);
   const bucketType = sensitive
     ? 'sensitive'
-    : publicRead
-      ? 'public-read'
-      : 'api';
+    : isAssistant
+      ? 'assistant'
+      : publicRead
+        ? 'public-read'
+        : 'api';
   const key = `${req.ip || req.socket.remoteAddress || 'unknown'}:${bucketType}`;
   const now = Date.now();
   let bucket = buckets.get(key);
