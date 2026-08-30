@@ -16,7 +16,11 @@ import {
 } from '@/src/utils/environmentConstants';
 import { EmailProvider } from './email.provider';
 import { renderNotification } from './notification.templates';
-import { failedDelivery, safeDeliveryError } from './outbox-policy';
+import {
+  failedDelivery,
+  safeDeliveryDiagnostics,
+  safeDeliveryError,
+} from './outbox-policy';
 
 @Injectable()
 export class OutboxWorker
@@ -91,7 +95,20 @@ export class OutboxWorker
             failedDelivery(row.attempts, EMAIL_MAX_ATTEMPTS, now),
           );
           row.lastError = safeDeliveryError(error, [SMTP_PASSWORD]);
-          this.log.warn(`Notification ${row.id} failed`);
+          const diagnostics = safeDeliveryDiagnostics(error, [SMTP_PASSWORD]);
+          const details = [
+            diagnostics.name && `name=${diagnostics.name}`,
+            diagnostics.code && `code=${diagnostics.code}`,
+            diagnostics.responseCode != null &&
+              `responseCode=${diagnostics.responseCode}`,
+            diagnostics.command && `command=${diagnostics.command}`,
+            diagnostics.response && `response=${diagnostics.response}`,
+          ]
+            .filter(Boolean)
+            .join(' ');
+          this.log.warn(
+            `Notification ${row.id} failed: ${diagnostics.message}${details ? ` (${details})` : ''}`,
+          );
         }
         await this.db.getRepository(NotificationOutboxEntity).save(row);
       }
