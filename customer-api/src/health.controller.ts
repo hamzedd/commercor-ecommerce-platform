@@ -38,7 +38,11 @@ export class HealthController {
       integrations: {
         paymentProvider: PAYMENT_PROVIDER,
         paymentEnvironment:
-          PAYMENT_PROVIDER === 'paypal' ? PAYPAL_ENV : 'disabled',
+          PAYMENT_PROVIDER === 'paypal'
+            ? PAYPAL_ENV
+            : PAYMENT_PROVIDER === 'manual'
+              ? 'manual'
+              : 'disabled',
         emailProvider: EMAIL_PROVIDER,
       },
       timestamp: new Date().toISOString(),

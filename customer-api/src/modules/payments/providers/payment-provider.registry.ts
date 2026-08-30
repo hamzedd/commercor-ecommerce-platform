@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PAYMENT_PROVIDER } from '@/src/utils/environmentConstants';
 import { ManualDisabledPaymentProvider } from './manual-disabled.provider';
+import { ManualPaymentProvider } from './manual.provider';
 import { PaymentProvider } from './payment-provider';
 import { PayPalPaymentProvider } from './paypal.provider';
 
@@ -10,10 +11,12 @@ export class PaymentProviderRegistry {
 
   constructor(
     manualDisabled: ManualDisabledPaymentProvider,
+    manual: ManualPaymentProvider,
     paypal: PayPalPaymentProvider,
   ) {
     this.providers = new Map<string, PaymentProvider>([
       [manualDisabled.name, manualDisabled],
+      [manual.name, manual],
       [paypal.name, paypal],
     ]);
     this.getConfiguredProvider();

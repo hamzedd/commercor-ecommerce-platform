@@ -5,6 +5,7 @@ import { OrderEntity } from '@/src/libs/models/entities/order/Order.entity';
 import { PaymentStatus } from '@/src/utils/enums/PaymentEnums';
 import { DOMAIN_URL } from '@/src/utils/environmentConstants';
 import { PaymentProviderRegistry } from '../providers/payment-provider.registry';
+import { MANUAL_PAYMENT_PROVIDER_NAME } from '../providers/manual.provider';
 
 @Injectable()
 export class PaymentInitializationService {
@@ -77,6 +78,13 @@ export class PaymentInitializationService {
       }
       payment.provider = result.provider;
       payment.providerPaymentId = result.providerPaymentId;
+      if (result.provider === MANUAL_PAYMENT_PROVIDER_NAME) {
+        // A confirmed cash-on-delivery/manual order is not an abandoned
+        // checkout - it must never be auto-cancelled by the pending-payment
+        // expiration worker, which only acts on payments with a real
+        // expiresAt (see shouldExpirePayment/isCheckoutPaymentActive).
+        payment.expiresAt = null;
+      }
       await manager.getRepository(PaymentEntity).save(payment);
     });
     return result;

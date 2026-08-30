@@ -107,6 +107,8 @@
   "pleaseWaitVerifyPayment": "Please wait while we verify your payment...",
   "paymentSuccessful": "Payment Successful!",
   "paymentProcessedSuccessfully": "Your payment has been processed successfully.",
+  "manualPaymentConfirmedTitle": "Order confirmed!",
+  "manualPaymentConfirmedMessage": "Pay on delivery. Your order has been placed and will be prepared for delivery.",
   "continue": "Continue",
   "paymentFailed": "Payment Failed",
   "paymentExpired": "Payment Expired",

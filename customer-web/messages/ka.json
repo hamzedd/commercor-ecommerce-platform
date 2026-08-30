@@ -107,6 +107,8 @@
   "pleaseWaitVerifyPayment": "გთხოვთ დაელოდოთ სანამ ვამოწმებთ თქვენს გადახდას...",
   "paymentSuccessful": "გადახდა წარმატებული!",
   "paymentProcessedSuccessfully": "თქვენი გადახდა წარმატებით დამუშავდა.",
+  "manualPaymentConfirmedTitle": "შეკვეთა დადასტურებულია!",
+  "manualPaymentConfirmedMessage": "გადაიხადეთ მიწოდებისას. თქვენი შეკვეთა მიღებულია და მზადდება მიწოდებისთვის.",
   "continue": "გაგრძელება",
   "paymentFailed": "გადახდა ვერ მოხერხდა",
   "paymentExpired": "გადახდის ვადა ამოიწურა",

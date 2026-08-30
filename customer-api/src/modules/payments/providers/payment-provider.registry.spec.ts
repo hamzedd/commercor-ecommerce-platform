@@ -6,9 +6,11 @@ describe('PaymentProviderRegistry', () => {
   const manual = new ManualDisabledPaymentProvider();
 
   it('rejects unsupported providers clearly', () => {
-    const registry = new PaymentProviderRegistry(manual, {
-      name: 'paypal',
-    } as any);
+    const registry = new PaymentProviderRegistry(
+      manual,
+      { name: 'manual' } as any,
+      { name: 'paypal' } as any,
+    );
     expect(() => registry.get('unsupported')).toThrow(
       'Unsupported PAYMENT_PROVIDER',
     );

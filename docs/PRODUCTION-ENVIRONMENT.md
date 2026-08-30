@@ -52,7 +52,7 @@ MinIO console port `9001` and API port `9000` are not published by production Co
 
 | Variable | Required | Example format | Purpose and security notes |
 |---|---:|---|---|
-| `PAYMENT_PROVIDER` | yes | `manual_disabled` or `paypal` | Keep `manual_disabled` until sandbox acceptance passes. |
+| `PAYMENT_PROVIDER` | yes | `manual_disabled`, `manual`, or `paypal` | Keep `manual_disabled` until sandbox acceptance passes. `manual` accepts cash-on-delivery/pay-manually checkouts without a gateway; payments stay pending/unpaid until staff mark them paid. |
 | `PAYMENT_PENDING_EXPIRY_MINUTES` | no | `30` | Checkout reservation lifetime. |
 | `PAYPAL_ENV` | with PayPal | `sandbox` or `live` | Provider endpoint selection. |
 | `PAYPAL_CLIENT_ID` | with PayPal | provider value | Server credential; the public SDK client ID must be configured separately only when the storefront enables it. |

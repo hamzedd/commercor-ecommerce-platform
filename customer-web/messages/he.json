@@ -99,6 +99,8 @@
   "pleaseWaitVerifyPayment": "אנא המתן בזמן שאנו מאמתים את התשלום שלך...",
   "paymentSuccessful": "התשלום הצליח!",
   "paymentProcessedSuccessfully": "התשלום שלך עובד בהצלחה.",
+  "manualPaymentConfirmedTitle": "ההזמנה אושרה!",
+  "manualPaymentConfirmedMessage": "תשלום במעמד המסירה. ההזמנה שלך נקלטה ותוכן למשלוח.",
   "continue": "לְהַמשִׁיך",
   "paymentFailed": "התשלום נכשל",
   "paymentExpired": "תוקף התשלום פג",

@@ -430,6 +430,22 @@ function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
           onError={setQuoteError}
         />
       )}
+      {pendingPayment?.initialization.provider === "manual" && (
+        <div className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-slate-800">
+          <p className="font-semibold">{t("manualPaymentConfirmedTitle")}</p>
+          <p className="mt-1 leading-6">{t("manualPaymentConfirmedMessage")}</p>
+          <button
+            type="button"
+            onClick={() => {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              router.push(pendingPayment.url as any);
+            }}
+            className="checkout-primary-cta mt-4 flex min-h-10 w-full items-center justify-center rounded-lg bg-gradient-to-r from-blue-600 via-violet-600 to-pink-600 px-4 font-bold shadow-sm shadow-violet-900/20 transition-all hover:shadow-md hover:shadow-violet-800/30"
+          >
+            {t("continue")}
+          </button>
+        </div>
+      )}
 
       <div className="mt-4 grid gap-2 text-xs font-medium text-slate-500 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
         <p className="flex items-center gap-2">

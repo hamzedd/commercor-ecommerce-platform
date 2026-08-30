@@ -99,6 +99,8 @@
   "pleaseWaitVerifyPayment": "يرجى الانتظار حتى نتحقق من دفعتك...",
   "paymentSuccessful": "تم الدفع بنجاح!",
   "paymentProcessedSuccessfully": "تمت معالجة دفعتك بنجاح.",
+  "manualPaymentConfirmedTitle": "تم تأكيد الطلب!",
+  "manualPaymentConfirmedMessage": "الدفع عند الاستلام. تم تسجيل طلبك وسيتم تجهيزه للتوصيل.",
   "continue": "يكمل",
   "paymentFailed": "فشل الدفع",
   "paymentExpired": "انتهت صلاحية الدفع",

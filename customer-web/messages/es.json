@@ -107,6 +107,8 @@
   "pleaseWaitVerifyPayment": "Por favor espera mientras verificamos tu pago...",
   "paymentSuccessful": "¡Pago exitoso!",
   "paymentProcessedSuccessfully": "Tu pago ha sido procesado exitosamente.",
+  "manualPaymentConfirmedTitle": "¡Pedido confirmado!",
+  "manualPaymentConfirmedMessage": "Paga al recibir tu pedido. Tu pedido ha sido registrado y se preparará para su entrega.",
   "continue": "Continuar",
   "paymentFailed": "Pago fallido",
   "paymentExpired": "Pago caducado",

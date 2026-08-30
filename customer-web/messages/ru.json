@@ -107,6 +107,8 @@
   "pleaseWaitVerifyPayment": "Пожалуйста, подождите, пока мы проверяем ваш платеж...",
   "paymentSuccessful": "Оплата прошла успешно!",
   "paymentProcessedSuccessfully": "Ваш платеж успешно обработан.",
+  "manualPaymentConfirmedTitle": "Заказ подтверждён!",
+  "manualPaymentConfirmedMessage": "Оплата при получении. Ваш заказ оформлен и будет подготовлен к доставке.",
   "continue": "Продолжить",
   "paymentFailed": "Оплата не удалась",
   "paymentExpired": "Срок оплаты истёк",

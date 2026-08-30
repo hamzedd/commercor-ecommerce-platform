@@ -11,6 +11,7 @@ import { AuthGuard } from '@/src/libs/guards/auth.guard';
 import { OrderItemEntity } from '@/src/libs/models/entities/order/OrderItem.entity';
 import { ProductEntity } from '@/src/libs/models/entities/product/Product.entity';
 import { ManualDisabledPaymentProvider } from './providers/manual-disabled.provider';
+import { ManualPaymentProvider } from './providers/manual.provider';
 import { PaymentProviderRegistry } from './providers/payment-provider.registry';
 import { PaymentInitializationService } from './services/payment-initialization.service';
 import { PaymentExpirationService } from './services/payment-expiration.service';
@@ -61,6 +62,7 @@ import { PromotionUsageEntity } from '@/src/libs/models/entities/promotion/Promo
     PaymentExpirationService,
     PaymentExpirationWorker,
     ManualDisabledPaymentProvider,
+    ManualPaymentProvider,
     PayPalPaymentProvider,
     PaymentProviderRegistry,
     PayPalPaymentService,
