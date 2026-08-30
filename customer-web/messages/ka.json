@@ -281,5 +281,8 @@
   "shippingDiscount": "მიწოდების ფასდაკლება",
   "checkoutInProgress": "გადახდა მიმდინარეობს",
   "pendingCheckoutMessage": "თქვენი კალათა ამჟამად გადახდის პროცესშია. მეტი პროდუქტის დამატებამდე დაასრულეთ მიმდინარე გადახდა.",
-  "continueCheckout": "გადახდის გაგრძელება"
+  "continueCheckout": "გადახდის გაგრძელება",
+  "termsOfService": "მომსახურების პირობები",
+  "privacyPolicy": "კონფიდენციალურობის პოლიტიკა",
+  "refundPolicy": "დაბრუნების პოლიტიკა"
 }

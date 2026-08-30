@@ -85,6 +85,18 @@ function DefaultFooter({ settings }: { settings: StoreSettingsType }) {
           >
             {t("contactUs")}
           </Link>
+          <Link href="/terms" className="transition-colors hover:text-white">
+            {t("termsOfService")}
+          </Link>
+          <Link href="/privacy" className="transition-colors hover:text-white">
+            {t("privacyPolicy")}
+          </Link>
+          <Link
+            href="/refund-policy"
+            className="transition-colors hover:text-white"
+          >
+            {t("refundPolicy")}
+          </Link>
         </nav>
         {socials.length > 0 && (
           <nav

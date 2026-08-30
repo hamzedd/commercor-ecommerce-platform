@@ -12,6 +12,9 @@ export const pathnames = {
   "/forgot-password": "/forgot-password",
   "/reset-password": "/reset-password",
   "/payment-status/[id]": "/payment-status/[id]",
+  "/terms": "/terms",
+  "/privacy": "/privacy",
+  "/refund-policy": "/refund-policy",
 };
 
 export const localePrefix = "always";
