@@ -104,6 +104,12 @@ export class FilesService implements OnModuleInit {
     fileName: string;
     bucketName?: CommercorMinioBucketEnums;
   }) {
+    // A caller may pass a record's previous object name, which can be
+    // null/undefined/empty when there was no prior file - that's a no-op,
+    // not an error, and must never reach the MinIO client (which throws
+    // InvalidObjectNameError on a falsy object name and would otherwise
+    // crash the caller).
+    if (!fileName) return;
     return this.minioService.removeObject(bucketName, fileName);
   }
 

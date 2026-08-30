@@ -125,10 +125,12 @@ export class CategoriesService {
             bucketName: CommercorMinioBucketEnums.CATEGORIES,
           });
           category.image = uploadedFile.objectName;
-          this.filesService.deleteFile({
-            fileName: oldImage,
-            bucketName: CommercorMinioBucketEnums.CATEGORIES,
-          });
+          if (oldImage) {
+            await this.filesService.deleteFile({
+              fileName: oldImage,
+              bucketName: CommercorMinioBucketEnums.CATEGORIES,
+            });
+          }
         }
 
         category.translations = Array.isArray(data.translations)
@@ -143,11 +145,13 @@ export class CategoriesService {
 
         await categoryRepo.save(category);
       })
-      .catch((e) => {
-        this.filesService.deleteFiles({
-          fileNames: uploadedFile.objectName,
-          bucketName: CommercorMinioBucketEnums.CATEGORIES,
-        });
+      .catch(async (e) => {
+        if (uploadedFile?.objectName) {
+          await this.filesService.deleteFile({
+            fileName: uploadedFile.objectName,
+            bucketName: CommercorMinioBucketEnums.CATEGORIES,
+          });
+        }
         throw e;
       });
 
