@@ -184,7 +184,7 @@ export default async function Home({ params }: Props) {
                     />
                   </div>
                 ) : (
-                  <div className="flex min-h-[330px] items-center justify-center rounded-2xl bg-white/5">
+                  <div className="flex aspect-square items-center justify-center rounded-2xl bg-white/5">
                     <span className="text-slate-300">
                       {t("featuredProduct")}
                     </span>

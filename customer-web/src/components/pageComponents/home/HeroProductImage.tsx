@@ -14,14 +14,14 @@ function HeroProductImage({ alt, fallback, src }: Props) {
 
   if (hasError) {
     return (
-      <div className="flex min-h-[330px] items-center justify-center px-8 text-center text-slate-500 sm:min-h-[390px]">
+      <div className="flex aspect-square w-full items-center justify-center px-8 text-center text-slate-500">
         {fallback}
       </div>
     );
   }
 
   return (
-    <div className="flex h-[330px] items-center justify-center p-6 sm:h-[390px] sm:p-10">
+    <div className="flex aspect-square w-full items-center justify-center p-6 sm:p-10">
       <Image
         src={src}
         alt={alt}
