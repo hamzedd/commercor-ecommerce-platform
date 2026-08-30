@@ -21,7 +21,7 @@ function HeroProductImage({ alt, fallback, src }: Props) {
   }
 
   return (
-    <div className="flex aspect-square w-full items-center justify-center p-6 sm:p-10">
+    <div className="flex aspect-square w-full items-center justify-center overflow-hidden p-6 sm:p-10">
       <Image
         src={src}
         alt={alt}
@@ -31,7 +31,7 @@ function HeroProductImage({ alt, fallback, src }: Props) {
         loading="eager"
         unoptimized
         onError={() => setHasError(true)}
-        className="h-full w-full object-contain drop-shadow-md"
+        className="animate-ken-burns h-full w-full object-contain drop-shadow-md motion-reduce:animate-none"
       />
     </div>
   );

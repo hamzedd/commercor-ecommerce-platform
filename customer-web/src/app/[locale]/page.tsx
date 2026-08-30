@@ -171,6 +171,10 @@ export default async function Home({ params }: Props) {
               className="animate-float-slower absolute -right-2 -bottom-6 h-20 w-20 rounded-full border border-white/10 bg-gradient-to-br from-pink-500/40 to-transparent backdrop-blur-sm sm:-right-6"
             />
             <div className="animate-product-float relative w-full max-w-[470px] overflow-hidden rounded-[2rem] bg-gradient-to-br from-blue-500/60 via-violet-500/60 to-pink-500/60 p-[1.5px] shadow-2xl shadow-violet-950/50 motion-reduce:animate-none">
+              <div
+                aria-hidden
+                className="animate-hero-shine pointer-events-none absolute inset-y-0 left-0 z-10 w-1/3 bg-gradient-to-r from-transparent via-white/25 to-transparent motion-reduce:hidden"
+              />
               <div className="glass-panel rounded-[calc(2rem-1.5px)] border-0 p-4 sm:p-6">
                 {featuredImage ? (
                   <div className="relative">
