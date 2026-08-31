@@ -1,4 +1,4 @@
-import { Button, Form, Space, type FormProps } from "antd";
+import { Button, Form, message, Space, type FormProps } from "antd";
 import type { ProductType } from "../../../../utils/types/productTypes.ts";
 import { useEffect, useState } from "react";
 import EditableLangTabs from "../../tabs/EditableLangTabs.tsx";
@@ -44,21 +44,27 @@ function ProductForm({
 
   useEffect(() => {
     const fetchOptions = async () => {
-      const [categories, brands] = await Promise.all([
-        getCategoriesService().then((res) =>
-          res.map((category: any) => ({
-            label: category.translations?.[0]?.name,
-            value: category.id,
-          })),
-        ),
-        getBrandsService().then((res) =>
-          res.map((brand: any) => ({
-            label: brand.translations?.[0]?.name,
-            value: brand.id,
-          })),
-        ),
-      ]);
-      setOptions({ categories, brands });
+      try {
+        const [categories, brands] = await Promise.all([
+          getCategoriesService().then((res) =>
+            res.map((category: any) => ({
+              label: category.translations?.[0]?.name,
+              value: category.id,
+            })),
+          ),
+          getBrandsService().then((res) =>
+            res.map((brand: any) => ({
+              label: brand.translations?.[0]?.name,
+              value: brand.id,
+            })),
+          ),
+        ]);
+        setOptions({ categories, brands });
+      } catch {
+        message.error(
+          "Failed to load categories and brands. Please refresh the page.",
+        );
+      }
     };
 
     fetchOptions();
