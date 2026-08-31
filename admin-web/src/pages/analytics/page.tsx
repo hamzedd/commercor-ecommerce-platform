@@ -17,13 +17,13 @@ import {
   Col,
   DatePicker,
   Row,
-  Select,
   Space,
   Statistic,
   Table,
   Tag,
   Typography,
 } from "antd";
+import { NativeSelect } from "../../components/ui/inputs/NativeSelectInput.tsx";
 import { Link } from "react-router";
 import { getAnalytics } from "../../service/apiServices/analyticsServices";
 import type { Analytics, Metric } from "../../utils/types/analyticsTypes";
@@ -99,7 +99,7 @@ export default function AnalyticsPage() {
           <Typography.Title level={2}>Advanced analytics</Typography.Title>
         </div>
         <Space>
-          <Select
+          <NativeSelect
             value={preset}
             onChange={setPreset}
             className="w-44"

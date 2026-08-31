@@ -1,17 +1,14 @@
-import {
-  Button,
-  Form,
-  Space,
-  type FormProps,
-  type CheckboxOptionType,
-} from "antd";
+import { Button, Form, Space, type FormProps } from "antd";
 import type { CategoryType } from "../../../../utils/types/categoryTypes.ts";
 import { useEffect, useState } from "react";
 import { getCategoriesService } from "../../../../service/apiServices/categoryServices.ts";
-import SelectInput from "../../inputs/SelectInput.tsx";
+import NativeSelectInput from "../../inputs/NativeSelectInput.tsx";
 import EditableLangTabs from "../../tabs/EditableLangTabs.tsx";
 import CategoryTranslationFields from "./components/CategoryTranslationFields.tsx";
-import type { FormLanguageType } from "../../../../utils/types/formTypes.ts";
+import type {
+  FormLanguageType,
+  FormOptionType,
+} from "../../../../utils/types/formTypes.ts";
 import FileInput from "../../inputs/FileInput.tsx";
 import countriesOptions from "../brandForm/components/countriesOptions.ts";
 
@@ -38,17 +35,19 @@ function CategoryForm({
         }))
       : [countriesOptions[0]],
   );
-  const [categories, setCategories] = useState<CheckboxOptionType[]>();
+  const [categories, setCategories] = useState<FormOptionType[]>();
 
   useEffect(() => {
     const fetchCategories = async () => {
       const res = await getCategoriesService();
       setCategories(
         res.map((category) => ({
-          label: (
-            category.translations.find((t) => t.lang.toLowerCase() === "en") ||
-            category.translations[0]
-          )?.name,
+          label:
+            (
+              category.translations.find(
+                (t) => t.lang.toLowerCase() === "en",
+              ) || category.translations[0]
+            )?.name ?? "Untitled",
           value: category.id,
         })),
       );
@@ -71,7 +70,7 @@ function CategoryForm({
         autoComplete="off"
         {...props}
       >
-        <SelectInput
+        <NativeSelectInput
           inputProps={{
             options: categories,
             placeholder: "Select Parent Category",

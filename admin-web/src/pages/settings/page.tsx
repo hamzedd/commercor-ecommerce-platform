@@ -8,12 +8,12 @@ import {
   Form,
   Input,
   Row,
-  Select,
   Space,
   Spin,
   Typography,
   message,
 } from "antd";
+import { NativeSelect } from "../../components/ui/inputs/NativeSelectInput.tsx";
 import {
   getStoreSettingsService,
   updateStoreSettingsService,
@@ -187,7 +187,8 @@ function SettingsPage() {
                 label="Default Locale"
                 rules={[{ required: true }]}
               >
-                <Select
+                <NativeSelect
+                  className="w-full"
                   options={[
                     { value: "en", label: "English (en)" },
                     { value: "ka", label: "Georgian (ka)" },

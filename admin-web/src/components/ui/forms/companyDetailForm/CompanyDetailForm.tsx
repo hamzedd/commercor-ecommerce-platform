@@ -1,6 +1,6 @@
 import { Button, Form, Space, type FormProps } from "antd";
 import TextInput from "../../inputs/TextInput.tsx";
-import SelectInput from "../../inputs/SelectInput.tsx";
+import NativeSelectInput from "../../inputs/NativeSelectInput.tsx";
 import FileInput from "../../inputs/FileInput.tsx";
 import companyDetailOptions from "../../../../utils/contants/options/companyDetailOptions.ts";
 
@@ -26,7 +26,7 @@ function CompanyDetailForm({
       autoComplete="off"
       {...props}
     >
-      <SelectInput
+      <NativeSelectInput
         formProps={{
           label: "Key",
           name: "key",

@@ -1,5 +1,5 @@
 import { Button, Form, type FormProps } from "antd";
-import SelectInput from "../../inputs/SelectInput.tsx";
+import NativeSelectInput from "../../inputs/NativeSelectInput.tsx";
 import type { FormOptionType } from "../../../../utils/types/formTypes.ts";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
@@ -24,7 +24,7 @@ function ProductFilterValueForm({
         {...props}
       >
         <div className="flex gap-2 w-full">
-          <SelectInput
+          <NativeSelectInput
             inputProps={{
               options: filterOptions.options,
               placeholder: "Select Filter",

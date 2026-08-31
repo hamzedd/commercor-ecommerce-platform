@@ -1,29 +1,33 @@
 import { Form, type FormItemProps } from "antd";
 import type { FormOptionType } from "../../../utils/types/formTypes.ts";
 
-interface NativeSelectProps {
+export interface NativeSelectProps {
   value?: string | number | null;
   onChange?: (value: string) => void;
   disabled?: boolean;
   placeholder?: string;
   options?: FormOptionType[];
+  allowClear?: boolean;
+  className?: string;
 }
 
-function NativeSelect({
+export function NativeSelect({
   value,
   onChange,
   disabled,
   placeholder,
   options,
+  allowClear,
+  className,
 }: NativeSelectProps) {
   return (
     <select
       value={value != null ? String(value) : ""}
       onChange={(e) => onChange?.(e.target.value)}
       disabled={disabled}
-      className="admin-native-select"
+      className={["admin-native-select", className].filter(Boolean).join(" ")}
     >
-      <option value="" disabled>
+      <option value="" disabled={!allowClear}>
         {placeholder ?? "Select"}
       </option>
       {options?.map((option) => (
@@ -43,7 +47,10 @@ interface Props {
 function NativeSelectInput({ inputProps, formProps }: Props) {
   return (
     <Form.Item {...formProps}>
-      <NativeSelect {...inputProps} />
+      <NativeSelect
+        {...inputProps}
+        className={["w-full", inputProps.className].filter(Boolean).join(" ")}
+      />
     </Form.Item>
   );
 }

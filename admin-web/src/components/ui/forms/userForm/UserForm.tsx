@@ -1,6 +1,6 @@
 import { Button, Form, Space, type FormProps, Input } from "antd";
 import TextInput from "../../inputs/TextInput.tsx";
-import SelectInput from "../../inputs/SelectInput.tsx";
+import NativeSelectInput from "../../inputs/NativeSelectInput.tsx";
 import type { UserType } from "../../../../utils/types/userTypes.ts";
 import { USER_ROLE_OPTIONS } from "../../../../utils/contants/options/userRoleOptions.ts";
 
@@ -56,7 +56,7 @@ function UserForm({
         <Input.Password placeholder="Enter Password" />
       </Form.Item>
 
-      <SelectInput
+      <NativeSelectInput
         inputProps={{
           options: USER_ROLE_OPTIONS,
           placeholder: "Select Role",

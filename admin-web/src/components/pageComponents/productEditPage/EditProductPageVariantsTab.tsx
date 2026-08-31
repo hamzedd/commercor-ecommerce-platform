@@ -7,13 +7,13 @@ import {
   InputNumber,
   Modal,
   Popconfirm,
-  Select,
   Space,
   Switch,
   Table,
   Typography,
   message,
 } from "antd";
+import { NativeSelect } from "../../ui/inputs/NativeSelectInput.tsx";
 import {
   addVariantOption,
   createVariant,
@@ -181,7 +181,8 @@ export default function EditProductPageVariantsTab({
               rules={[{ required: true }]}
               getValueFromEvent={(v) => v}
             >
-              <Select
+              <NativeSelect
+                className="w-full"
                 options={o.values.map((v) => ({ value: v.id, label: v.value }))}
               />
             </Form.Item>

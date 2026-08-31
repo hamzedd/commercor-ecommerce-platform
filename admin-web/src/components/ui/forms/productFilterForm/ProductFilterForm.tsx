@@ -2,6 +2,7 @@ import { Form, type FormProps, Button, Space } from "antd";
 import EditableLangTabs from "../../tabs/EditableLangTabs.tsx";
 import { useEffect, useState } from "react";
 import SelectInput from "../../inputs/SelectInput.tsx";
+import NativeSelectInput from "../../inputs/NativeSelectInput.tsx";
 import ProductFilterTranslationForm from "./components/ProductFilterTranslationForm.tsx";
 import { getProductFilterTypesService } from "../../../../service/apiServices/productFilterServices.ts";
 import type { ProductFilterTypeType } from "../../../../utils/types/productFilterTypes.ts";
@@ -64,7 +65,7 @@ function ProductFilterForm({ onFinish, form, isEdit, ...props }: Props) {
         autoComplete="off"
         {...props}
       >
-        <SelectInput
+        <NativeSelectInput
           formProps={{
             name: "type",
             label: "Filter Type",
@@ -77,7 +78,7 @@ function ProductFilterForm({ onFinish, form, isEdit, ...props }: Props) {
               value: type.value,
             })),
           }}
-        ></SelectInput>
+        ></NativeSelectInput>
         <SelectInput
           formProps={{
             name: "categoryIds",
