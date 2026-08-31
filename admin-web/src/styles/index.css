@@ -16,6 +16,13 @@ body,
   min-height: 100%;
   margin: 0;
 }
+html {
+  /* Keeps the sticky .admin-header (64px) from covering an element that the
+     browser scrolls into view (focus, validation, hash links) — without
+     this, a field that lands flush with the viewport top is scrolled
+     directly underneath the header and becomes unclickable. */
+  scroll-padding-top: 80px;
+}
 body {
   min-width: 320px;
   overflow-x: hidden;
