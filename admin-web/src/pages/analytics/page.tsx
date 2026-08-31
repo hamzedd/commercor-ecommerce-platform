@@ -319,11 +319,11 @@ function Descriptions({ data }: { data: Analytics }) {
       <Statistic title="Low stock" value={data.inventory.lowStock || 0} />
       <Statistic
         title="Tax collected"
-        value={data.payments.shipping.tax || 0}
+        value={data.payments.shipping?.tax || 0}
       />
       <Statistic
         title="Shipping collected"
-        value={data.payments.shipping.revenue || 0}
+        value={data.payments.shipping?.revenue || 0}
       />
     </div>
   );
