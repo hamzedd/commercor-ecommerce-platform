@@ -11,7 +11,7 @@ import FileInput from "../../inputs/FileInput.tsx";
 import NumberInput from "../../inputs/NumberInput.tsx";
 import { getCategoriesService } from "../../../../service/apiServices/categoryServices.ts";
 import { getBrandsService } from "../../../../service/apiServices/brandServices.ts";
-import SelectInput from "../../inputs/SelectInput.tsx";
+import NativeSelectInput from "../../inputs/NativeSelectInput.tsx";
 import countriesOptions from "../brandForm/components/countriesOptions.ts";
 
 interface Props extends FormProps {
@@ -85,7 +85,7 @@ function ProductForm({
         autoComplete="off"
         {...props}
       >
-        <SelectInput
+        <NativeSelectInput
           formProps={{
             label: "Category",
             name: "categoryId",
@@ -96,7 +96,7 @@ function ProductForm({
             options: options.categories,
           }}
         />
-        <SelectInput
+        <NativeSelectInput
           formProps={{
             label: "Brand",
             name: "brandId",

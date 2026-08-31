@@ -335,6 +335,43 @@ a {
 .ant-select-focused .ant-select-selector {
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
 }
+.admin-native-select {
+  width: 100%;
+  height: 38px;
+  padding: 4px 32px 4px 12px;
+  border: 1px solid #e4e7ec;
+  border-radius: 8px;
+  background-color: #ffffff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M2.5 4.5L6 8L9.5 4.5' stroke='%23667085' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  appearance: none;
+  -webkit-appearance: none;
+  color: #172033;
+  font-size: 14px;
+  font-family: inherit;
+  line-height: 1.5;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.admin-native-select:hover {
+  border-color: #94a3b8;
+}
+.admin-native-select:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+.admin-native-select:disabled {
+  color: #98a2b3;
+  background-color: #f8fafc;
+  cursor: not-allowed;
+}
+.admin-native-select option:disabled {
+  color: #98a2b3;
+}
 .ant-btn {
   transition:
     color 0.15s ease,
