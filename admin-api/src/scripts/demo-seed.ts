@@ -151,6 +151,17 @@ const products: DemoProduct[] = [
     brandSlug: 'homecraft',
     imageFile: 'coffee-mug.jpg',
   },
+  {
+    name: 'iPhone 16 Pro',
+    slug: 'iphone-16-pro',
+    description:
+      'A premium titanium smartphone with a pro camera system, A-series performance, and an edge-to-edge display.',
+    price: '999.99',
+    stock: 20,
+    categorySlug: 'electronics',
+    brandSlug: 'novatech',
+    imageFile: 'iphone-16-pro.jpg',
+  },
 ];
 
 const imageDirectory = join(process.cwd(), 'demo-assets', 'products');

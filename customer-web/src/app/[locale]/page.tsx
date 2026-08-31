@@ -12,7 +12,10 @@ import Reveal from "@/src/components/ui/utis/reveal/Reveal";
 import { LocaleType } from "@/src/i18n/config";
 import { Link } from "@/src/i18n/navigation";
 import { fetchCategories } from "@/src/service/apiServices/category.service";
-import { fetchProducts } from "@/src/service/apiServices/product.service";
+import {
+  fetchProduct,
+  fetchProducts,
+} from "@/src/service/apiServices/product.service";
 import getImageSrcByBucketAndFileNames from "@/src/utils/functions/getImageSrcByBucketAndFileNames";
 import { getStoreSettingsService } from "@/src/service/apiServices/storeSettings.service";
 import formatCurrency from "@/src/utils/functions/formatCurrency";
@@ -22,13 +25,17 @@ interface Props {
   params: Promise<{ locale: string }>;
 }
 
+const FEATURED_PRODUCT_SLUG = "iphone-16-pro";
+
 export default async function Home({ params }: Props) {
   const { locale } = await params;
   const t = await getTranslations();
   const categories = await fetchCategories();
   const productsResponse = await fetchProducts({});
   const settings = await getStoreSettingsService();
-  const featuredProduct = productsResponse?.data?.[0];
+  const featuredProduct =
+    (await fetchProduct(FEATURED_PRODUCT_SLUG).catch(() => null)) ??
+    productsResponse?.data?.[0];
   const featuredTranslation = selectTranslation(
     featuredProduct?.translations,
     locale,
