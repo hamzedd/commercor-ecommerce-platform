@@ -6,12 +6,14 @@ import { PaymentStatus } from '@/src/utils/enums/PaymentEnums';
 import { DOMAIN_URL } from '@/src/utils/environmentConstants';
 import { PaymentProviderRegistry } from '../providers/payment-provider.registry';
 import { MANUAL_PAYMENT_PROVIDER_NAME } from '../providers/manual.provider';
+import { CartService } from '@/src/modules/cart/cart.service';
 
 @Injectable()
 export class PaymentInitializationService {
   constructor(
     private readonly dataSource: DataSource,
     private readonly providers: PaymentProviderRegistry,
+    private readonly carts: CartService,
   ) {}
 
   async initialize(paymentId: string, customerId: string) {
@@ -86,6 +88,15 @@ export class PaymentInitializationService {
         payment.expiresAt = null;
       }
       await manager.getRepository(PaymentEntity).save(payment);
+      if (result.provider === MANUAL_PAYMENT_PROVIDER_NAME) {
+        // Cash-on-delivery orders never reach PaymentCompletionService
+        // (there is no webhook to complete them), so the cart's checkout
+        // lock would otherwise remain set forever - isCheckoutPaymentActive
+        // treats a payment that is PENDING with no expiresAt as still
+        // active. Convert the cart now, at order confirmation time, the
+        // same way a paid order is converted on payment completion.
+        await this.carts.convert(manager, input.customerId, input.orderId);
+      }
     });
     return result;
   }

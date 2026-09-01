@@ -60,4 +60,33 @@ describe('CartService checkout lifecycle', () => {
     await (service as any).assertMutable({} as never, unlocked);
     expect(expiration.reconcileCheckout).not.toHaveBeenCalled();
   });
+
+  it('convert() releases the checkout lock (cash-on-delivery order confirmation), and a repeat call is a safe no-op', async () => {
+    const converted = cart();
+    const cartRepo = {
+      findOne: jest.fn(async () =>
+        converted.status === CartStatus.ACTIVE ? converted : null,
+      ),
+      save: jest.fn(async (value) => Object.assign(converted, value)),
+    };
+    const manager = { getRepository: jest.fn(() => cartRepo) };
+    const expiration = { reconcileCheckout: jest.fn() };
+    const service = new CartService({} as never, expiration as never);
+
+    await service.convert(manager as never, 'customer', 'order');
+    expect(converted.status).toBe(CartStatus.CONVERTED);
+    expect(converted.checkoutOrderId).toBeNull();
+
+    // A second convert() call for the same order (e.g. a duplicate payment
+    // initialization retry) must not throw or mutate anything further -
+    // the cart is no longer ACTIVE so the lookup finds nothing.
+    await service.convert(manager as never, 'customer', 'order');
+    expect(cartRepo.save).toHaveBeenCalledTimes(1);
+
+    // Once converted, a fresh mutation on a *new* active cart is never
+    // blocked by the old checkout - there is no lingering lock to reconcile.
+    const freshCart = { ...cart(), checkoutOrderId: null };
+    await (service as any).assertMutable({} as never, freshCart);
+    expect(expiration.reconcileCheckout).not.toHaveBeenCalled();
+  });
 });

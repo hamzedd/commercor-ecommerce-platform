@@ -26,6 +26,28 @@ export function getCartItemsCount(): number {
   return getCart().reduce((total, item) => total + item.quantity, 0);
 }
 
+export async function refreshCartFromServer() {
+  if (typeof window === "undefined") return null;
+  if (!localStorage.getItem("accessToken")) return null;
+  const { getServerCart } = await import(
+    "@/src/service/apiServices/cart.service"
+  );
+  const server = await getServerCart();
+  localStorage.setItem(
+    "cart",
+    JSON.stringify(
+      server.items.map(({ productId, variantId, quantity }) => ({
+        productId,
+        variantId,
+        quantity,
+      })),
+    ),
+  );
+  localStorage.setItem("serverCart", JSON.stringify(server));
+  notifyCartUpdated();
+  return server;
+}
+
 export async function syncGuestCartToServer() {
   if (typeof window === 'undefined') return null;
   const token=localStorage.getItem('accessToken'); if(!token)return null;

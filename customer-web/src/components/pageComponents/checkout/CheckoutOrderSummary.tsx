@@ -25,6 +25,7 @@ import {
   PaymentInitialization,
 } from "@/src/service/apiServices/payment.service";
 import { getServerCart } from "@/src/service/apiServices/cart.service";
+import { refreshCartFromServer } from "@/src/utils/cart/cartStorage";
 
 interface Props {
   cart: CreateOrderItemType[];
@@ -152,6 +153,13 @@ function CheckoutOrderSummary({ cart, productPrices, lang }: Props) {
       });
       const initialization = await initializePaymentService(paymentId);
       setPendingPayment({ id: paymentId, url: paymentUrl, initialization });
+      if (initialization.provider === "manual") {
+        // The backend has already converted the cart and released its
+        // checkout lock at this point (cash-on-delivery orders confirm
+        // immediately). Re-sync the local cart cache so the header badge
+        // and cart page stop showing the items that were just ordered.
+        refreshCartFromServer().catch(() => undefined);
+      }
       setSubmitting(false);
     } catch (error: unknown) {
       setQuoteError(getCheckoutErrorMessage(error, t("checkoutError")));
