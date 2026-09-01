@@ -491,6 +491,14 @@ section[class*="rounded-2xl"] {
 
 .nav-link-underline {
   position: relative;
+  /* antd injects a scoped `a { color }` reset with higher specificity than
+     a bare Tailwind utility class, so the default/hover colors need to be
+     forced here rather than via className alone. */
+  color: #ffffff !important;
+}
+.nav-link-underline:hover,
+.nav-link-underline:focus-visible {
+  color: #ddd6fe !important;
 }
 .nav-link-underline::after {
   content: "";
