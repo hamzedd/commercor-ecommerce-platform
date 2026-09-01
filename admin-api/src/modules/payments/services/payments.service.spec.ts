@@ -55,6 +55,38 @@ describe('PaymentsService.markManualPaymentPaid', () => {
     expect(order.status).toBe(OrderStatus.COMPLETED);
   });
 
+  it('does NOT complete the order when marking payment paid before delivery (payment-received-first sequence)', async () => {
+    // Regression for the b402b9a follow-up bug: markManualPaymentPaid()
+    // used to set order.status = COMPLETED unconditionally, so an order
+    // that was merely PENDING/PROCESSING/SHIPPED showed as "completed" in
+    // admin the instant staff collected cash, even though fulfillment
+    // hadn't reached DELIVERED yet.
+    const payment: any = {
+      id: 'payment',
+      status: PaymentStatus.PENDING,
+      provider: MANUAL_PAYMENT_PROVIDER_NAME,
+      totalAmount: 42,
+      paidAmount: null,
+      completedAt: null,
+    };
+    const order: any = {
+      id: 'order',
+      paymentId: 'payment',
+      status: OrderStatus.PENDING,
+      fulfillmentStatus: 'shipped',
+    };
+    const { target, orderRepo } = service(payment, order);
+
+    await expect(target.markManualPaymentPaid('payment')).resolves.toEqual({
+      message: 'Payment marked as paid',
+      idempotent: false,
+    });
+    expect(payment.status).toBe(PaymentStatus.COMPLETED);
+    expect(order.status).toBe(OrderStatus.PENDING);
+    expect(order.fulfillmentStatus).toBe('shipped');
+    expect(orderRepo.save).not.toHaveBeenCalled();
+  });
+
   it('rejects a non-manual (gateway) payment', async () => {
     const payment: any = {
       id: 'payment',

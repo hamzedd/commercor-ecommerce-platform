@@ -13,6 +13,7 @@ import { OrderStatus, PaymentStatus } from '@/src/utils/enums/PaymentEnums';
 import { assertRefund, remainingRefundable } from '../payment-state';
 import { PayPalRefundService } from './paypal-refund.service';
 import { MANUAL_PAYMENT_PROVIDER_NAME } from '@/src/utils/constants/PaymentProviders';
+import { FulfillmentStatus } from '@/src/libs/models/entities/order/OrderStatusHistory.entity';
 
 @Injectable()
 export class PaymentsService {
@@ -93,7 +94,14 @@ export class PaymentsService {
             where: { paymentId: payment.id },
             lock: { mode: 'pessimistic_write' },
           });
-          if (order) {
+          // Payment status and order status are separate: collecting cash
+          // does not by itself mean the order is finished, only that it's
+          // no longer unpaid. Only complete the order here if fulfillment
+          // already reached DELIVERED (delivered-first sequence) - the
+          // opposite sequence (payment collected before delivery) instead
+          // completes the order from FulfillmentService.transition() once
+          // it reaches DELIVERED, see the check there.
+          if (order && order.fulfillmentStatus === FulfillmentStatus.DELIVERED) {
             order.status = OrderStatus.COMPLETED;
             await orderRepo.save(order);
           }

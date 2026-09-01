@@ -8,10 +8,14 @@ export const useOrdersQuery = () => {
     queryFn: async () => {
       return await getOrdersService();
     },
-    refetchOnMount: false,
+    // Order/fulfillment/payment status change server-side via admin
+    // actions the customer doesn't control - always refetch on mount so a
+    // revisit to the Orders tab shows the current state instead of
+    // whatever was cached from an earlier visit in this session.
+    refetchOnMount: "always",
     refetchOnWindowFocus: false,
     retryOnMount: false,
-    staleTime: 1000 * 60 * 60,
+    staleTime: 0,
     retry: false,
   });
 };

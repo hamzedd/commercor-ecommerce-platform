@@ -20,6 +20,8 @@ import {
   assertFulfillmentTransition,
   validNextFulfillmentStatuses,
 } from '../fulfillment-state';
+import { OrderStatus, PaymentStatus } from '@/src/utils/enums/PaymentEnums';
+import { MANUAL_PAYMENT_PROVIDER_NAME } from '@/src/utils/constants/PaymentProviders';
 @Injectable()
 export class FulfillmentService {
   constructor(private db: DataSource) {}
@@ -65,8 +67,24 @@ export class FulfillmentService {
         order.processingAt = now;
       if (d.fulfillmentStatus === FulfillmentStatus.SHIPPED)
         order.shippedAt = now;
-      if (d.fulfillmentStatus === FulfillmentStatus.DELIVERED)
+      if (d.fulfillmentStatus === FulfillmentStatus.DELIVERED) {
         order.deliveredAt = now;
+        // Payment status and order status are separate: for a COD order
+        // whose payment was already collected before delivery (the
+        // "mark payment received" happened first), completing it only
+        // once delivery is reached happens here instead - the opposite
+        // sequence (delivered first) completes the order from
+        // markManualPaymentPaid() instead, once payment is collected.
+        // Scoped to manual/COD - online orders already complete at
+        // checkout via customer-api's payment-completion flow and are
+        // untouched by this.
+        if (
+          payment.provider === MANUAL_PAYMENT_PROVIDER_NAME &&
+          payment.status === PaymentStatus.COMPLETED
+        ) {
+          order.status = OrderStatus.COMPLETED;
+        }
+      }
       if (d.fulfillmentStatus === FulfillmentStatus.CANCELLED)
         order.cancelledAt = now;
       await m.getRepository(OrderEntity).save(order);
