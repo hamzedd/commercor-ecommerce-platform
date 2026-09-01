@@ -6,9 +6,8 @@ export default function HeroFeaturedMedia() {
         muted
         loop
         playsInline
-        controls
         preload="auto"
-        className="absolute inset-0 z-50 h-full w-full object-cover"
+        className="absolute inset-0 h-full w-full object-cover object-center"
       >
         <source src="/videos/iphone-featured.mp4" type="video/mp4" />
       </video>
