@@ -14,6 +14,7 @@ import {
   CartStatus,
 } from '@/src/libs/models/entities/cart/Cart.entity';
 import { isCheckoutPaymentActive } from '../payment-checkout-state';
+import { MANUAL_PAYMENT_PROVIDER_NAME } from '../providers/manual.provider';
 
 export const PAYMENT_EXPIRATION_REASON = 'pending_payment_expired';
 
@@ -93,7 +94,19 @@ export class PaymentExpirationService {
       return false;
     }
     if (isCheckoutPaymentActive(payment, now)) return true;
-    if (shouldExpirePayment(payment, now)) {
+    if (
+      payment.provider === MANUAL_PAYMENT_PROVIDER_NAME &&
+      (payment.status as PaymentStatus) === PaymentStatus.PENDING
+    ) {
+      // A confirmed cash-on-delivery order: the checkout finished
+      // successfully, it just never reaches PaymentCompletionService (no
+      // webhook completes a manual payment). Convert the cart the same way
+      // a paid order does on completion, instead of merely releasing the
+      // lock - this also self-heals any cart that got stuck ACTIVE +
+      // locked before this reconciliation existed, since every GET /cart
+      // routes through here.
+      await this.convertCart(manager, customerId, orderId, now);
+    } else if (shouldExpirePayment(payment, now)) {
       await this.expireLocked(manager, payment, now, order);
     } else {
       await this.releaseCart(manager, customerId, orderId, now);
@@ -175,6 +188,28 @@ export class PaymentExpirationService {
       lock: { mode: 'pessimistic_write' },
     });
     if (!cart) return;
+    cart.checkoutOrderId = null;
+    cart.lastActivityAt = now;
+    await manager.getRepository(CartEntity).save(cart);
+  }
+
+  private async convertCart(
+    manager: EntityManager,
+    customerId: string,
+    orderId: string,
+    now: Date,
+  ) {
+    const cart = await manager.getRepository(CartEntity).findOne({
+      where: {
+        customerId,
+        status: CartStatus.ACTIVE,
+        checkoutOrderId: orderId,
+      },
+      lock: { mode: 'pessimistic_write' },
+    });
+    if (!cart) return;
+    cart.status = CartStatus.CONVERTED;
+    cart.convertedOrderId = orderId;
     cart.checkoutOrderId = null;
     cart.lastActivityAt = now;
     await manager.getRepository(CartEntity).save(cart);

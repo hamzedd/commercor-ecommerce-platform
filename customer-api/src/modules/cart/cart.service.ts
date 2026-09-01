@@ -70,8 +70,8 @@ export class CartService {
   async add(customerId: string, data: AddCartItemDto) {
     return this.db.transaction(async (manager) => {
       const { stock } = await this.validate(manager, data);
-      const cart = (await this.active(manager, customerId))!;
-      await this.assertMutable(manager, cart);
+      let cart = (await this.active(manager, customerId))!;
+      cart = await this.assertMutable(manager, customerId, cart);
       const repo = manager.getRepository(CartItemEntity);
       const existing = await repo.findOne({
         where: {
@@ -99,9 +99,9 @@ export class CartService {
   }
   async update(customerId: string, id: string, quantity: number) {
     return this.db.transaction(async (manager) => {
-      const cart = await this.active(manager, customerId, false);
+      let cart = await this.active(manager, customerId, false);
       if (!cart) throw new NotFoundException();
-      await this.assertMutable(manager, cart);
+      cart = await this.assertMutable(manager, customerId, cart);
       const item = await manager
         .getRepository(CartItemEntity)
         .findOneBy({ id, cartId: cart.id });
@@ -119,9 +119,9 @@ export class CartService {
   }
   async remove(customerId: string, id: string) {
     return this.db.transaction(async (manager) => {
-      const cart = await this.active(manager, customerId, false);
+      let cart = await this.active(manager, customerId, false);
       if (!cart) throw new NotFoundException();
-      await this.assertMutable(manager, cart);
+      cart = await this.assertMutable(manager, customerId, cart);
       const result = await manager
         .getRepository(CartItemEntity)
         .softDelete({ id, cartId: cart.id });
@@ -132,9 +132,9 @@ export class CartService {
   }
   async clear(customerId: string) {
     return this.db.transaction(async (manager) => {
-      const cart = await this.active(manager, customerId, false);
+      let cart = await this.active(manager, customerId, false);
       if (cart) {
-        await this.assertMutable(manager, cart);
+        cart = await this.assertMutable(manager, customerId, cart);
         await manager
           .getRepository(CartItemEntity)
           .softDelete({ cartId: cart.id });
@@ -174,7 +174,16 @@ export class CartService {
       cart.checkoutOrderId = null;
       cart = await manager.getRepository(CartEntity).save(cart);
     }
-    await this.reconcileCheckout(manager, cart);
+    const hadCheckout = !!cart.checkoutOrderId;
+    const checkoutStillActive = await this.reconcileCheckout(manager, cart);
+    if (hadCheckout && !checkoutStillActive) {
+      // Reconciliation may have just converted this cart in the database
+      // (e.g. a newly-confirmed COD order, including one self-healed from
+      // being stuck locked before that reconciliation existed) - re-resolve
+      // the customer's actual current active cart instead of continuing to
+      // read stale in-memory state/items off the now-converted row.
+      cart = (await this.active(manager, customerId, true))!;
+    }
     const items = await manager
       .getRepository(CartItemEntity)
       .find({ where: { cartId: cart.id } });
@@ -283,10 +292,23 @@ export class CartService {
     }
   }
 
-  private async assertMutable(manager: EntityManager, cart: CartEntity) {
+  private async assertMutable(
+    manager: EntityManager,
+    customerId: string,
+    cart: CartEntity,
+  ): Promise<CartEntity> {
+    const hadCheckout = !!cart.checkoutOrderId;
     if (await this.reconcileCheckout(manager, cart)) {
       throw new BadRequestException('Cart has a pending checkout');
     }
+    if (!hadCheckout) return cart;
+    // Reconciliation just resolved this cart's checkout as no-longer-active,
+    // which may have converted it in the database (e.g. a newly-confirmed,
+    // or previously stuck, COD order). Re-resolve the customer's actual
+    // current active cart instead of mutating a row that may now be
+    // historical - a plain in-memory checkoutOrderId=null is not enough to
+    // tell the two cases apart.
+    return (await this.active(manager, customerId, true))!;
   }
 
   private async reconcileCheckout(
