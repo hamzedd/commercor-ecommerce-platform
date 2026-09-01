@@ -42,6 +42,7 @@ export class FulfillmentService {
           from,
           d.fulfillmentStatus,
           payment.status,
+          payment.provider,
         );
       } catch (e) {
         throw new BadRequestException((e as Error).message);

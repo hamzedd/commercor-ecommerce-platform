@@ -28,4 +28,9 @@ export class PaymentsController {
   updatePayment(@Param('id') id: string, @Body() data: PaymentRefundDto) {
     return this.paymentsService.refundPayment(id, data);
   }
+
+  @Put(':id/mark-paid')
+  markPaid(@Param('id') id: string) {
+    return this.paymentsService.markManualPaymentPaid(id);
+  }
 }

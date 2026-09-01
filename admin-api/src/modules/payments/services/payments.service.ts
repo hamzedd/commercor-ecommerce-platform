@@ -12,6 +12,7 @@ import { PaymentRefundEntity } from '@/src/libs/models/entities/payment/PaymentR
 import { OrderStatus, PaymentStatus } from '@/src/utils/enums/PaymentEnums';
 import { assertRefund, remainingRefundable } from '../payment-state';
 import { PayPalRefundService } from './paypal-refund.service';
+import { MANUAL_PAYMENT_PROVIDER_NAME } from '@/src/utils/constants/PaymentProviders';
 
 @Injectable()
 export class PaymentsService {
@@ -51,6 +52,53 @@ export class PaymentsService {
         );
         return this.recordVerifiedRefund(id, {
           provider: 'paypal', externalRefundId: result.externalRefundId, amount: result.amount,
+        });
+      }
+
+      // Cash-on-delivery payments are collected by staff at delivery, not
+      // through any gateway - there is no webhook to complete them (see
+      // customer-api's manual payment provider). This is the admin-side
+      // "payment collected" action; it never applies to gateway (paypal,
+      // etc.) payments, which must go through their normal completion or
+      // refund flow instead.
+      async markManualPaymentPaid(id: string): Promise<{ message: string; idempotent: boolean }> {
+        return this.paymentRepository.manager.transaction(async (manager) => {
+          const paymentRepo = manager.getRepository(PaymentEntity);
+          const payment = await paymentRepo.findOne({
+            where: { id },
+            lock: { mode: 'pessimistic_write' },
+          });
+          if (!payment) throw new BadRequestException('Payment not found');
+          if (payment.provider !== MANUAL_PAYMENT_PROVIDER_NAME) {
+            throw new BadRequestException(
+              'Only cash-on-delivery payments can be marked as paid this way',
+            );
+          }
+          if (payment.status === PaymentStatus.COMPLETED) {
+            return { message: 'Payment already marked as paid', idempotent: true };
+          }
+          if (payment.status !== PaymentStatus.PENDING) {
+            throw new BadRequestException(
+              'Only pending payments can be marked as paid',
+            );
+          }
+          const now = new Date();
+          payment.status = PaymentStatus.COMPLETED;
+          payment.paidAmount = payment.totalAmount;
+          payment.completedAt = now;
+          await paymentRepo.save(payment);
+
+          const orderRepo = manager.getRepository(OrderEntity);
+          const order = await orderRepo.findOne({
+            where: { paymentId: payment.id },
+            lock: { mode: 'pessimistic_write' },
+          });
+          if (order) {
+            order.status = OrderStatus.COMPLETED;
+            await orderRepo.save(order);
+          }
+
+          return { message: 'Payment marked as paid', idempotent: false };
         });
       }
 

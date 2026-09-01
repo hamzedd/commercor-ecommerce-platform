@@ -7,6 +7,7 @@ import { OrderEntity } from '@/src/libs/models/entities/order/Order.entity';
 import { OrderDto } from '@/src/libs/models/dtos/orders/Order.dto';
 import { OrderItemEntity } from '@/src/libs/models/entities/order/OrderItem.entity';
 import { OrderStatusHistoryEntity } from '@/src/libs/models/entities/order/OrderStatusHistory.entity'; import { validNextFulfillmentStatuses } from '../fulfillment-state';
+import { MANUAL_PAYMENT_PROVIDER_NAME } from '@/src/utils/constants/PaymentProviders';
 
 @Injectable()
 export class OrdersService {
@@ -61,7 +62,8 @@ export class OrdersService {
         where: { id },
       });
       const payment=await manager.getRepository(PaymentEntity).findOneBy({id:order.paymentId});
-      if(!payment||payment.status!==PaymentStatus.COMPLETED)throw new BadRequestException('Unpaid orders cannot enter fulfillment states');
+      const isCashOnDelivery=payment?.provider===MANUAL_PAYMENT_PROVIDER_NAME;
+      if(!payment||(!isCashOnDelivery&&payment.status!==PaymentStatus.COMPLETED))throw new BadRequestException('Unpaid orders cannot enter fulfillment states');
       Object.assign(order, data);
 
       await orderRepo.save(order);

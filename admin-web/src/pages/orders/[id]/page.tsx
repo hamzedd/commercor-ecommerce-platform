@@ -11,30 +11,47 @@ import { getOrderService } from "../../../service/apiServices/orderServices.ts";
 import type { ProductType } from "../../../utils/types/productTypes.ts";
 import { updateFulfillment } from "../../../service/apiServices/orderServices.ts";
 import { formatMoney, toNumber } from "../../../utils/functions/money.ts";
+import { markPaymentAsPaidService } from "../../../service/apiServices/paymentServices.ts";
 
 const { Title, Text } = Typography;
+
+const MANUAL_PAYMENT_PROVIDER_NAME = "manual";
 
 function OrderPage() {
   const { id } = useParams();
 
   const [orderData, setOrderData] = useState<OrderType>();
   const [loading, setLoading] = useState(false);
+  const [markingPaid, setMarkingPaid] = useState(false);
   const [form]=Form.useForm();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        if (id) {
-          const res = await getOrderService(id);
-          setOrderData(res);
-        }
-      } finally {
-        setLoading(false);
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      if (id) {
+        const res = await getOrderService(id);
+        setOrderData(res);
       }
-    };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchData();
   }, [id]);
+
+  const handleMarkPaid = async () => {
+    if (!orderData?.payment) return;
+    try {
+      setMarkingPaid(true);
+      await markPaymentAsPaidService(orderData.payment.id);
+      message.success("Payment marked as paid");
+      await fetchData();
+    } finally {
+      setMarkingPaid(false);
+    }
+  };
 
   // Table columns for order items
   const orderItemColumns: ColumnsType<OrderItemType> = [
@@ -217,6 +234,17 @@ function OrderPage() {
               </Descriptions.Item>
             )}
           </Descriptions>
+          {orderData.payment?.provider === MANUAL_PAYMENT_PROVIDER_NAME &&
+            orderData.payment?.status === "pending" && (
+              <Button
+                type="primary"
+                className="mt-4"
+                loading={markingPaid}
+                onClick={handleMarkPaid}
+              >
+                Mark payment received
+              </Button>
+            )}
         </Card>
         <Card title="Fulfillment" bordered={false}><Descriptions column={{xs:1,sm:2}}><Descriptions.Item label="Status"><Tag>{orderData.fulfillmentStatus?.toUpperCase()}</Tag></Descriptions.Item><Descriptions.Item label="Carrier">{orderData.carrier||'Not assigned'}</Descriptions.Item><Descriptions.Item label="Tracking number">{orderData.trackingNumber||'Not assigned'}</Descriptions.Item><Descriptions.Item label="Tracking URL">{orderData.trackingUrl?<a href={orderData.trackingUrl} target="_blank" rel="noreferrer">Open tracking</a>:'Not assigned'}</Descriptions.Item><Descriptions.Item label="Processing at">{orderData.processingAt||'-'}</Descriptions.Item><Descriptions.Item label="Shipped at">{orderData.shippedAt||'-'}</Descriptions.Item><Descriptions.Item label="Delivered at">{orderData.deliveredAt||'-'}</Descriptions.Item></Descriptions><Timeline className="mt-5" items={(orderData.statusHistory||[]).map(h=>({children:<><b>{h.toStatus}</b> — {new Date(h.created_at).toLocaleString()}{h.note&&<p>{h.note}</p>}</>}))}/>{orderData.validNextFulfillmentStatuses?.length>0&&<Form form={form} layout="vertical" onFinish={async v=>{const updated=await updateFulfillment(String(id),v);setOrderData(prev=>prev?{...prev,...updated}:updated);message.success('Fulfillment updated')}} initialValues={{carrier:orderData.carrier,trackingNumber:orderData.trackingNumber,trackingUrl:orderData.trackingUrl}}><Form.Item name="fulfillmentStatus" label="Next status" rules={[{required:true}]}><NativeSelect className="w-full" options={orderData.validNextFulfillmentStatuses.map(v=>({value:v,label:v}))}/></Form.Item><Form.Item name="carrier" label="Carrier"><Input/></Form.Item><Form.Item name="trackingNumber" label="Tracking number"><Input/></Form.Item><Form.Item name="trackingUrl" label="Tracking URL" rules={[{type:'url'}]}><Input/></Form.Item><Form.Item name="note" label="Customer-visible note"><Input.TextArea maxLength={1000}/></Form.Item><Button htmlType="submit" type="primary">Update fulfillment</Button></Form>}</Card>
 
