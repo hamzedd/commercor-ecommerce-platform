@@ -1,9 +1,11 @@
 export type PaymentType = {
   id: string;
-  totalAmount: number;
-  refundedAmount: number;
+  // decimal columns - TypeORM/pg returns these as strings at runtime, see
+  // src/utils/functions/money.ts
+  totalAmount: number | string;
+  refundedAmount: number | string;
   status: string;
-  paidAmount: number | null;
+  paidAmount: number | string | null;
   currencyCode: string | null;
   provider: string | null;
   providerPaymentId: string | null;

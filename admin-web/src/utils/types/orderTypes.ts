@@ -12,7 +12,9 @@ export type OrderItemType = {
   product: ProductType;
   productId: string;
   quantity: number;
-  unitPrice: number;
+  // decimal column - TypeORM/pg returns this as a string at runtime, see
+  // src/utils/functions/money.ts
+  unitPrice: number | string;
   variantId: string | null;
   variantSku: string | null;
   variantDescription: string | null;
@@ -20,10 +22,12 @@ export type OrderItemType = {
 
 export type OrderType = {
   id: string | number;
-  deliveryAmount: number;
-  productAmount: number;
-  taxAmount: number;
-  finalTotal: number;
+  // decimal columns - TypeORM/pg returns these as strings at runtime, see
+  // src/utils/functions/money.ts
+  deliveryAmount: number | string;
+  productAmount: number | string;
+  taxAmount: number | string;
+  finalTotal: number | string;
   address: AddressType;
   customer: CustomerType;
   orderItems: OrderItemType[];

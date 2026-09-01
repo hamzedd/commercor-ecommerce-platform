@@ -1,6 +1,10 @@
 import type { ColumnsType } from "antd/es/table";
 import type { OrderType } from "../../../../../utils/types/orderTypes.ts";
 import type { AddressType } from "../../../../../utils/types/addressTypes.ts";
+import {
+  formatMoney,
+  toNumber,
+} from "../../../../../utils/functions/money.ts";
 
 export default [
   {
@@ -26,7 +30,13 @@ export default [
     title: "Amount",
     dataIndex: ["amount"],
     key: "amount",
-    render: (_, order: OrderType) => order.finalTotal ?? order.deliveryAmount + order.productAmount + (order.taxAmount || 0),
+    render: (_, order: OrderType) =>
+      formatMoney(
+        order.finalTotal ??
+          toNumber(order.deliveryAmount) +
+            toNumber(order.productAmount) +
+            toNumber(order.taxAmount),
+      ),
   },
   {
     title: "Actions",

@@ -7,6 +7,7 @@ import { App as AntApp, ConfigProvider } from "antd";
 import { Skeleton } from "antd";
 import { adminTheme } from "./styles/theme.ts";
 import AdminNotificationBridge from "./service/apiInstances/AdminNotificationBridge.tsx";
+import RouteErrorBoundary from "./components/ui/errorBoundary/RouteErrorBoundary.tsx";
 
 const HomePage = lazy(() => import("./pages/page.tsx"));
 const CategoriesPage = lazy(() => import("./pages/categories/page.tsx"));
@@ -171,6 +172,7 @@ function App() {
         {
           path: "orders/:id",
           element: <OrderPage />,
+          errorElement: <RouteErrorBoundary />,
         },
         {
           path: "users",

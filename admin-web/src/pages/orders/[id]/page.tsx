@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { getOrderService } from "../../../service/apiServices/orderServices.ts";
 import type { ProductType } from "../../../utils/types/productTypes.ts";
 import { updateFulfillment } from "../../../service/apiServices/orderServices.ts";
+import { formatMoney, toNumber } from "../../../utils/functions/money.ts";
 
 const { Title, Text } = Typography;
 
@@ -62,11 +63,13 @@ function OrderPage() {
       title: "Unit Price",
       dataIndex: "unitPrice",
       key: "unitPrice",
+      render: (unitPrice: OrderItemType["unitPrice"]) => formatMoney(unitPrice),
     },
     {
       title: "Total",
       key: "total",
-      render: (_, record) => record.quantity * record.unitPrice,
+      render: (_, record) =>
+        formatMoney(toNumber(record.quantity) * toNumber(record.unitPrice)),
     },
   ];
 
@@ -104,22 +107,22 @@ function OrderPage() {
               {orderData.created_at}
             </Descriptions.Item>
             <Descriptions.Item label="Product Amount">
-              {orderData.productAmount.toFixed(2)}
+              {formatMoney(orderData.productAmount)}
             </Descriptions.Item>
             <Descriptions.Item label="Delivery Amount">
-              {orderData.deliveryAmount.toFixed(2)}
+              {formatMoney(orderData.deliveryAmount)}
             </Descriptions.Item>
             <Descriptions.Item label="Tax Amount">
-              {(orderData.taxAmount || 0).toFixed(2)}
+              {formatMoney(orderData.taxAmount)}
             </Descriptions.Item>
             <Descriptions.Item label="Total Amount">
               <Text strong>
-                {(
+                {formatMoney(
                   orderData.finalTotal ??
-                  orderData.productAmount +
-                    orderData.deliveryAmount +
-                    (orderData.taxAmount || 0)
-                ).toFixed(2)}
+                    toNumber(orderData.productAmount) +
+                      toNumber(orderData.deliveryAmount) +
+                      toNumber(orderData.taxAmount),
+                )}
               </Text>
             </Descriptions.Item>
           </Descriptions>
@@ -179,15 +182,19 @@ function OrderPage() {
               )}
             </Descriptions.Item>
             <Descriptions.Item label="Expected Amount">
-              {orderData.payment?.totalAmount.toFixed(2) ?? "Not available"}
+              {orderData.payment
+                ? formatMoney(orderData.payment.totalAmount)
+                : "Not available"}
             </Descriptions.Item>
             <Descriptions.Item label="Paid Amount">
               {orderData.payment?.paidAmount == null
                 ? "Not paid"
-                : `${orderData.payment.paidAmount.toFixed(2)} ${orderData.payment.currencyCode || ""}`}
+                : `${formatMoney(orderData.payment.paidAmount)} ${orderData.payment.currencyCode || ""}`}
             </Descriptions.Item>
             <Descriptions.Item label="Refunded Amount">
-              {orderData.payment?.refundedAmount.toFixed(2) ?? "Not available"}
+              {orderData.payment
+                ? formatMoney(orderData.payment.refundedAmount)
+                : "Not available"}
             </Descriptions.Item>
             <Descriptions.Item label="Provider">
               {orderData.payment?.provider || "Not assigned"}
@@ -222,7 +229,8 @@ function OrderPage() {
             pagination={false}
             summary={(pageData) => {
               const totalAmount = pageData.reduce(
-                (sum, item) => sum + item.quantity * item.unitPrice,
+                (sum, item) =>
+                  sum + toNumber(item.quantity) * toNumber(item.unitPrice),
                 0,
               );
               return (
@@ -232,7 +240,7 @@ function OrderPage() {
                       <Text strong>Total</Text>
                     </Table.Summary.Cell>
                     <Table.Summary.Cell index={1}>
-                      <Text strong>{totalAmount.toFixed(2)}</Text>
+                      <Text strong>{formatMoney(totalAmount)}</Text>
                     </Table.Summary.Cell>
                   </Table.Summary.Row>
                 </Table.Summary>
