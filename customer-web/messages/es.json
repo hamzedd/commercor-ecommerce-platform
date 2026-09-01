@@ -215,6 +215,8 @@
   "unavailable": "No disponible",
   "selectVariant": "Selecciona opciones",
   "reviews": "Reseñas",
+  "signInToWriteReview": "Inicia sesión para escribir una reseña",
+  "reviewsPurchaseRequired": "Solo los clientes que compraron este producto pueden dejar una reseña",
   "writeReview": "Escribir una reseña",
   "verifiedPurchase": "Compra verificada",
   "pendingApproval": "Tu reseña está pendiente de aprobación.",

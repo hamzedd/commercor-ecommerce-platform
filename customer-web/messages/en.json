@@ -215,6 +215,8 @@
   "unavailable": "Unavailable",
   "selectVariant": "Select options",
   "reviews": "Reviews",
+  "signInToWriteReview": "Sign in to write a review",
+  "reviewsPurchaseRequired": "Only customers who purchased this product can leave a review",
   "writeReview": "Write a review",
   "verifiedPurchase": "Verified purchase",
   "pendingApproval": "Your review is pending approval.",

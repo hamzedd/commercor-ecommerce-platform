@@ -207,6 +207,8 @@
   "unavailable": "غير متاح",
   "selectVariant": "حدد الخيارات",
   "reviews": "التقييمات",
+  "signInToWriteReview": "سجّل الدخول لكتابة مراجعة",
+  "reviewsPurchaseRequired": "يمكن للعملاء الذين اشتروا هذا المنتج فقط ترك مراجعة",
   "writeReview": "اكتب مراجعة",
   "verifiedPurchase": "عملية شراء تم التحقق منها",
   "pendingApproval": "مراجعتك في انتظار الموافقة.",

@@ -13,9 +13,14 @@ import {
   updateReview,
 } from "@/src/service/apiServices/review.service";
 import type { ProductReview } from "@/src/utils/types/product.type";
+import { useCurrentUserQuery } from "@/src/service/react-query/user/query/useCurrentUserQuery";
+import { useModalStore } from "@/src/components/providers/modalStoreProvider";
 
 export default function ProductReviews({ productId }: { productId: string }) {
   const t = useTranslations();
+  const { data: userData } = useCurrentUserQuery();
+  const toggleLogin = useModalStore((state) => state.toggleLogin);
+  const isLoggedIn = !!userData?.id;
   const [reviews, setReviews] = useState<ProductReview[]>([]);
   const [summary, setSummary] = useState({
     averageRating: 0,
@@ -27,6 +32,7 @@ export default function ProductReviews({ productId }: { productId: string }) {
     hasReview: boolean;
     review?: ProductReview;
   }>();
+  const [eligibilityLoading, setEligibilityLoading] = useState(false);
   const [rating, setRating] = useState(5);
   const [title, setTitle] = useState("");
   const [comment, setComment] = useState("");
@@ -39,6 +45,13 @@ export default function ProductReviews({ productId }: { productId: string }) {
     getReviewSummary(productId)
       .then(setSummary)
       .catch(() => {});
+    if (!isLoggedIn) {
+      // The eligibility endpoint requires auth - skip it for guests rather
+      // than letting it fail with a silently-swallowed 401.
+      setEligibility(undefined);
+      return;
+    }
+    setEligibilityLoading(true);
     getReviewEligibility(productId)
       .then((result) => {
         setEligibility(result);
@@ -48,9 +61,10 @@ export default function ProductReviews({ productId }: { productId: string }) {
           setComment(result.review.comment);
         }
       })
-      .catch(() => setEligibility(undefined));
+      .catch(() => setEligibility(undefined))
+      .finally(() => setEligibilityLoading(false));
   };
-  useEffect(load, [productId]);
+  useEffect(load, [productId, isLoggedIn]);
 
   const submit = async () => {
     if (eligibility?.review)
@@ -77,6 +91,23 @@ export default function ProductReviews({ productId }: { productId: string }) {
         <b className="text-slate-950">{summary.averageRating.toFixed(1)}</b>
         <span className="text-slate-500">({summary.reviewCount})</span>
       </div>
+
+      {!isLoggedIn ? (
+        <div className="mt-6 rounded-xl bg-gradient-to-br from-violet-50 via-slate-50 to-blue-50 p-4">
+          <p className="text-slate-700">{t("signInToWriteReview")}</p>
+          <Button type="primary" className="mt-3" onClick={() => toggleLogin()}>
+            {t("login")}
+          </Button>
+        </div>
+      ) : (
+        eligibility &&
+        !eligibilityLoading &&
+        !eligibility.eligible && (
+          <div className="mt-6 rounded-xl bg-gradient-to-br from-violet-50 via-slate-50 to-blue-50 p-4">
+            <p className="text-slate-700">{t("reviewsPurchaseRequired")}</p>
+          </div>
+        )
+      )}
 
       {eligibility?.eligible && (
         <div className="mt-6 rounded-xl bg-gradient-to-br from-violet-50 via-slate-50 to-blue-50 p-4">

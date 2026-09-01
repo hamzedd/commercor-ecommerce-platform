@@ -215,6 +215,8 @@
   "unavailable": "Недоступно",
   "selectVariant": "Выберите параметры",
   "reviews": "Отзывы",
+  "signInToWriteReview": "Войдите, чтобы написать отзыв",
+  "reviewsPurchaseRequired": "Оставить отзыв могут только покупатели, которые приобрели этот товар",
   "writeReview": "Написать отзыв",
   "verifiedPurchase": "Подтверждённая покупка",
   "pendingApproval": "Ваш отзыв ожидает одобрения.",
