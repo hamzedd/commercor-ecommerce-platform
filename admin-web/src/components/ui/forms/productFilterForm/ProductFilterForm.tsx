@@ -1,8 +1,8 @@
 import { Form, type FormProps, Button, Space } from "antd";
 import EditableLangTabs from "../../tabs/EditableLangTabs.tsx";
 import { useEffect, useState } from "react";
-import SelectInput from "../../inputs/SelectInput.tsx";
 import NativeSelectInput from "../../inputs/NativeSelectInput.tsx";
+import NativeMultiSelectInput from "../../inputs/NativeMultiSelectInput.tsx";
 import ProductFilterTranslationForm from "./components/ProductFilterTranslationForm.tsx";
 import { getProductFilterTypesService } from "../../../../service/apiServices/productFilterServices.ts";
 import type { ProductFilterTypeType } from "../../../../utils/types/productFilterTypes.ts";
@@ -79,17 +79,15 @@ function ProductFilterForm({ onFinish, form, isEdit, ...props }: Props) {
             })),
           }}
         ></NativeSelectInput>
-        <SelectInput
+        <NativeMultiSelectInput
           formProps={{
             name: "categoryIds",
             label: "Categories",
             initialValue: [],
           }}
           inputProps={{
-            mode: "multiple",
             placeholder: "Select categories",
             options: categoryOptions,
-            optionFilterProp: "label",
           }}
         />
         {languages?.map((language, index) => (
